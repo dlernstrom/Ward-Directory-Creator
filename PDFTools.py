@@ -67,10 +67,6 @@ class PDFTools:
 		if DEBUG:
 			self.CombinedStyle.add('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)
 			self.CombinedStyle.add('BOX', (0,0), (-1,-1), 0.25, colors.black)
-		self.MissingPictures = []
-
-	def GetMissingPictures(self):
-		return self.MissingPictures
 
 	def TableizeFamily(self, Household):
 		Family = []
@@ -98,7 +94,6 @@ class PDFTools:
 			FamilyPicture = Image(self.DIRECTORY_IMAGES + Household[3])
 			FamilyPicture.drawHeight = 1.125 * inch
 		except:
-			self.MissingPictures.append(Household[4])
 			FamilyPicture = Image(self.DIRECTORY_IMAGES + 'Missing.jpg')
 			FamilyPicture.drawHeight = (1.5 * inch /180) * 100.0
 		FamilyPicture.drawWidth = 1.5 * inch

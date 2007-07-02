@@ -259,26 +259,33 @@ class Application:
 			pdf.save()
 			pdf_FRONT.save()
 			pdf_BACK.save()
-		message = "The following " + str(len(PDFToolHandle.GetMissingPictures())) + " people are missing pictures\n\n"
-		for Name in PDFToolHandle.GetMissingPictures():
-			message += Name + '\n'
-		#print message
-		if SEND_EMAILS:
-			for ToAddy in MISSING_PEOPLE_EMAILS:
-				mail(SMTP_SERVER, 'David@Ernstrom.net', ToAddy, 'Missing Picture', message)
-		Handle = open(CSV_LOCATION + "Needed.txt", 'w')
-		Handle.write(message)
-		Handle.close()
 		os.system('\"' + filename + '\"')
-		self.MissingList()
 
 	def GetMembershipList(self):
 		MembershipHandle = CSVMembershipParser.CSVMembershipParser(self.CSV_LOCATION + "Greenfield Ward member directory.csv")
 		for Household in MembershipHandle.next():
 			self.MembershipList.append(Household)
 
-	def MissingList(self):
+	def GetMissingList(self):
 		MissingImages = []
 		for Family in self.MembershipList:
-			print Family[3]
+			if not os.path.exists(self.DIRECTORY_IMAGES + Family[3]):
+				MissingImages.append(Family[4])
 		return MissingImages
+
+	def GetMissingMsg(self):
+		message = "The following " + str(len(self.GetMissingList())) + " people are missing pictures\n\n"
+		for Name in self.GetMissingList():
+			message += Name + '\n'
+		#print message
+		return message
+
+	def SendEmails(self):
+		if self.SEND_EMAILS:
+			for ToAddy in self.MISSING_PEOPLE_EMAILS:
+				mail(SMTP_SERVER, 'David@Ernstrom.net', ToAddy, 'Missing Picture', self.GetMissingMsg())
+
+	def MakeMissingFile(self):
+		Handle = open(CSV_LOCATION + "Needed.txt", 'w')
+		Handle.write(self.GetMissingMsg())
+		Handle.close()
