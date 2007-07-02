@@ -87,18 +87,17 @@ class PDFPrint:
 		NumberOfHouseholds = 0
 		MissingPictures = []
 		MembershipList = CSVMembershipParser.CSVMembershipParser(CSV_LOCATION + "Greenfield Ward member directory.csv")
+		TheTableStyle = TableStyle([
+						('LEFTPADDING', (0,0), (-1,-1), 3),
+						('RIGHTPADDING', (0,0), (-1,-1), 3),
+						('BOTTOMPADDING', (0,0), (-1,-1), 0),
+						('TOPPADDING', (1,0), (-1,-1), 0),
+					])
+		if DEBUG:
+			TheTableStyle.add('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)
+			TheTableStyle.add('BOX', (0,0), (-1,-1), .25, colors.black)
 		for Household in MembershipList.next():
 			NumberOfHouseholds += 1
-			TheTableStyle = TableStyle([
-							#('BACKGROUND', (0,0), (-1,-1), colors.Color(0.9, 0.9, 0.9)),
-							('LEFTPADDING', (0,0), (-1,-1), 3),
-							('RIGHTPADDING', (0,0), (-1,-1), 3),
-							('BOTTOMPADDING', (0,0), (-1,-1), 0),
-							('TOPPADDING', (1,0), (-1,-1), 0),
-						])
-			if DEBUG:
-				TheTableStyle.add('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)
-				TheTableStyle.add('BOX', (0,0), (-1,-1), .25, colors.black)
 			NumberOfMembers += len(Household[1][0]) + len(Household[1][1])
 			Family = []
 			print Household[0],'Family'
