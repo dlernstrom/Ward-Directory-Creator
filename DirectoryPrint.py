@@ -9,6 +9,7 @@ APPDATAFOLDER = 'Ward Directory'
 DEBUG = 0
 MISSING_PEOPLE_EMAILS = ['david.ernstrom@usa.dupont.com', 'tina@ernstrom.net', 'david@ernstrom.net']
 DIRECTORY_IMAGES = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\WardPictures\\'
+MOVED_OUT = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\MovedOut\\'
 CSV_LOCATION = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\'
 
 ########################
@@ -59,6 +60,7 @@ class MyFrame(wx.Frame):
 				  'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf',
 				  APPDATAFOLDER,
 				  DIRECTORY_IMAGES,
+				  MOVED_OUT,
 				  CSV_LOCATION,
 				  SEND_EMAILS,
 				  SMTP_SERVER,
