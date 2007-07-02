@@ -347,14 +347,14 @@ class PDFPrint:
 			pdf.save()
 			pdf_FRONT.save()
 			pdf_BACK.save()
-		message = 'The following", str(len(MissingPictures)), "people are missing pictures\n\n'
+		message = "The following " + str(len(MissingPictures)) + " people are missing pictures\n\n"
 		for Name in MissingPictures:
 			message += Name + '\n'
 		print message
 		if SEND_EMAILS:
 			for ToAddy in MISSING_PEOPLE_EMAILS:
 				mail(SMTP_SERVER, 'David@Ernstrom.net', ToAddy, 'Missing Picture', message)
-		Handle = open("Needed.txt", 'w')
+		Handle = open(CSV_LOCATION + "Needed.txt", 'w')
 		Handle.write(message)
 		Handle.close()
 		os.system('\"' + filename + '\"')
