@@ -15,6 +15,7 @@ from Email import mail
 import csv
 import datetime
 import CSVMembershipParser
+import PDFTools
 
 SEND_EMAILS = 0
 SMTP_SERVER = 'smtp.forward.email.dupont.com'
@@ -79,105 +80,18 @@ class PDFPrint:
 								  parent=styles['DaveBold'],
 								  fontSize = 8,
 								  ))
-		
 		CurrentDocument = []
+		PDFToolHandle = PDFTools.PDFTools(DEBUG, DIRECTORY_IMAGES)
 		#########NOTICE THAT SPAN IS WRITTEN BASS ACKWARDS WITH COL,ROW
 		#Here I start adding flowables
 		NumberOfMembers = 0
 		NumberOfHouseholds = 0
 		MissingPictures = []
 		MembershipList = CSVMembershipParser.CSVMembershipParser(CSV_LOCATION + "Greenfield Ward member directory.csv")
-		TheTableStyle = TableStyle([
-						('LEFTPADDING', (0,0), (-1,-1), 3),
-						('RIGHTPADDING', (0,0), (-1,-1), 3),
-						('BOTTOMPADDING', (0,0), (-1,-1), 0),
-						('TOPPADDING', (1,0), (-1,-1), 0),
-					])
-		if DEBUG:
-			TheTableStyle.add('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)
-			TheTableStyle.add('BOX', (0,0), (-1,-1), .25, colors.black)
 		for Household in MembershipList.next():
 			NumberOfHouseholds += 1
 			NumberOfMembers += len(Household[1][0]) + len(Household[1][1])
-			Family = []
-			print Household[0],'Family'
-			print "Number of Members", str(len(Household[1][0]) + len(Household[1][1]))
-			for Parent in Household[1][0]:
-				Family.append([Parent,'P'])
-			for Child in Household[1][1]:
-				Family.append([Child, 'C'])
-
-			Rows = 3
-			if 1 + len(Household[1][0]) + len(Household[1][1]) > Rows:
-				Rows = 1 + len(Household[1][0]) + len(Household[1][1])
-
-			#Get me a blank populated table
-			data = []
-			for Row in range(Rows):
-				data.append([None, None, None, None, None])
-
-			#Add the obvious entries
-			data[0][0] = Paragraph(Household[0], styles['DaveBold'])
-			TheTableStyle.add('SPAN', (0,0), (2,0))
-			data[0][3] = Paragraph(Household[2][0], styles['DaveHeading'])
-			data[0][4] = Paragraph(Household[2][1], styles['DaveBoldSmall'])
-			try:
-				FamilyPicture = Image(DIRECTORY_IMAGES + Household[3])
-				FamilyPicture.drawHeight = 1.125 * inch
-			except:
-				MissingPictures.append(Household[4])
-				FamilyPicture = Image(DIRECTORY_IMAGES + 'Missing.jpg')
-				FamilyPicture.drawHeight = (1.5 * inch /180) * 100.0
-			FamilyPicture.drawWidth = 1.5 * inch
-
-			#Add the family Members
-			CurrentRow = 0
-			print "Family:",Family
-			for Member in Family:
-				CurrentRow += 1
-				if Member[1] == 'P':
-					Column = 1
-				else:
-					Column = 2
-				if not Member[0].find('<') == -1:
-					data[CurrentRow][3] = Preformatted(Member[0][Member[0].find('<')+1:Member[0].find('>')], styles['DaveHeading'])
-					TheTableStyle.add('SPAN', (3, CurrentRow), (4, CurrentRow))
-					Member[0] = Member[0][:Member[0].find('<')]
-				data[CurrentRow][Column] = Preformatted(Member[0], styles['DaveHeading'])
-			TextTable = Table(data, [.125 * inch, .125 * inch, 0.9 * inch, 1.45 * inch, .8 * inch])
-			TextTable.setStyle(TheTableStyle)
-			TextTable.hAlign = 'LEFT'
-			ImageTable = Table([[FamilyPicture]], [1.5 * inch])
-			ImageTableStyle = TableStyle([('LEFTPADDING', (0,0), (-1,-1), 0),
-										  ('RIGHTPADDING', (0,0), (-1,-1), 0),
-										  ('BOTTOMPADDING', (0,0), (-1,-1), 0),
-										  ('TOPPADDING', (0,0), (-1,-1), 0),
-										  ('LEADING', (0,0), (-1,-1), 0),
-										  ('ALIGN', (0,0), (-1,-1), 'LEFT'),
-										  ('FONTSIZE', (0,0), (-1,-1), 0),
-										  ])
-			if DEBUG:
-				ImageTableStyle.add('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)
-				ImageTableStyle.add('BOX', (0,0), (-1,-1), 0.25, colors.black)
-			#ImageTable.setStyle(TheTableStyle)
-			CombinedTableData = [[TextTable, ImageTable]]
-			CombinedStyle = TableStyle([('VALIGN', (0,0), (-1,-1), 'TOP'),
-										#('BOX', (0,0), (-1,-1), 1.5, colors.black),
-										('LINEBELOW', (0,0), (-1,-1), 1.0, colors.black),
-										('LINEABOVE', (0,0), (-1,-1), 1.0, colors.black),
-										('LEFTPADDING', (0,0), (-1,-1), 0),
-										('RIGHTPADDING', (0,0), (-1,-1), 0),
-										('BOTTOMPADDING', (0,0), (-1,-1), 0),
-										('TOPPADDING', (0,0), (-1,-1), 0),
-										('LEADING', (0,0), (-1,-1), 0),
-										('ALIGN', (0,0), (-1,-1), 'LEFT'),
-										('FONTSIZE', (0,0), (-1,-1), 0),
-					])
-			if DEBUG:
-				CombinedStyle.add('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)
-				CombinedStyle.add('BOX', (0,0), (-1,-1), 0.25, colors.black)
-			MasterTable = Table(CombinedTableData, ['*', 1.6 * inch])
-			MasterTable.setStyle(CombinedStyle)
+			MasterTable = PDFToolHandle.TableizeFamily(Household)
 			CurrentDocument.append(MasterTable)
 			print str(len(CurrentDocument)), Household[0]
 			print '------------------------------------------'
@@ -262,8 +176,6 @@ class PDFPrint:
 			Used += item[2]
 			PageCounter += 1
 		FamiliesOnPages = NewPageCounts
-
-		#PageCount = PageCounter - 1
 
 		##Recover From Flowable Backup
 		CurrentDocument = []
