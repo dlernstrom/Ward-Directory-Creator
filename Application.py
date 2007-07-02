@@ -11,7 +11,7 @@ class Application:
 				 back,
 				 APPDATAFOLDER = 'Ward Directory',
 				 DIRECTORY_IMAGES = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\WardPictures\\',
-				 MOVED_OUT = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\MovedOut\\',
+				 MOVED_OUT = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\ImageArchive\\',
 				 CSV_LOCATION = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\',
 				 SEND_EMAILS = 0,
 				 SMTP_SERVER = None,
@@ -25,9 +25,6 @@ class Application:
 		self.MISSING_PEOPLE_EMAILS = MISSING_PEOPLE_EMAILS
 		self.MembershipList = []
 
-		self.MoveSuperflousImages()
-		return
-
 		PDFToolHandle = PDFTools.PDFTools(DEBUG,
 										  DIRECTORY_IMAGES,
 										  APPDATAFOLDER,
@@ -39,6 +36,7 @@ class Application:
 		#Here I start adding flowables
 		NumberOfMembers = 0
 		NumberOfHouseholds = 0
+		self.GetMembershipList()
 		for Household in self.MembershipList:
 			NumberOfHouseholds += 1
 			NumberOfMembers += len(Household[1][0]) + len(Household[1][1])

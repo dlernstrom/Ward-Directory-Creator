@@ -9,7 +9,7 @@ APPDATAFOLDER = 'Ward Directory'
 DEBUG = 0
 MISSING_PEOPLE_EMAILS = ['david.ernstrom@usa.dupont.com', 'tina@ernstrom.net', 'david@ernstrom.net']
 DIRECTORY_IMAGES = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\WardPictures\\'
-MOVED_OUT = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\MovedOut\\'
+MOVED_OUT = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\ImageArchive\\'
 CSV_LOCATION = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\'
 
 ########################
@@ -55,21 +55,6 @@ class MyFrame(wx.Frame):
 
 		self.Bind(wx.EVT_BUTTON, self.OnDoPrint, PrintButton)
 		self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
-		Application.Application(self, 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf',
-				  'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf',
-				  'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf',
-				  APPDATAFOLDER,
-				  DIRECTORY_IMAGES,
-				  MOVED_OUT,
-				  CSV_LOCATION,
-				  SEND_EMAILS,
-				  SMTP_SERVER,
-				  MISSING_PEOPLE_EMAILS,
-				  DEBUG
-				  )
-		self.Destroy()
-
-
 
 	def OnCloseWindow(self, event):
 		self.Destroy()
@@ -81,6 +66,7 @@ class MyFrame(wx.Frame):
 								'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf',
 								APPDATAFOLDER,
 								DIRECTORY_IMAGES,
+								MOVED_OUT,
 								CSV_LOCATION,
 								SEND_EMAILS,
 								SMTP_SERVER,
