@@ -54,23 +54,37 @@ class MyFrame(wx.Frame):
 
 		self.Bind(wx.EVT_BUTTON, self.OnDoPrint, PrintButton)
 		self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
+		Application.Application(self, 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf',
+				  'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf',
+				  'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf',
+				  APPDATAFOLDER,
+				  DIRECTORY_IMAGES,
+				  CSV_LOCATION,
+				  SEND_EMAILS,
+				  SMTP_SERVER,
+				  MISSING_PEOPLE_EMAILS,
+				  DEBUG
+				  )
+		self.Destroy()
+
 
 
 	def OnCloseWindow(self, event):
 		self.Destroy()
 
 	def OnDoPrint(self, event):
-		Application.Application(self, 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf',
-						  'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf',
-						  'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf',
-						  'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_TEST.pdf',
-						  APPDATAFOLDER,
-						  DIRECTORY_IMAGES,
-						  CSV_LOCATION,
-						  SEND_EMAILS,
-						  SMTP_SERVER,
-						  DEBUG
-						  )
+		Application.Application(self,
+								'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf',
+								'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf',
+								'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf',
+								APPDATAFOLDER,
+								DIRECTORY_IMAGES,
+								CSV_LOCATION,
+								SEND_EMAILS,
+								SMTP_SERVER,
+								MISSING_PEOPLE_EMAILS,
+								DEBUG
+								)
 
 class MyApp(wx.App):
 	def OnInit(self):
