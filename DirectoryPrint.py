@@ -1,9 +1,6 @@
 import wx
 import time
-import re
-from Email import mail
-import csv
-import PDFPrint
+import Application
 
 SEND_EMAILS = 0
 SMTP_SERVER = 'smtp.forward.email.dupont.com'
@@ -14,6 +11,18 @@ MISSING_PEOPLE_EMAILS = ['david.ernstrom@usa.dupont.com', 'tina@ernstrom.net', '
 DIRECTORY_IMAGES = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\WardPictures\\'
 CSV_LOCATION = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\'
 
+########################
+## Application Options:
+## -Analyze Ward Data
+##     -Parse Ward Data
+##     -Paginate Ward
+##     -Add Filler Pages
+##     -Repaginate Ward
+## -Generate Booklet PDF
+## -Generate Standard PDF
+## -Generate Missing List
+## -Email Missing List
+## -Extract Moved Family Images
 
 class MyFrame(wx.Frame):
 	def __init__(
@@ -51,8 +60,7 @@ class MyFrame(wx.Frame):
 		self.Destroy()
 
 	def OnDoPrint(self, event):
-		#print self.TableData
-		PDFPrint.PDFPrint(self, 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf',
+		Application.Application(self, 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf',
 						  'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf',
 						  'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf',
 						  'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_TEST.pdf',

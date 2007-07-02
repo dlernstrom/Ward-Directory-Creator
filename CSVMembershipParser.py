@@ -53,6 +53,7 @@ class CSVMembershipParser:
 		return self.CurrentFamily[0]
 
 if __name__ == '__main__':
-	Handle = CSVMembershipParser("Greenfield Ward member directory.csv")
+	CSV_LOCATION = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\'
+	Handle = CSVMembershipParser(CSV_LOCATION + "Greenfield Ward member directory.csv")
 	for Family in Handle.next():
 		print Family

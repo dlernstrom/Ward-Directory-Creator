@@ -11,8 +11,9 @@ from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
 import PDFTools
 import CSVMembershipParser
 import datetime
+from Email import mail
 
-class PDFPrint:
+class Application:
 	def __init__(self,
 				 parent,
 				 filename,
@@ -25,6 +26,10 @@ class PDFPrint:
 				 SEND_EMAILS = 0,
 				 SMTP_SERVER = None,
 				 DEBUG = 0):
+		self.DIRECTORY_IMAGES = DIRECTORY_IMAGES
+		self.CSV_LOCATION = CSV_LOCATION
+		self.MembershipList = []
+		self.GetMembershipList()
 		filename = win32api.GetEnvironmentVariable('APPDATA') + os.sep + APPDATAFOLDER + os.sep + filename
 		front = win32api.GetEnvironmentVariable('APPDATA') + os.sep + APPDATAFOLDER + os.sep + front
 		back = win32api.GetEnvironmentVariable('APPDATA') + os.sep + APPDATAFOLDER + os.sep + back
@@ -84,8 +89,7 @@ class PDFPrint:
 		NumberOfMembers = 0
 		NumberOfHouseholds = 0
 		MissingPictures = []
-		MembershipList = CSVMembershipParser.CSVMembershipParser(CSV_LOCATION + "Greenfield Ward member directory.csv")
-		for Household in MembershipList.next():
+		for Household in self.MembershipList:
 			NumberOfHouseholds += 1
 			NumberOfMembers += len(Household[1][0]) + len(Household[1][1])
 			MasterTable = PDFToolHandle.TableizeFamily(Household)
@@ -258,7 +262,7 @@ class PDFPrint:
 		message = "The following " + str(len(PDFToolHandle.GetMissingPictures())) + " people are missing pictures\n\n"
 		for Name in PDFToolHandle.GetMissingPictures():
 			message += Name + '\n'
-		print message
+		#print message
 		if SEND_EMAILS:
 			for ToAddy in MISSING_PEOPLE_EMAILS:
 				mail(SMTP_SERVER, 'David@Ernstrom.net', ToAddy, 'Missing Picture', message)
@@ -266,3 +270,15 @@ class PDFPrint:
 		Handle.write(message)
 		Handle.close()
 		os.system('\"' + filename + '\"')
+		self.MissingList()
+
+	def GetMembershipList(self):
+		MembershipHandle = CSVMembershipParser.CSVMembershipParser(self.CSV_LOCATION + "Greenfield Ward member directory.csv")
+		for Household in MembershipHandle.next():
+			self.MembershipList.append(Household)
+
+	def MissingList(self):
+		MissingImages = []
+		for Family in self.MembershipList:
+			print Family[3]
+		return MissingImages
