@@ -3,6 +3,8 @@ import CSVMembershipParser
 from Email import mail
 import os
 
+__version__ = $Rev$
+
 class Application:
 	def __init__(self,
 				 parent,
