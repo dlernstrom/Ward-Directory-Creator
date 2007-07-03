@@ -33,7 +33,7 @@ class ConfigPanel(ColoredPanel):
 		sizer.Add(self.ImagesFolder)
 
 		self.SetSizerAndFit(sizer)
-		parent.SetClientSize(self.GetSize())
+		#parent.SetClientSize(self.GetSize())
 
 		self.Title = "Configuration"
 

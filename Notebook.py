@@ -3,7 +3,7 @@ from Panels import *
 
 class Notebook(wx.Notebook):
 	def __init__(self, parent, id, AppHandle):
-		wx.Notebook.__init__(self, parent, id, size=(50,50),
+		wx.Notebook.__init__(self, parent, id, size=wx.DefaultSize
 							 #style=
 							 #wx.NB_TOP # | wx.NB_MULTILINE
 							 #wx.NB_BOTTOM
@@ -29,6 +29,8 @@ class Notebook(wx.Notebook):
 
 		self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
 		self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGING, self.OnPageChanging)
+		#self.Fit()
+		self.SetPageSize(self.myMainPanel.GetSize())
 
 
 	def OnPageChanged(self, event):

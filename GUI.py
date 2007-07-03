@@ -46,9 +46,16 @@ class MyFrame(wx.Frame):
 								DEBUG
 								)
 		self.AppVersion = self.AppHandle.GetVersion()
-		self.myNotebook = Notebook.Notebook(self, -1, self.AppHandle)
 		self.StatusBar = wx.StatusBar(self, -1)
 		self.StatusBar.SetStatusText("Version " + self.AppVersion)
+		self.myNotebook = Notebook.Notebook(self, -1, self.AppHandle)
+		#print "Furrow NotebookA:",self.myNotebook.GetSize()
+		#print "Furrow NotebookB:",self.myNotebook.GetSize()
+		#print "Furrow Notebook:",self.myNotebook.GetSize()
+		#print "Frame Client:",self.GetClientSize()
+		#print "Frame:", self.GetSize()
+		self.Fit()
+		#print "Frame post fit:",self.GetClientSize()
 
 	def OnCloseWindow(self, event):
 		self.Destroy()
@@ -59,7 +66,8 @@ class MyFrame(wx.Frame):
 class MyApp(wx.App):
 	def OnInit(self):
 		win = MyFrame(None, -1, "Ward Directory Creator", size=wx.DefaultSize,
-				style = wx.DEFAULT_FRAME_STYLE)
+				style = wx.MINIMIZE_BOX | wx.MAXIMIZE_BOX
+					  | wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
 		win.Show(True)
 		return True
 
