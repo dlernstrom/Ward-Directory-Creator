@@ -47,6 +47,8 @@ class MyFrame(wx.Frame):
 								)
 		self.AppVersion = self.AppHandle.GetVersion()
 		self.myNotebook = Notebook.Notebook(self, -1, self.AppHandle)
+		self.StatusBar = wx.StatusBar(self, -1)
+		self.StatusBar.SetStatusText("Version " + self.AppVersion)
 
 	def OnCloseWindow(self, event):
 		self.Destroy()
