@@ -1,6 +1,7 @@
 import wx
 import time
 import Application
+import Notebook
 
 SEND_EMAILS = 0
 SMTP_SERVER = 'smtp.forward.email.dupont.com'
@@ -31,31 +32,6 @@ class MyFrame(wx.Frame):
 			size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE
 			):
 		wx.Frame.__init__(self, parent, ID, title, pos, size, style)
-
-		panel = wx.Panel(self, -1, style = wx.TAB_TRAVERSAL
-						 | wx.CLIP_CHILDREN
-						 | wx.FULL_REPAINT_ON_RESIZE
-						 )
-
-		gbs = self.gbs = wx.GridBagSizer(15, 6)
-
-		Title = wx.StaticText(panel, -1, "Ward Photo Directory Printing Tool")
-		Title.SetFont(wx.Font(18, wx.SWISS, wx.NORMAL, wx.BOLD))
-		gbs.Add( Title, (0,0), (1,6), wx.ALIGN_CENTER, wx.ALL, 5)
-
-		PrintButton = wx.Button(panel, -1, "Print")
-		gbs.Add(PrintButton, (5, 5))
-
-		gbs.AddGrowableRow(14)
-		gbs.AddGrowableCol(0)
-		gbs.AddGrowableCol(5)
-
-		panel.SetSizerAndFit(gbs)
-		self.SetClientSize(panel.GetSize())
-
-		self.Bind(wx.EVT_BUTTON, self.OnDoPrint, PrintButton)
-		self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
-
 		self.AppHandle = Application.Application(self,
 								'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf',
 								'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf',
@@ -70,6 +46,7 @@ class MyFrame(wx.Frame):
 								DEBUG
 								)
 		self.AppVersion = self.AppHandle.GetVersion()
+		self.myNotebook = Notebook.Notebook(self, -1, self.AppHandle)
 
 	def OnCloseWindow(self, event):
 		self.Destroy()
