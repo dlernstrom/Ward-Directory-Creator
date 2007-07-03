@@ -3,7 +3,9 @@ import CSVMembershipParser
 from Email import mail
 import os
 
-__version__ = $Rev$
+__version__ = "$Rev$".split()[1]
+VersionString = '1.0'
+State = 'dev'
 
 class Application:
 	def __init__(self,
@@ -19,20 +21,27 @@ class Application:
 				 SMTP_SERVER = None,
 				 MISSING_PEOPLE_EMAILS = ['david.ernstrom@usa.dupont.com'],
 				 DEBUG = 0):
+		self.filename = filename
+		self.front = front
+		self.back = back
+		self.APPDATAFOLDER = APPDATAFOLDER
 		self.DIRECTORY_IMAGES = DIRECTORY_IMAGES
 		self.MOVED_OUT = MOVED_OUT
 		self.CSV_LOCATION = CSV_LOCATION
 		self.SEND_EMAILS = SEND_EMAILS
 		self.SMTP_SERVER = SMTP_SERVER
 		self.MISSING_PEOPLE_EMAILS = MISSING_PEOPLE_EMAILS
+		self.DEBUG = DEBUG
+
 		self.MembershipList = []
 
-		PDFToolHandle = PDFTools.PDFTools(DEBUG,
-										  DIRECTORY_IMAGES,
-										  APPDATAFOLDER,
-										  filename,
-										  front,
-										  back
+	def InitiatePDF(self):
+		PDFToolHandle = PDFTools.PDFTools(self.DEBUG,
+										  self.DIRECTORY_IMAGES,
+										  self.APPDATAFOLDER,
+										  self.filename,
+										  self.front,
+										  self.back
 										  )
 
 		#Here I start adding flowables
@@ -50,6 +59,9 @@ class Application:
 		PDFToolHandle.AddDirectoryWrapperImages()
 		PDFToolHandle.GenerateWardPagination()
 		PDFToolHandle.GeneratePDFDocs()
+
+	def GetVersion(self):
+		return VersionString + State + __version__
 
 	def GetMembershipList(self):
 		self.MembershipList = []

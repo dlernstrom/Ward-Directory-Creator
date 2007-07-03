@@ -56,11 +56,7 @@ class MyFrame(wx.Frame):
 		self.Bind(wx.EVT_BUTTON, self.OnDoPrint, PrintButton)
 		self.Bind(wx.EVT_CLOSE, self.OnCloseWindow)
 
-	def OnCloseWindow(self, event):
-		self.Destroy()
-
-	def OnDoPrint(self, event):
-		Application.Application(self,
+		self.AppHandle = Application.Application(self,
 								'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf',
 								'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf',
 								'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf',
@@ -73,6 +69,13 @@ class MyFrame(wx.Frame):
 								MISSING_PEOPLE_EMAILS,
 								DEBUG
 								)
+		print self.AppHandle.GetVersion()
+
+	def OnCloseWindow(self, event):
+		self.Destroy()
+
+	def OnDoPrint(self, event):
+		self.AppHandle.InitiatePDF()
 
 class MyApp(wx.App):
 	def OnInit(self):
