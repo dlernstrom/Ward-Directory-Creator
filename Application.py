@@ -60,8 +60,11 @@ class Application:
 		PDFToolHandle.GenerateWardPagination()
 		PDFToolHandle.GeneratePDFDocs()
 
-	def GetVersion(self):
+	def GetFullVersion(self):
 		return VersionString + State + __version__
+
+	def GetMajorVersion(self):
+		return VersionString
 
 	def GetMembershipList(self):
 		self.MembershipList = []

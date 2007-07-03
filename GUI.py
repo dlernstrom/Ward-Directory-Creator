@@ -45,9 +45,11 @@ class MyFrame(wx.Frame):
 								MISSING_PEOPLE_EMAILS,
 								DEBUG
 								)
-		self.AppVersion = self.AppHandle.GetVersion()
+		self.FullAppVersion = self.AppHandle.GetFullVersion()
+		self.MajorAppVersion = self.AppHandle.GetMajorVersion()
+		self.SetTitle("Ward Directory Creator " + self.MajorAppVersion)
 		self.StatusBar = wx.StatusBar(self, -1)
-		self.StatusBar.SetStatusText("Version " + self.AppVersion)
+		self.StatusBar.SetStatusText("Version " + self.FullAppVersion)
 		self.myNotebook = Notebook.Notebook(self, -1, self.AppHandle)
 
 		self.Fit()
