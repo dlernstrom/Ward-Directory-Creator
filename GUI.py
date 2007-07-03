@@ -69,7 +69,7 @@ class MyFrame(wx.Frame):
 								MISSING_PEOPLE_EMAILS,
 								DEBUG
 								)
-		print self.AppHandle.GetVersion()
+		self.AppVersion = self.AppHandle.GetVersion()
 
 	def OnCloseWindow(self, event):
 		self.Destroy()
@@ -79,7 +79,7 @@ class MyFrame(wx.Frame):
 
 class MyApp(wx.App):
 	def OnInit(self):
-		win = MyFrame(None, -1, "Ward Photo Directory Printing/Configuration Utility", size=wx.DefaultSize,
+		win = MyFrame(None, -1, "Ward Directory Creator", size=wx.DefaultSize,
 				style = wx.DEFAULT_FRAME_STYLE)
 		win.Show(True)
 		return True
