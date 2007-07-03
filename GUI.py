@@ -49,13 +49,8 @@ class MyFrame(wx.Frame):
 		self.StatusBar = wx.StatusBar(self, -1)
 		self.StatusBar.SetStatusText("Version " + self.AppVersion)
 		self.myNotebook = Notebook.Notebook(self, -1, self.AppHandle)
-		#print "Furrow NotebookA:",self.myNotebook.GetSize()
-		#print "Furrow NotebookB:",self.myNotebook.GetSize()
-		#print "Furrow Notebook:",self.myNotebook.GetSize()
-		#print "Frame Client:",self.GetClientSize()
-		#print "Frame:", self.GetSize()
+
 		self.Fit()
-		#print "Frame post fit:",self.GetClientSize()
 
 	def OnCloseWindow(self, event):
 		self.Destroy()

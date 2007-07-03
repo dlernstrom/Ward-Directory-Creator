@@ -74,6 +74,7 @@ class Application:
 		return map(lambda Member: Member[3], self.MembershipList)
 
 	def GetMissingList(self):
+		self.GetMembershipList()
 		MissingImages = []
 		for Family in self.MembershipList:
 			if not os.path.exists(self.DIRECTORY_IMAGES + Family[3]):
@@ -86,6 +87,21 @@ class Application:
 			message += Name + '\n'
 		#print message
 		return message
+
+	def GetMemberEmails(self):
+		self.GetMembershipList()
+		EmailList = []
+		for Family in self.MembershipList:
+			# Family[1] is the name/email list
+			# Family[0] is the surname
+			#print Family[0]
+			for MemberType in Family[1]:
+				#print MemberType
+				for Name in MemberType:
+					if not Name.find('<') == -1:
+						Result = Name[:Name.find('<')] + Family[0] + Name[Name.find('<') - 1:]
+						EmailList.append(Result)
+		return EmailList
 
 	def SendEmails(self):
 		if self.SEND_EMAILS:
