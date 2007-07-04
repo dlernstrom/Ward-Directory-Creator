@@ -64,10 +64,10 @@ class MainPanel(ColoredPanel):
 		gbs.Add(StaticInspQuote,
 				pos = (7,0), span = (1,2), flag = wx.ALIGN_LEFT)
 
-		#TXT_Quote = wx.TextCtrl(self, -1, size = (350, 100))
-		#TXT_Quote.SetFont(StandardFont)
-		#gbs.Add(TXT_Quote,
-		#		pos = (8,1), span = (1,3), flag = wx.ALIGN_LEFT)
+		TXT_Quote = wx.TextCtrl(self, -1, size = (350, 105))
+		TXT_Quote.SetFont(StandardFont)
+		gbs.Add(TXT_Quote,
+				pos = (8,0), span = (1,4), flag = wx.ALIGN_LEFT)
 
 		StaticAuthor = wx.StaticText(self, -1, "Author:")
 		StaticAuthor.SetFont(StandardFont)
@@ -113,7 +113,7 @@ class MainPanel(ColoredPanel):
 		StaticBoxSizer.Add(BTN_Go, 0, wx.TOP | wx.ALIGN_CENTER_HORIZONTAL, 10)
 
 		gbs.Add(StaticBoxSizer,
-				pos = (2,3), span = (5,1), flag = wx.ALIGN_CENTER_HORIZONTAL)
+				pos = (2,4), span = (5,1), flag = wx.ALIGN_CENTER_HORIZONTAL)
 		#gbs.Add((10,0), (14,7))
 		#self.gbs.AddGrowableRow(100)
 		border = wx.BoxSizer()
