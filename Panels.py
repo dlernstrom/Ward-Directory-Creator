@@ -12,7 +12,7 @@ class MainPanel(ColoredPanel):
 		#st.SetForegroundColour(wx.WHITE)
 		#st.SetBackgroundColour(wx.GREEN)
 
-		self.gbs = gbs = wx.GridBagSizer(vgap = 10, hgap = 10)
+		self.gbs = gbs = wx.GridBagSizer(vgap = 5, hgap = 10)
 
 		TitleFont = wx.Font(22, wx.DEFAULT, wx.NORMAL, wx.FONTWEIGHT_BOLD, False, "Georgia")
 		StandardFont = wx.Font(14, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "Georgia")
@@ -21,17 +21,17 @@ class MainPanel(ColoredPanel):
 		StaticHeading = wx.StaticText(self, -1,"Ward Directory Creator " + parent.parent.MajorAppVersion)
 		StaticHeading.SetFont(TitleFont)
 		gbs.Add(StaticHeading,
-				pos = (0,0), span = (1,5), flag = wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_TOP)
+				pos = (0,0), span = (1,4), flag = wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_TOP)
 
 		StaticWardName = wx.StaticText(self, -1, "Ward Name:")
 		StaticWardName.SetFont(StandardFont)
 		gbs.Add(StaticWardName,
 				pos = (2,0), span = (1,1), flag = wx.ALIGN_LEFT)
 
-		TXT_WardName = wx.TextCtrl(self, -1)
+		TXT_WardName = wx.TextCtrl(self, -1, size=(250,35))
 		TXT_WardName.SetFont(StandardFont)
 		gbs.Add(TXT_WardName,
-				pos = (2,1), span = wx.DefaultSpan, flag = wx.ALIGN_LEFT)
+				pos = (2,1), span = (1,2), flag = wx.ALIGN_LEFT)
 
 		RB_Ward = wx.RadioButton(self, -1, "Ward", style = wx.RB_GROUP)
 		RB_Ward.SetFont(StandardFont)
@@ -48,17 +48,17 @@ class MainPanel(ColoredPanel):
 		gbs.Add(StaticStakeName,
 				pos = (4,0), span = (1,1), flag = wx.ALIGN_LEFT)
 
-		TXT_StakeName = wx.TextCtrl(self, -1)
+		TXT_StakeName = wx.TextCtrl(self, -1, size=(250,35))
 		TXT_StakeName.SetFont(StandardFont)
 		gbs.Add(TXT_StakeName,
-				pos = (4,1), span = wx.DefaultSpan, flag = wx.ALIGN_LEFT)
+				pos = (4,1), span = (1,2), flag = wx.ALIGN_LEFT)
 
 		CB_UseQuote = wx.CheckBox(self, -1, "Use Quote")
 		CB_UseQuote.SetFont(StandardFont)
 		gbs.Add(CB_UseQuote,
 				pos = (6,0), span = (1,2), flag = wx.ALIGN_LEFT)
 
-		StaticInspQuote = wx.StaticText(self, -1, "Inspirational Quote:", style=wx.TRANSPARENT_WINDOW)
+		StaticInspQuote = wx.StaticText(self, -1, "Inspirational Quote:")
 		StaticInspQuote.SetFont(StandardFont)
 		StaticInspQuote.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 		gbs.Add(StaticInspQuote,
@@ -74,15 +74,15 @@ class MainPanel(ColoredPanel):
 		gbs.Add(StaticAuthor,
 				pos = (9,0), span = (1,1), flag = wx.ALIGN_LEFT)
 
-		TXT_Author = wx.TextCtrl(self, -1)
+		TXT_Author = wx.TextCtrl(self, -1, size=(250,35))
 		TXT_Author.SetFont(StandardFont)
 		gbs.Add(TXT_Author,
-				pos = (9,1), span = wx.DefaultSpan, flag = wx.ALIGN_LEFT)
+				pos = (9,1), span = (1,2), flag = wx.ALIGN_LEFT)
 
 		BTN_RestoreQuote = wx.Button(self, -1, "Restore Default")
 		BTN_RestoreQuote.SetFont(StandardFont)
 		gbs.Add(BTN_RestoreQuote,
-				pos = (9,2), span = wx.DefaultSpan, flag = wx.ALIGN_LEFT)
+				pos = (10,0), span = (1,2), flag = wx.ALIGN_LEFT)
 
 		StaticBox = wx.StaticBox(self, -1, "Generate Directory")
 		StaticBox.SetFont(StandardFont)
@@ -113,7 +113,7 @@ class MainPanel(ColoredPanel):
 		StaticBoxSizer.Add(BTN_Go, 0, wx.TOP | wx.ALIGN_CENTER_HORIZONTAL, 10)
 
 		gbs.Add(StaticBoxSizer,
-				pos = (2,4), span = (5,1), flag = wx.ALIGN_CENTER_HORIZONTAL)
+				pos = (2,3), span = (5,1), flag = wx.ALIGN_CENTER_HORIZONTAL)
 		#gbs.Add((10,0), (14,7))
 		#self.gbs.AddGrowableRow(100)
 		border = wx.BoxSizer()
