@@ -49,22 +49,22 @@ class MainPanel(ColoredPanel):
 		logo = wx.StaticBitmap(self, -1, self.logo_bmp, (self.logo_bmp.GetWidth(), self.logo_bmp.GetHeight()))
 
 		left_level3 = wx.BoxSizer(wx.VERTICAL)
-		left_level3.Add(self.WardBoxSizer, 5, wx.EXPAND | wx.ALL, 25)
-		left_level3.Add(logo, 5, wx.EXPAND | wx.ALL, 25)
+		left_level3.Add(self.WardBoxSizer, 6, wx.EXPAND | wx.TOP | wx.BOTTOM | wx.LEFT, 25)
+		left_level3.Add(logo, 3, wx.EXPAND | wx.TOP | wx.BOTTOM | wx.LEFT, 25)
 
 		right_level3 = wx.BoxSizer()
 		right_level3.Add(self.QuoteBoxSizer, 5, wx.EXPAND | wx.ALL, 25)
 
 		top_level2 = wx.BoxSizer(wx.HORIZONTAL)
-		top_level2.Add(StaticHeading, 1, wx.EXPAND | wx.ALL | wx.ALIGN_CENTER_HORIZONTAL, 25)
+		top_level2.Add(StaticHeading, 1, wx.EXPAND | wx.ALIGN_CENTER_HORIZONTAL)
 
 		bottom_level2 = wx.BoxSizer(wx.HORIZONTAL)
-		bottom_level2.Add(left_level3, 5, wx.EXPAND | wx.ALL, 25)
-		bottom_level2.Add(right_level3, 5, wx.EXPAND | wx.ALL, 25)
+		bottom_level2.Add(left_level3, 2, wx.EXPAND)
+		bottom_level2.Add(right_level3, 3, wx.EXPAND)
 
 		inside_border_level1 = wx.BoxSizer(wx.VERTICAL)
-		inside_border_level1.Add(top_level2, 0, wx.EXPAND | wx.ALL | wx.ALIGN_CENTER_HORIZONTAL, 25)
-		inside_border_level1.Add(bottom_level2, 1, wx.EXPAND | wx.ALL, 25)
+		inside_border_level1.Add(top_level2, 0, wx.EXPAND | wx.ALL, 25)
+		inside_border_level1.Add(bottom_level2, 1, wx.EXPAND)
 
 		border_level0 = wx.BoxSizer()
 		border_level0.Add(inside_border_level1, 1, wx.EXPAND | wx.ALL, 25)
