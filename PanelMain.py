@@ -13,38 +13,26 @@ class MainPanel(ColoredPanel):
 
 		StaticWardName = wx.StaticText(self, -1, "Ward Name:")
 		StaticWardName.SetFont(self.StandardFont)
-		#gbs.Add(StaticWardName,
-		#		pos = (2,0), span = (1,1), flag = wx.ALIGN_LEFT)
 		WardBoxSizer.Add(StaticWardName, 0, wx.TOP | wx.LEFT, 10)
 
 		TXT_WardName = wx.TextCtrl(self, -1, size=(250,25))
 		TXT_WardName.SetFont(self.TextBoxFont)
-		#gbs.Add(TXT_WardName,
-		#		pos = (2,1), span = (1,2), flag = wx.ALIGN_LEFT)
 		WardBoxSizer.Add(TXT_WardName, 0, wx.TOP | wx.LEFT, 10)
 
 		RB_Ward = wx.RadioButton(self, -1, "Ward", style = wx.RB_GROUP)
 		RB_Ward.SetFont(self.StandardFont)
-		#gbs.Add(RB_Ward,
-		#		pos = (3,0), span = wx.DefaultSpan, flag = wx.ALIGN_CENTER_HORIZONTAL)
 		WardBoxSizer.Add(RB_Ward, 0, wx.TOP | wx.LEFT, 10)
 
 		RB_Branch = wx.RadioButton(self, -1, "Branch")
 		RB_Branch.SetFont(self.StandardFont)
-		#gbs.Add(RB_Branch,
-		#		pos = (3,1), span = wx.DefaultSpan, flag = wx.ALIGN_LEFT)
 		WardBoxSizer.Add(RB_Branch, 0, wx.TOP | wx.LEFT, 10)
 
 		StaticStakeName = wx.StaticText(self, -1, "Stake Name:")
 		StaticStakeName.SetFont(self.StandardFont)
-		#gbs.Add(StaticStakeName,
-		#		pos = (4,0), span = (1,1), flag = wx.ALIGN_LEFT)
 		WardBoxSizer.Add(StaticStakeName, 0, wx.TOP | wx.LEFT, 10)
 
 		TXT_StakeName = wx.TextCtrl(self, -1, size=(250,25))
 		TXT_StakeName.SetFont(self.TextBoxFont)
-		#gbs.Add(TXT_StakeName,
-		#		pos = (4,1), span = (1,2), flag = wx.ALIGN_LEFT)
 		WardBoxSizer.Add(TXT_StakeName, 0, wx.TOP | wx.LEFT, 10)
 
 		QuoteBox = wx.StaticBox(self, -1, "Quote Configuration")
@@ -53,39 +41,27 @@ class MainPanel(ColoredPanel):
 
 		CB_UseQuote = wx.CheckBox(self, -1, "Use Quote")
 		CB_UseQuote.SetFont(self.StandardFont)
-		#gbs.Add(CB_UseQuote,
-		#		pos = (6,0), span = (1,2), flag = wx.ALIGN_LEFT)
 		QuoteBoxSizer.Add(CB_UseQuote, 0, wx.TOP | wx.LEFT, 10)
 
 		StaticInspQuote = wx.StaticText(self, -1, "Inspirational Quote:")
 		StaticInspQuote.SetFont(self.StandardFont)
 		StaticInspQuote.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
-		#gbs.Add(StaticInspQuote,
-		#		pos = (7,0), span = (1,2), flag = wx.ALIGN_LEFT)
 		QuoteBoxSizer.Add(StaticInspQuote, 0, wx.TOP | wx.LEFT, 10)
 
 		TXT_Quote = wx.TextCtrl(self, -1, size = (350, 100))
 		TXT_Quote.SetFont(self.TextBoxFont)
-		#gbs.Add(TXT_Quote,
-		#		pos = (8,0), span = (1,4), flag = wx.ALIGN_LEFT)
 		QuoteBoxSizer.Add(TXT_Quote, 0, wx.TOP | wx.LEFT, 10)
 
 		StaticAuthor = wx.StaticText(self, -1, "Author:")
 		StaticAuthor.SetFont(self.StandardFont)
-		#gbs.Add(StaticAuthor,
-		#		pos = (9,0), span = (1,1), flag = wx.ALIGN_LEFT)
 		QuoteBoxSizer.Add(StaticAuthor, 0, wx.TOP | wx.LEFT, 10)
 
 		TXT_Author = wx.TextCtrl(self, -1, size=(250,25))
 		TXT_Author.SetFont(self.TextBoxFont)
-		#gbs.Add(TXT_Author,
-		#		pos = (9,1), span = (1,2), flag = wx.ALIGN_LEFT)
 		QuoteBoxSizer.Add(TXT_Author, 0, wx.TOP | wx.LEFT, 10)
 
 		BTN_RestoreQuote = wx.Button(self, -1, "Restore Default")
 		BTN_RestoreQuote.SetFont(self.StandardFont)
-		#gbs.Add(BTN_RestoreQuote,
-		#		pos = (10,0), span = (1,2), flag = wx.ALIGN_LEFT)
 		QuoteBoxSizer.Add(BTN_RestoreQuote, 0, wx.TOP | wx.LEFT, 10)
 
 
