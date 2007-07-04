@@ -40,35 +40,66 @@ class MainPanel(ColoredPanel):
 		#st.SetForegroundColour(wx.WHITE)
 		#st.SetBackgroundColour(wx.GREEN)
 
-		self.gbs = gbs = wx.GridBagSizer(vgap = 5, hgap = 40)
-
-
-		StaticHeading = wx.StaticText(self, -1,"Ward Directory Creator " + parent.parent.MajorAppVersion)
+		StaticHeading = wx.StaticText(self,
+									  -1,
+									  "Ward Directory Creator " + parent.parent.MajorAppVersion,
+									  style = wx.ALIGN_CENTRE)
 		StaticHeading.SetFont(self.TitleFont)
-		gbs.Add(StaticHeading,
-				pos = (0,0), span = (1,3), flag = wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_TOP)
 
+		logo = wx.StaticBitmap(self, -1, self.logo_bmp, (self.logo_bmp.GetWidth(), self.logo_bmp.GetHeight()))
 
-		gbs.Add(self.WardBoxSizer,
-				pos = (1,0), span = (6,1), flag = wx.ALIGN_LEFT)
+		left_level3 = wx.BoxSizer(wx.VERTICAL)
+		left_level3.Add(self.WardBoxSizer, 5, wx.EXPAND | wx.ALL, 25)
+		left_level3.Add(logo, 5, wx.EXPAND | wx.ALL, 25)
 
-		gbs.Add(self.QuoteBoxSizer,
-				pos = (1,1), span = (8,2), flag = wx.ALIGN_CENTER_HORIZONTAL)
+		right_level3 = wx.BoxSizer()
+		right_level3.Add(self.QuoteBoxSizer, 5, wx.EXPAND | wx.ALL, 25)
 
-		
-		gbs.Add(wx.StaticBitmap(self, -1, self.logo_bmp, (self.logo_bmp.GetWidth(), self.logo_bmp.GetHeight())),
-				pos = (7,0), span = (2,1), flag = wx.ALIGN_CENTER)
+		top_level2 = wx.BoxSizer(wx.HORIZONTAL)
+		top_level2.Add(StaticHeading, 1, wx.EXPAND | wx.ALL | wx.ALIGN_CENTER_HORIZONTAL, 25)
 
+		bottom_level2 = wx.BoxSizer(wx.HORIZONTAL)
+		bottom_level2.Add(left_level3, 5, wx.EXPAND | wx.ALL, 25)
+		bottom_level2.Add(right_level3, 5, wx.EXPAND | wx.ALL, 25)
 
-		self.gbs.AddGrowableCol(1)
-
+		inside_border_level1 = wx.BoxSizer(wx.VERTICAL)
+		inside_border_level1.Add(top_level2, 0, wx.EXPAND | wx.ALL | wx.ALIGN_CENTER_HORIZONTAL, 25)
+		inside_border_level1.Add(bottom_level2, 1, wx.EXPAND | wx.ALL, 25)
 
 		border_level0 = wx.BoxSizer()
-		border_level0.Add(gbs, 1, wx.EXPAND | wx.ALL, 25)
+		border_level0.Add(inside_border_level1, 1, wx.EXPAND | wx.ALL, 25)
 		self.SetSizer(border_level0)
-		border_level0.SetDimension(0,0,self.GetSize()[0], self.GetSize()[1])
-		print border_level0.GetSize()
-		print self.gbs.GetSize()
+		border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])
+		print "Level 0 - position:",border_level0.GetPosition()
+		print "Level 0 - size:",border_level0.GetSize()
+
+		print "Level 1 - Inner Border position:", inside_border_level1.GetPosition()
+		print "Level 1 - Inner Border size:", inside_border_level1.GetSize()
+
+		print "Level 2 - Top Title position:", top_level2.GetPosition()
+		print "Level 2 - Top Title size:", top_level2.GetSize()
+
+		print "Level 2 - Bottom Content position:", bottom_level2.GetPosition()
+		print "Level 2 - Bottom Content size:", bottom_level2.GetSize()
+
+		print "Level 3 - Static Title position:", StaticHeading.GetPosition()
+		print "Level 3 - Static Title size:", StaticHeading.GetSize()
+
+		print "Level 3 - Left Content position:", left_level3.GetPosition()
+		print "Level 3 - Left Content size:", left_level3.GetSize()
+
+		print "Level 3 - Right Content position:", right_level3.GetPosition()
+		print "Level 3 - Right Content size:", right_level3.GetSize()
+
+		print "Level 4 - Ward/Branch position:", self.WardBoxSizer.GetPosition()
+		print "Level 4 - Ward/Branch size:", self.WardBoxSizer.GetSize()
+
+		print "Level 4 - LOGO position:", logo.GetPosition()
+		print "Level 4 - LOGO size:", logo.GetSize()
+
+		print "Level 4 - Quote position:", self.QuoteBoxSizer.GetPosition()
+		print "Level 4 - Quote size:", self.QuoteBoxSizer.GetSize()
+
 		self.Title = "Main"
 
 
