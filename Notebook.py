@@ -25,6 +25,9 @@ class Notebook(wx.Notebook):
 		self.myLeadershipPanel = LeadershipPanel(self)
 		self.AddPage(self.myLeadershipPanel, self.myLeadershipPanel.Title)
 
+		self.myGeneratePanel = GeneratePanel(self)
+		self.AddPage(self.myGeneratePanel, self.myGeneratePanel.Title)
+
 		self.myHelpPanel = HelpPanel(self)
 		self.AddPage(self.myHelpPanel, self.myHelpPanel.Title)
 
