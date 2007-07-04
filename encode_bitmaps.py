@@ -7,7 +7,8 @@ from wx.tools import img2py
 
 command_lines = [
 	"-a -u -n NotebookBKGD bmp_source/BG_image.png images.py",
-	"-a -u -n Splash bmp_source/splash.png images.py"
+	"-a -u -n Splash bmp_source/splash.png images.py",
+	"-a -u -n WDC bmp_source/wdc.png images.py"
 	]
 
 if __name__ == "__main__":
