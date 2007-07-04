@@ -55,13 +55,19 @@ class MainPanel(ColoredPanel):
 		gbs.Add(self.QuoteBoxSizer,
 				pos = (1,1), span = (8,2), flag = wx.ALIGN_CENTER_HORIZONTAL)
 
+		
+		gbs.Add(wx.StaticBitmap(self, -1, self.logo_bmp, (self.logo_bmp.GetWidth(), self.logo_bmp.GetHeight())),
+				pos = (7,0), span = (2,1), flag = wx.ALIGN_CENTER)
+
 
 		self.gbs.AddGrowableCol(1)
-		border = wx.BoxSizer()
-		border.Add(gbs, 1, wx.EXPAND | wx.ALL, 25)
-		self.SetSizer(border)
-		border.SetDimension(0,0,self.GetSize()[0], self.GetSize()[1])
-		print border.GetSize()
+
+
+		border_level0 = wx.BoxSizer()
+		border_level0.Add(gbs, 1, wx.EXPAND | wx.ALL, 25)
+		self.SetSizer(border_level0)
+		border_level0.SetDimension(0,0,self.GetSize()[0], self.GetSize()[1])
+		print border_level0.GetSize()
 		print self.gbs.GetSize()
 		self.Title = "Main"
 

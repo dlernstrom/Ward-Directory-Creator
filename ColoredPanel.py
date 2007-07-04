@@ -10,6 +10,7 @@ class ColoredPanel(wx.Window):
 
 		# Just for style points, we'll use this as a background image.
 		self.bg_bmp = images.getNotebookBKGDBitmap()
+		self.logo_bmp = images.getWDCBitmap()
 		self.SetSize((self.bg_bmp.GetWidth(), self.bg_bmp.GetHeight()))
 
 		# This could also be done by getting the window's default font;
