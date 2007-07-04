@@ -17,6 +17,8 @@ class Notebook(wx.Notebook):
 							 )
 		self.parent = parent
 		self.AppHandle = AppHandle
+		self.TextBoxFont = wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "Georgia")
+		self.SetFont(self.TextBoxFont)
 
 		self.myMainPanel = MainPanel(self)
 		self.AddPage(self.myMainPanel, self.myMainPanel.Title)
