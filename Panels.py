@@ -61,6 +61,7 @@ class MainPanel(ColoredPanel):
 		bottom_level2 = wx.BoxSizer(wx.HORIZONTAL)
 		bottom_level2.Add(left_level3, 2, wx.EXPAND)
 		bottom_level2.Add(right_level3, 3, wx.EXPAND)
+		#bottom_level2.Hide(left_level3)
 
 		inside_border_level1 = wx.BoxSizer(wx.VERTICAL)
 		inside_border_level1.Add(top_level2, 0, wx.EXPAND | wx.ALL, 25)

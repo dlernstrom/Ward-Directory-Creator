@@ -1,5 +1,10 @@
 import wx
-from Panels import *
+from PanelMain import *
+from PanelConfig import *
+from PanelBuilding import *
+from PanelLeadership import *
+from PanelGenerate import *
+from PanelHelp import *
 
 class Notebook(wx.Notebook):
 	def __init__(self, parent, id, AppHandle):
