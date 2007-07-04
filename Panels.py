@@ -51,7 +51,7 @@ class MainPanel(ColoredPanel):
 		gbs.Add(StaticHeading,
 				pos = (0,0), span = (1,3), flag = wx.ALIGN_CENTER_HORIZONTAL | wx.ALIGN_TOP)
 
-		WardBox = DaveStaticBox(self, -1, "Ward/Branch Configuration")
+		WardBox = wx.StaticBox(self, -1, "Ward/Branch Configuration")
 		WardBox.SetFont(StandardFont)
 		WardBoxSizer = wx.StaticBoxSizer(WardBox, wx.VERTICAL)
 
