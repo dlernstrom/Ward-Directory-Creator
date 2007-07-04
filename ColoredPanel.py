@@ -15,14 +15,14 @@ class ColoredPanel(wx.Window):
 		# This could also be done by getting the window's default font;
 		# either way, we need to have a font loaded for later on.
 		#self.SetBackgroundColour("WHITE")
-		self.font = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL)
+		#self.font = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL)
 
 		# Create drawing area and set its font
-		dc = wx.ClientDC(self)
-		dc.SetFont(self.font)
+		#dc = wx.ClientDC(self)
+		#dc.SetFont(self.font)
 
 		self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
-		self.Bind(wx.EVT_PAINT, self.OnPaint)
+	#	self.Bind(wx.EVT_PAINT, self.OnPaint)
 		self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
 		#print "ColoredPanel:",self.GetSize()
 
@@ -39,9 +39,11 @@ class ColoredPanel(wx.Window):
 			dc = wx.ClientDC(self)
 			rect = self.GetUpdateRegion().GetBox()
 			dc.SetClippingRect(rect)
-
 		self.DrawBackground(dc)
 
-	def OnPaint(self, evt):
-		dc = wx.PaintDC(self)
-		self.PrepareDC(dc)
+	#def OnPaint(self, evt):
+	#	#dc = wx.PaintDC(self)
+	#	#self.PrepareDC(dc)
+	#	dc = wx.BufferedPaintDC(self, self.bg_bmp)
+	#	print dir(evt)
+	#	print "Paint"

@@ -10,6 +10,7 @@ class Notebook(wx.Notebook):
 							 #wx.NB_LEFT
 							 #wx.NB_RIGHT
 							 )
+		self.parent = parent
 		self.AppHandle = AppHandle
 
 		self.myMainPanel = MainPanel(self)
