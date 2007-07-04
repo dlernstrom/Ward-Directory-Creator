@@ -6,7 +6,9 @@ import  wx.lib.filebrowsebutton as filebrowse
 class MainPanel(ColoredPanel):
 	def __init__(self, parent):
 		ColoredPanel.__init__(self, parent, wx.BLUE)
-		
+
+		#########################################################################
+		## Ward/Branch Configuration Section
 		WardBox = wx.StaticBox(self, -1, "Ward/Branch Configuration")
 		WardBox.SetFont(self.StandardFont)
 		self.WardBoxSizer = WardBoxSizer = wx.StaticBoxSizer(WardBox, wx.VERTICAL)
@@ -35,6 +37,8 @@ class MainPanel(ColoredPanel):
 		TXT_StakeName.SetFont(self.TextBoxFont)
 		WardBoxSizer.Add(TXT_StakeName, 0, wx.TOP | wx.LEFT, 10)
 
+		############################################################################
+		## Quote Configuration Section
 		QuoteBox = wx.StaticBox(self, -1, "Quote Configuration")
 		QuoteBox.SetFont(self.StandardFont)
 		self.QuoteBoxSizer = QuoteBoxSizer = wx.StaticBoxSizer(QuoteBox, wx.VERTICAL)
@@ -64,7 +68,8 @@ class MainPanel(ColoredPanel):
 		BTN_RestoreQuote.SetFont(self.StandardFont)
 		QuoteBoxSizer.Add(BTN_RestoreQuote, 0, wx.TOP | wx.LEFT, 10)
 
-
+		#######################################################################
+		## Non wrapped items
 		StaticHeading = wx.StaticText(self,
 									  -1,
 									  "Ward Directory Creator " + parent.parent.MajorAppVersion,
@@ -73,6 +78,8 @@ class MainPanel(ColoredPanel):
 
 		logo = wx.StaticBitmap(self, -1, self.logo_bmp, (self.logo_bmp.GetWidth(), self.logo_bmp.GetHeight()))
 
+		#######################################################################
+		## Sizer encapsulation section
 		left_level3 = wx.BoxSizer(wx.VERTICAL)
 		left_level3.Add(self.WardBoxSizer, 6, wx.EXPAND | wx.TOP | wx.BOTTOM | wx.LEFT, 25)
 		left_level3.Add(logo, 3, wx.EXPAND | wx.TOP | wx.BOTTOM | wx.LEFT, 25)
