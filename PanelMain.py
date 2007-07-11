@@ -103,6 +103,7 @@ class MainPanel(ColoredPanel):
 		border_level0.Add(inside_border_level1, 1, wx.EXPAND | wx.ALL, 25)
 		self.SetSizer(border_level0)
 		border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])
+		'''
 		print "Level 0 - position:",border_level0.GetPosition()
 		print "Level 0 - size:",border_level0.GetSize()
 
@@ -132,5 +133,5 @@ class MainPanel(ColoredPanel):
 
 		print "Level 4 - Quote position:", self.QuoteBoxSizer.GetPosition()
 		print "Level 4 - Quote size:", self.QuoteBoxSizer.GetSize()
-
+		'''
 		self.Title = "Main"
