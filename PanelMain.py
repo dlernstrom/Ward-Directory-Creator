@@ -49,7 +49,6 @@ class MainPanel(ColoredPanel):
 
 		StaticInspQuote = wx.StaticText(self, -1, "Inspirational Quote:")
 		StaticInspQuote.SetFont(self.StandardFont)
-		StaticInspQuote.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 		QuoteBoxSizer.Add(StaticInspQuote, 0, wx.TOP | wx.LEFT, 10)
 
 		TXT_Quote = wx.TextCtrl(self, -1, size = (350, 100))
