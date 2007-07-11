@@ -112,7 +112,7 @@ class Application:
 		Name_Phone = []
 		for Family in self.MembershipList:
 			for Name in Family[1][0]:
-				Name_Phone.append([Family[0] + ', ' + Name, Name + Family[0], Family[2][1]])
+				Name_Phone.append([Family[0] + ', ' + Name.split('<')[0], Name.split('<')[0] + Family[0], Family[2][1]])
 		return Name_Phone
 
 	def SendEmails(self):
