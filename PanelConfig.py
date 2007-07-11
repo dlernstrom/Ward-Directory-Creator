@@ -6,24 +6,8 @@ import  wx.lib.filebrowsebutton as filebrowse
 class ConfigPanel(ColoredPanel):
 	def __init__(self, parent):
 		ColoredPanel.__init__(self, parent, None)
+		self.parent = parent
 
-		#sizer = wx.BoxSizer(wx.VERTICAL)
-
-		#self.csvFile = filebrowse.FileBrowseButton(
-		#	self, -1, size=(450, 30),
-		#	labelText = "Membership File",
-		#	fileMask = "*.csv"#, changeCallback = self.fbbCallback
-		#	)
-		#sizer.Add(self.csvFile)
-
-		#self.ImagesFolder = filebrowse.DirBrowseButton(
-		#	self, -1, size=(450, 100),
-		#	labelText = "Images Folder",
-		#	)
-		#sizer.Add(self.ImagesFolder)
-
-		#self.SetSizerAndFit(sizer)
-		#parent.SetClientSize(self.GetSize())
 		############################################################################
 		## File/Folder Configuration
 		FolderBox = wx.StaticBox(self, -1, "File/Folder Configuration")
@@ -61,18 +45,27 @@ class ConfigPanel(ColoredPanel):
 		MissingBox.SetFont(self.StandardFont)
 		self.MissingBoxSizer = MissingBoxSizer = wx.StaticBoxSizer(MissingBox, wx.VERTICAL)
 
-		StaticInspQuote = wx.StaticText(self, -1, "Inspirational Quote:")
-		StaticInspQuote.SetFont(self.StandardFont)
-		StaticInspQuote.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
-		MissingBoxSizer.Add(StaticInspQuote, 0, wx.TOP | wx.LEFT, 10)
+		StaticName = wx.StaticText(self, -1, "Contact Name:")
+		StaticName.SetFont(self.StandardFont)
+		MissingBoxSizer.Add(StaticName, 0, wx.TOP | wx.LEFT, 10)
 
-		StaticAuthor = wx.StaticText(self, -1, "Author:")
-		StaticAuthor.SetFont(self.StandardFont)
-		MissingBoxSizer.Add(StaticAuthor, 0, wx.TOP | wx.LEFT, 10)
+		self.NamePhoneList = self.parent.parent.AppHandle.GetNamePhoneList()
+		NameList = map(lambda x: x[0], self.NamePhoneList)
+		Contact_Dropdown = wx.ComboBox(self, -1, choices = NameList)
+		Contact_Dropdown.SetFont(self.TextBoxFont)
+		MissingBoxSizer.Add(Contact_Dropdown, 0, wx.TOP | wx.LEFT, 10)
+
+		StaticPhone = wx.StaticText(self, -1, "Contact Phone:")
+		StaticPhone.SetFont(self.StandardFont)
+		MissingBoxSizer.Add(StaticPhone, 0, wx.TOP | wx.LEFT, 10)
 
 		TXT_Author = wx.TextCtrl(self, -1, size=(250,25))
 		TXT_Author.SetFont(self.TextBoxFont)
 		MissingBoxSizer.Add(TXT_Author, 0, wx.TOP | wx.LEFT, 10)
+
+		CB_OverridePhone = wx.CheckBox(self, -1, "Override Phone")
+		CB_OverridePhone.SetFont(self.StandardFont)
+		MissingBoxSizer.Add(CB_OverridePhone, 0, wx.TOP | wx.LEFT, 10)
 
 		############################################################################
 		## Email Configuration Section
@@ -80,36 +73,34 @@ class ConfigPanel(ColoredPanel):
 		EmailBox.SetFont(self.StandardFont)
 		self.EmailBoxSizer = EmailBoxSizer = wx.StaticBoxSizer(EmailBox, wx.VERTICAL)
 
-		StaticInspQuote = wx.StaticText(self, -1, "Inspirational Quote:")
+		StaticInspQuote = wx.StaticText(self, -1, "Email Recipients")
 		StaticInspQuote.SetFont(self.StandardFont)
-		StaticInspQuote.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 		EmailBoxSizer.Add(StaticInspQuote, 0, wx.TOP | wx.LEFT, 10)
 
-		StaticAuthor = wx.StaticText(self, -1, "Author:")
-		StaticAuthor.SetFont(self.StandardFont)
-		EmailBoxSizer.Add(StaticAuthor, 0, wx.TOP | wx.LEFT, 10)
+		self.EmailList = self.parent.parent.AppHandle.GetMemberEmails()
+		Email_Dropdown = wx.ComboBox(self, -1, size = (390, 24),
+									 choices = self.EmailList, style = wx.CB_READONLY)
+		Email_Dropdown.SetFont(self.TextBoxFont)
+		EmailBoxSizer.Add(Email_Dropdown, 0, wx.TOP | wx.LEFT, 10)
 
-		#TXT_Author = wx.TextCtrl(self, -1, size=(250,25))
-		#TXT_Author.SetFont(self.TextBoxFont)
-		#EmailBoxSizer.Add(TXT_Author, 0, wx.TOP | wx.LEFT, 10)
+		self.BTN_AddEmail = wx.Button(self, wx.ID_ADD)
+		self.BTN_AddEmail.SetFont(self.TextBoxFont)
+		EmailBoxSizer.Add(self.BTN_AddEmail, 0, wx.TOP | wx.LEFT, 10)
+
+		self.EmailList = wx.ListBox(self, -1, size = (390, 151))
+		self.EmailList.SetFont(self.TextBoxFont)
+		EmailBoxSizer.Add(self.EmailList, 1, wx.TOP | wx.LEFT, 10)
+
+		self.BTN_RemoveEmail = wx.Button(self, wx.ID_REMOVE)
+		self.BTN_RemoveEmail.SetFont(self.TextBoxFont)
+		EmailBoxSizer.Add(self.BTN_RemoveEmail, 0, wx.TOP | wx.LEFT, 10)
 
 		#######################################################################
 		## Non wrapped items
-
 		logo = wx.StaticBitmap(self, -1, self.logo_bmp, (self.logo_bmp.GetWidth(), self.logo_bmp.GetHeight()))
 
 		#######################################################################
 		## Sizer encapsulation section
-		#top_left_level3 = wx.BoxSizer()
-		#top_left_level3.Add(FolderBoxSizer, 1, wx.EXPAND | wx.TOP | wx.BOTTOM | wx.LEFT, 25)
-
-		#top_right_level3 = wx.BoxSizer(wx.VERTICAL)
-		#top_right_level3.Add(self.EmailBoxSizer, 6, wx.EXPAND | wx.TOP | wx.BOTTOM | wx.LEFT, 25)
-
-		#top_level2 = wx.BoxSizer(wx.HORIZONTAL)
-		#top_level2.Add(top_left_level3, 3, wx.EXPAND | wx.ALIGN_CENTER_HORIZONTAL)
-		#top_level2.Add(top_right_level3, 2, wx.EXPAND | wx.ALIGN_CENTER_HORIZONTAL)
-
 		bottom_left_level3 = wx.BoxSizer(wx.VERTICAL)
 		bottom_left_level3.Add(logo, 0, wx.EXPAND | wx.BOTTOM, 25)
 		bottom_left_level3.Add(self.MissingBoxSizer, 1, wx.EXPAND)
@@ -157,6 +148,7 @@ class ConfigPanel(ColoredPanel):
 		print "Level 3 - Bottom Right Content position:", bottom_right_level3.GetPosition()
 		print "Level 3 - Bottom Right Content size:", bottom_right_level3.GetSize()
 		'''
+
 		self.Title = "Configuration"
 
 
