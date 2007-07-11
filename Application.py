@@ -102,7 +102,7 @@ class Application:
 				#print MemberType
 				for Name in MemberType:
 					if not Name.find('<') == -1:
-						Result = Name[:Name.find('<')] + Family[0] + Name[Name.find('<') - 1:]
+						Result = '"' + Name[:Name.find('<')] + Family[0] + '" ' + Name[Name.find('<') - 1:]
 						EmailList.append(Result)
 		return EmailList
 
