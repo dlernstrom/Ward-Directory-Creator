@@ -121,34 +121,6 @@ class ConfigPanel(ColoredPanel):
 		self.SetSizer(border_level0)
 		border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])
 
-		print "Level 0 - position:",border_level0.GetPosition()
-		print "Level 0 - size:",border_level0.GetSize()
-
-		print "Level 1 - Inner Border position:", inside_border_level1.GetPosition()
-		print "Level 1 - Inner Border size:", inside_border_level1.GetSize()
-
-		print "FolderBoxSize: ", str(self.FolderBoxSizer.GetSize())
-		'''
-		print "Level 2 - Top Sizer position:", top_level2.GetPosition()
-		print "Level 2 - Top Sizer size:", top_level2.GetSize()
-
-		print "Level 2 - Bottom Sizer position:", bottom_level2.GetPosition()
-		print "Level 2 - Bottom Sizer size:", bottom_level2.GetSize()
-
-		print "Level 3 - Top Left Content position:", top_left_level3.GetPosition()
-		print "Level 3 - Top Left Content size:", top_left_level3.GetSize()
-
-		print "Level 3 - Top Right Content position:", top_right_level3.GetPosition()
-		print "Level 3 - Top Right Content size:", top_right_level3.GetSize()
-
-		print "Level 3 - logo Content position:", logo.GetPosition()
-		print "Level 3 - logo Content size:", logo.GetSize()
-
-
-		print "Level 3 - Bottom Right Content position:", bottom_right_level3.GetPosition()
-		print "Level 3 - Bottom Right Content size:", bottom_right_level3.GetSize()
-		'''
-
 		self.Title = "Configuration"
 
 
