@@ -178,7 +178,7 @@ class PDFTools:
 
 		UsedFaces = CurrentPage + 1
 		print str(UsedFaces) + " faces are present"
-		Fillers = 4 - UsedFaces % 4
+		Fillers = (4 - UsedFaces % 4) % 4
 		print str(Fillers) + " blank faces will be added to make full pages"
 		for Count in range(Fillers):
 			FamiliesOnPages.insert(-4, [-1, 0, 1, 0])
