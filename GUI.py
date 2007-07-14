@@ -65,6 +65,7 @@ class MyApp(wx.App):
 		win = MyFrame(None, -1, "Ward Directory Creator", size=wx.DefaultSize,
 				style = wx.MINIMIZE_BOX | wx.MAXIMIZE_BOX
 					  | wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
+		#win.AppHandle.InitiatePDF()
 		win.Show(True)
 		return True
 
