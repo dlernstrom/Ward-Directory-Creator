@@ -44,7 +44,6 @@ class Notebook(wx.Notebook):
 		self.AppHandle.SetConfigValue(DictionaryField, value)
 
 	def isValidCSV(self):
-		self.AppHandle.GetMembershipList()
 		return self.AppHandle.isValidCSV()
 
 	def OnPageChanged(self, event):
