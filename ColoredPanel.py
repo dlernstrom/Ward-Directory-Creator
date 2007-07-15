@@ -3,6 +3,7 @@ import images
 
 class ColoredPanel(wx.Window):
 	def __init__(self, parent, color):
+		self.parent = parent
 		self.id = wx.NewId()
 		wx.Window.__init__(self, parent, self.id, style = wx.SIMPLE_BORDER)
 		#if not color == None:
