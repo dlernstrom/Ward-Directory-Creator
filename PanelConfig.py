@@ -49,7 +49,7 @@ class ConfigPanel(ColoredPanel):
 		self.StaticName.SetFont(self.StandardFont)
 		MissingBoxSizer.Add(self.StaticName, 0, wx.TOP | wx.LEFT, 10)
 
-		self.Contact_Dropdown = wx.ComboBox(self, -1, size=(250,-1))
+		self.Contact_Dropdown = wx.ComboBox(self, -1, size=(250,-1), style = wx.CB_READONLY )
 		self.Contact_Dropdown.SetFont(self.TextBoxFont)
 		MissingBoxSizer.Add(self.Contact_Dropdown, 0, wx.TOP | wx.LEFT, 10)
 
@@ -192,8 +192,6 @@ class ConfigPanel(ColoredPanel):
 			for Name in NameList:
 				self.Contact_Dropdown.Append(Name)
 			if self.parent.GetConfigValue('missing.missingname') in NameList:
-				print "missing name is in name list"
-				print "MissingName from config is:", self.parent.GetConfigValue('missing.missingname')
 				self.Contact_Dropdown.SetStringSelection(self.parent.GetConfigValue('missing.missingname'))
 				self.CB_OverridePhone.Enable(True)
 				if self.parent.GetConfigValue('missing.overridephone') == '1':
