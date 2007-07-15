@@ -13,21 +13,27 @@ class MainPanel(ColoredPanel):
 		WardBox.SetFont(self.StandardFont)
 		self.WardBoxSizer = WardBoxSizer = wx.StaticBoxSizer(WardBox, wx.VERTICAL)
 
-		StaticWardName = wx.StaticText(self, -1, "Ward Name:")
+		StaticWardName = wx.StaticText(self, -1, "Unit Name:")
 		StaticWardName.SetFont(self.StandardFont)
 		WardBoxSizer.Add(StaticWardName, 0, wx.TOP | wx.LEFT, 10)
 
 		TXT_WardName = wx.TextCtrl(self, -1, size=(250,25))
 		TXT_WardName.SetFont(self.TextBoxFont)
+		if self.parent.GetConfigValue('unit.unitname'):
+			TXT_WardName.SetValue(self.parent.GetConfigValue('unit.unitname'))
 		WardBoxSizer.Add(TXT_WardName, 0, wx.TOP | wx.LEFT, 10)
 
-		RB_Ward = wx.RadioButton(self, -1, "Ward", style = wx.RB_GROUP)
-		RB_Ward.SetFont(self.StandardFont)
-		WardBoxSizer.Add(RB_Ward, 0, wx.TOP | wx.LEFT, 10)
+		self.RB_Ward = wx.RadioButton(self, -1, "Ward", style = wx.RB_GROUP)
+		self.RB_Ward.SetFont(self.StandardFont)
+		if self.parent.GetConfigValue('unit.unit_type') == 'Ward':
+			self.RB_Ward.SetValue(True)
+		WardBoxSizer.Add(self.RB_Ward, 0, wx.TOP | wx.LEFT, 10)
 
-		RB_Branch = wx.RadioButton(self, -1, "Branch")
-		RB_Branch.SetFont(self.StandardFont)
-		WardBoxSizer.Add(RB_Branch, 0, wx.TOP | wx.LEFT, 10)
+		self.RB_Branch = wx.RadioButton(self, -1, "Branch")
+		self.RB_Branch.SetFont(self.StandardFont)
+		if self.parent.GetConfigValue('unit.unit_type') == 'Branch':
+			self.RB_Branch.SetValue(True)
+		WardBoxSizer.Add(self.RB_Branch, 0, wx.TOP | wx.LEFT, 10)
 
 		StaticStakeName = wx.StaticText(self, -1, "Stake Name:")
 		StaticStakeName.SetFont(self.StandardFont)
@@ -35,6 +41,8 @@ class MainPanel(ColoredPanel):
 
 		TXT_StakeName = wx.TextCtrl(self, -1, size=(250,25))
 		TXT_StakeName.SetFont(self.TextBoxFont)
+		if self.parent.GetConfigValue('unit.stakename'):
+			TXT_StakeName.SetValue(self.parent.GetConfigValue('unit.stakename'))
 		WardBoxSizer.Add(TXT_StakeName, 0, wx.TOP | wx.LEFT, 10)
 
 		############################################################################
@@ -43,9 +51,11 @@ class MainPanel(ColoredPanel):
 		QuoteBox.SetFont(self.StandardFont)
 		self.QuoteBoxSizer = QuoteBoxSizer = wx.StaticBoxSizer(QuoteBox, wx.VERTICAL)
 
-		CB_UseQuote = wx.CheckBox(self, -1, "Use Quote")
-		CB_UseQuote.SetFont(self.StandardFont)
-		QuoteBoxSizer.Add(CB_UseQuote, 0, wx.TOP | wx.LEFT, 10)
+		self.CB_UseQuote = wx.CheckBox(self, -1, "Use Quote")
+		self.CB_UseQuote.SetFont(self.StandardFont)
+		if int(self.parent.GetConfigValue('quote.usequote')):
+			self.CB_UseQuote.SetValue(True)
+		QuoteBoxSizer.Add(self.CB_UseQuote, 0, wx.TOP | wx.LEFT, 10)
 
 		StaticInspQuote = wx.StaticText(self, -1, "Inspirational Quote:")
 		StaticInspQuote.SetFont(self.StandardFont)
@@ -102,35 +112,29 @@ class MainPanel(ColoredPanel):
 		border_level0.Add(inside_border_level1, 1, wx.EXPAND | wx.ALL, 25)
 		self.SetSizer(border_level0)
 		border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])
-		'''
-		print "Level 0 - position:",border_level0.GetPosition()
-		print "Level 0 - size:",border_level0.GetSize()
 
-		print "Level 1 - Inner Border position:", inside_border_level1.GetPosition()
-		print "Level 1 - Inner Border size:", inside_border_level1.GetSize()
+		self.Bind(wx.EVT_TEXT, self.OnWardChanged, TXT_WardName)
+		self.Bind(wx.EVT_RADIOBUTTON, self.OnWardTypeChanged)
+		self.Bind(wx.EVT_TEXT, self.OnStakeChanged, TXT_StakeName)
+		self.Bind(wx.EVT_CHECKBOX, self.OnUseQuote, self.CB_UseQuote)
 
-		print "Level 2 - Top Title position:", top_level2.GetPosition()
-		print "Level 2 - Top Title size:", top_level2.GetSize()
-
-		print "Level 2 - Bottom Content position:", bottom_level2.GetPosition()
-		print "Level 2 - Bottom Content size:", bottom_level2.GetSize()
-
-		print "Level 3 - Static Title position:", StaticHeading.GetPosition()
-		print "Level 3 - Static Title size:", StaticHeading.GetSize()
-
-		print "Level 3 - Left Content position:", left_level3.GetPosition()
-		print "Level 3 - Left Content size:", left_level3.GetSize()
-
-		print "Level 3 - Right Content position:", right_level3.GetPosition()
-		print "Level 3 - Right Content size:", right_level3.GetSize()
-
-		print "Level 4 - Ward/Branch position:", self.WardBoxSizer.GetPosition()
-		print "Level 4 - Ward/Branch size:", self.WardBoxSizer.GetSize()
-
-		print "Level 4 - LOGO position:", logo.GetPosition()
-		print "Level 4 - LOGO size:", logo.GetSize()
-
-		print "Level 4 - Quote position:", self.QuoteBoxSizer.GetPosition()
-		print "Level 4 - Quote size:", self.QuoteBoxSizer.GetSize()
-		'''
 		self.Title = "Main"
+
+	def OnWardChanged(self, evt):
+		self.parent.SetConfigValue('unit.unitname', evt.GetString())
+
+	def OnWardTypeChanged(self, evt):
+		if evt.GetId() == self.RB_Ward.GetId():
+			self.parent.SetConfigValue('unit.unit_type', 'Ward')
+		else:
+			self.parent.SetConfigValue('unit.unit_type', 'Branch')
+
+	def OnStakeChanged(self, evt):
+		self.parent.SetConfigValue('unit.stakename', evt.GetString())
+
+	def OnUseQuote(self, evt):
+		print evt.Checked()
+		if evt.Checked():
+			self.parent.SetConfigValue('quote.usequote', 1)
+		else:
+			self.parent.SetConfigValue('quote.usequote', 0)
