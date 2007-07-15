@@ -84,7 +84,7 @@ class ConfigPanel(ColoredPanel):
 		self.BTN_AddEmail.SetFont(self.TextBoxFont)
 		EmailBoxSizer.Add(self.BTN_AddEmail, 0, wx.TOP | wx.LEFT, 10)
 
-		self.EmailList = wx.ListBox(self, -1, size = (390, 151))
+		self.EmailList = wx.ListBox(self, -1, size = (390, 151), style = wx.LB_SORT )
 		self.EmailList.SetFont(self.TextBoxFont)
 		EmailBoxSizer.Add(self.EmailList, 1, wx.TOP | wx.LEFT, 10)
 
@@ -184,8 +184,10 @@ class ConfigPanel(ColoredPanel):
 		self.BTN_AddEmail.Enable(True)
 
 	def OnAddEmail(self, evt):
+		#TODO: Remove the entry from the list of choices...
 		self.BTN_AddEmail.Enable(False)
 		print self.Email_Dropdown.GetStringSelection()
+		#Clear for next usage
 		self.Email_Dropdown.SetSelection(wx.NOT_FOUND)
 
 	def makingActive(self):
