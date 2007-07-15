@@ -131,6 +131,12 @@ class Application:
 				Name.append((Family[0] + ', ' + Result.split('<')[0]).strip())
 		return Name
 
+	def GetPhoneNumber(self, Name):
+		for Family in self.MembershipList:
+			for Result in Family[1][0]:
+				if Name == (Family[0] + ', ' + Result.split('<')[0]).strip():
+					return Family[2][1]
+
 	def SendEmails(self):
 		if self.SEND_EMAILS:
 			for ToAddy in self.MISSING_PEOPLE_EMAILS:
