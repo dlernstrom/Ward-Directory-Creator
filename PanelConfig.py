@@ -75,9 +75,8 @@ class ConfigPanel(ColoredPanel):
 		self.StaticRecipients.SetFont(self.StandardFont)
 		EmailBoxSizer.Add(self.StaticRecipients, 0, wx.TOP | wx.LEFT, 10)
 
-		self.EmailAddys = self.parent.parent.AppHandle.GetMemberEmails()
 		self.Email_Dropdown = wx.ComboBox(self, -1, size = (390, 24),
-									 choices = self.EmailAddys, style = wx.CB_READONLY)
+									 style = wx.CB_READONLY)
 		self.Email_Dropdown.SetFont(self.TextBoxFont)
 		EmailBoxSizer.Add(self.Email_Dropdown, 0, wx.TOP | wx.LEFT, 10)
 
@@ -122,6 +121,8 @@ class ConfigPanel(ColoredPanel):
 		self.Bind(wx.EVT_CHECKBOX, self.OnOverridePhone, self.CB_OverridePhone)
 		self.Bind(wx.EVT_COMBOBOX, self.OnSelectMissing, self.Contact_Dropdown)
 		self.Bind(wx.EVT_TEXT, self.OnPhoneText, self.TXT_Phone)
+		self.Bind(wx.EVT_COMBOBOX, self.OnSelectEmail, self.Email_Dropdown)
+		self.Bind(wx.EVT_BUTTON, self.OnAddEmail, self.BTN_AddEmail)
 
 		self.Title = "Configuration"
 
@@ -138,7 +139,6 @@ class ConfigPanel(ColoredPanel):
 			self.CB_OverridePhone.SetValue(True)
 		else:
 			self.CB_OverridePhone.SetValue(False)
-
 
 	def NewCSVFileCallback(self, evt):
 		self.parent.SetConfigValue('file.csvlocation', evt.GetString())
@@ -180,6 +180,14 @@ class ConfigPanel(ColoredPanel):
 			Phone = self.parent.parent.AppHandle.GetPhoneNumber(NameInQuestion)
 			self.TXT_Phone.SetValue(Phone)
 
+	def OnSelectEmail(self, evt):
+		self.BTN_AddEmail.Enable(True)
+
+	def OnAddEmail(self, evt):
+		self.BTN_AddEmail.Enable(False)
+		print self.Email_Dropdown.GetStringSelection()
+		self.Email_Dropdown.SetSelection(wx.NOT_FOUND)
+
 	def makingActive(self):
 		if self.parent.isValidCSV():
 			self.StaticName.Enable(True)
@@ -187,9 +195,9 @@ class ConfigPanel(ColoredPanel):
 			self.StaticPhone.Enable(True)
 			self.StaticRecipients.Enable(True)
 			self.Email_Dropdown.Enable(True)
-			self.BTN_AddEmail.Enable(True)
+			self.BTN_AddEmail.Enable(False)
 			self.EmailList.Enable(True)
-			self.BTN_RemoveEmail.Enable(True)
+			self.BTN_RemoveEmail.Enable(False)
 
 			#Refresh choices to name list
 			self.Contact_Dropdown.Clear()
@@ -207,8 +215,22 @@ class ConfigPanel(ColoredPanel):
 					self.TXT_Phone.Enable(False)
 					self.TXT_Phone.SetValue(self.parent.parent.AppHandle.GetPhoneNumber(self.parent.GetConfigValue('missing.missingname')))
 			else:
+				if self.parent.GetConfigValue('missing.missingname'):
+					OldMissingName = self.parent.GetConfigValue('missing.missingname')
+					#dlg = wx.MessageDialog(self, 'Removing ' + OldMissingName + " from missing image section",
+					#   'Alert',
+					#   wx.OK | wx.ICON_EXCLAMATION | wx.STAY_ON_TOP 
+					#   )
+					#dlg.ShowModal()
+					#dlg.Destroy()
 				self.TXT_Phone.Enable(False)
 				self.CB_OverridePhone.Enable(False)
+
+			#Now let's populate the email addresses
+			EmailAddys = self.parent.parent.AppHandle.GetMemberEmails()
+			self.Email_Dropdown.Clear()
+			for Email in EmailAddys:
+				self.Email_Dropdown.Append(Email)
 		else:
 			self.StaticName.Enable(False)
 			self.Contact_Dropdown.Enable(False)
