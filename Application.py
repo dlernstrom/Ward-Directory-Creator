@@ -128,7 +128,7 @@ class Application:
 		Name = []
 		for Family in self.MembershipList:
 			for Result in Family[1][0]:
-				Name.append(Family[0] + ', ' + Result.split('<')[0])
+				Name.append((Family[0] + ', ' + Result.split('<')[0]).strip())
 		return Name
 
 	def SendEmails(self):
