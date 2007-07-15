@@ -39,6 +39,7 @@ class Application:
 				 MISSING_PEOPLE_EMAILS = ['david.ernstrom@usa.dupont.com'],
 				 DEBUG = 0):
 		self.ConfigHandle = Configuration.Configuration(ConfigFilename, ConfigDefaults)
+		self.ConfigDefaults = ConfigDefaults
 		self.filename = filename
 		self.front = front
 		self.back = back
