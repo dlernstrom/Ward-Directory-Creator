@@ -57,25 +57,49 @@ class MainPanel(ColoredPanel):
 			self.CB_UseQuote.SetValue(True)
 		QuoteBoxSizer.Add(self.CB_UseQuote, 0, wx.TOP | wx.LEFT, 10)
 
-		StaticInspQuote = wx.StaticText(self, -1, "Inspirational Quote:")
-		StaticInspQuote.SetFont(self.StandardFont)
-		QuoteBoxSizer.Add(StaticInspQuote, 0, wx.TOP | wx.LEFT, 10)
+		self.StaticInspQuote = wx.StaticText(self, -1, "Inspirational Quote:")
+		self.StaticInspQuote.SetFont(self.StandardFont)
+		if int(self.parent.GetConfigValue('quote.usequote')):
+			self.StaticInspQuote.Enable(True)
+		else:
+			self.StaticInspQuote.Enable(False)
+		QuoteBoxSizer.Add(self.StaticInspQuote, 0, wx.TOP | wx.LEFT, 10)
 
-		TXT_Quote = wx.TextCtrl(self, -1, size = (350, 100))
-		TXT_Quote.SetFont(self.TextBoxFont)
-		QuoteBoxSizer.Add(TXT_Quote, 0, wx.TOP | wx.LEFT, 10)
+		self.TXT_Quote = wx.TextCtrl(self, -1, size = (350, 100), style = wx.PROCESS_ENTER | wx.TE_MULTILINE )
+		self.TXT_Quote.SetFont(self.TextBoxFont)
+		if int(self.parent.GetConfigValue('quote.usequote')):
+			self.TXT_Quote.Enable(True)
+		else:
+			self.TXT_Quote.Enable(False)
+		if not self.parent.GetConfigValue('quote.quotecontent') == None:
+			self.TXT_Quote.SetValue(self.parent.GetConfigValue('quote.quotecontent'))
+		QuoteBoxSizer.Add(self.TXT_Quote, 0, wx.TOP | wx.LEFT, 10)
 
-		StaticAuthor = wx.StaticText(self, -1, "Author:")
-		StaticAuthor.SetFont(self.StandardFont)
-		QuoteBoxSizer.Add(StaticAuthor, 0, wx.TOP | wx.LEFT, 10)
+		self.StaticAuthor = wx.StaticText(self, -1, "Author:")
+		self.StaticAuthor.SetFont(self.StandardFont)
+		if int(self.parent.GetConfigValue('quote.usequote')):
+			self.StaticAuthor.Enable(True)
+		else:
+			self.StaticAuthor.Enable(False)
+		QuoteBoxSizer.Add(self.StaticAuthor, 0, wx.TOP | wx.LEFT, 10)
 
-		TXT_Author = wx.TextCtrl(self, -1, size=(250,25))
-		TXT_Author.SetFont(self.TextBoxFont)
-		QuoteBoxSizer.Add(TXT_Author, 0, wx.TOP | wx.LEFT, 10)
+		self.TXT_Author = wx.TextCtrl(self, -1, size=(250,25))
+		self.TXT_Author.SetFont(self.TextBoxFont)
+		if int(self.parent.GetConfigValue('quote.usequote')):
+			self.TXT_Author.Enable(True)
+		else:
+			self.TXT_Author.Enable(False)
+		if not self.parent.GetConfigValue('quote.quoteauthor') == None:
+			self.TXT_Author.SetValue(self.parent.GetConfigValue('quote.quoteauthor'))
+		QuoteBoxSizer.Add(self.TXT_Author, 0, wx.TOP | wx.LEFT, 10)
 
-		BTN_RestoreQuote = wx.Button(self, -1, "Restore Default")
-		BTN_RestoreQuote.SetFont(self.StandardFont)
-		QuoteBoxSizer.Add(BTN_RestoreQuote, 0, wx.TOP | wx.LEFT, 10)
+		self.BTN_RestoreQuote = wx.Button(self, -1, "Restore Default")
+		self.BTN_RestoreQuote.SetFont(self.StandardFont)
+		if int(self.parent.GetConfigValue('quote.usequote')):
+			self.BTN_RestoreQuote.Enable(True)
+		else:
+			self.BTN_RestoreQuote.Enable(False)
+		QuoteBoxSizer.Add(self.BTN_RestoreQuote, 0, wx.TOP | wx.LEFT, 10)
 
 		#######################################################################
 		## Non wrapped items
@@ -117,6 +141,9 @@ class MainPanel(ColoredPanel):
 		self.Bind(wx.EVT_RADIOBUTTON, self.OnWardTypeChanged)
 		self.Bind(wx.EVT_TEXT, self.OnStakeChanged, TXT_StakeName)
 		self.Bind(wx.EVT_CHECKBOX, self.OnUseQuote, self.CB_UseQuote)
+		self.Bind(wx.EVT_TEXT, self.OnQuoteChanged, self.TXT_Quote)
+		self.Bind(wx.EVT_TEXT, self.OnAuthorChanged, self.TXT_Author)
+		self.Bind(wx.EVT_BUTTON, self.OnRestoreQuote, self.BTN_RestoreQuote)
 
 		self.Title = "Main"
 
@@ -133,8 +160,27 @@ class MainPanel(ColoredPanel):
 		self.parent.SetConfigValue('unit.stakename', evt.GetString())
 
 	def OnUseQuote(self, evt):
-		print evt.Checked()
 		if evt.Checked():
 			self.parent.SetConfigValue('quote.usequote', 1)
+			self.StaticInspQuote.Enable(True)
+			self.TXT_Quote.Enable(True)
+			self.StaticAuthor.Enable(True)
+			self.TXT_Author.Enable(True)
+			self.BTN_RestoreQuote.Enable(True)
 		else:
 			self.parent.SetConfigValue('quote.usequote', 0)
+			self.StaticInspQuote.Enable(False)
+			self.TXT_Quote.Enable(False)
+			self.StaticAuthor.Enable(False)
+			self.TXT_Author.Enable(False)
+			self.BTN_RestoreQuote.Enable(False)
+
+	def OnQuoteChanged(self, evt):
+		self.parent.SetConfigValue('quote.quotecontent', evt.GetString())
+
+	def OnAuthorChanged(self, evt):
+		self.parent.SetConfigValue('quote.quoteauthor', evt.GetString())
+
+	def OnRestoreQuote(self, evt):
+		self.TXT_Quote.SetValue(self.parent.AppHandle.ConfigDefaults['quote.quotecontent'])
+		self.TXT_Author.SetValue(self.parent.AppHandle.ConfigDefaults['quote.quoteauthor'])
