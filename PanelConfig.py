@@ -53,27 +53,36 @@ class ConfigPanel(ColoredPanel):
 		MissingBox.SetFont(self.StandardFont)
 		self.MissingBoxSizer = MissingBoxSizer = wx.StaticBoxSizer(MissingBox, wx.VERTICAL)
 
-		StaticName = wx.StaticText(self, -1, "Contact Name:")
-		StaticName.SetFont(self.StandardFont)
-		MissingBoxSizer.Add(StaticName, 0, wx.TOP | wx.LEFT, 10)
+		self.StaticName = wx.StaticText(self, -1, "Contact Name:")
+		self.StaticName.SetFont(self.StandardFont)
+		MissingBoxSizer.Add(self.StaticName, 0, wx.TOP | wx.LEFT, 10)
 
-		self.NamePhoneList = self.parent.parent.AppHandle.GetNamePhoneList()
-		NameList = map(lambda x: x[0], self.NamePhoneList)
-		Contact_Dropdown = wx.ComboBox(self, -1, choices = NameList)
-		Contact_Dropdown.SetFont(self.TextBoxFont)
-		MissingBoxSizer.Add(Contact_Dropdown, 0, wx.TOP | wx.LEFT, 10)
+		NameList = self.parent.parent.AppHandle.GetNameList()
+		self.Contact_Dropdown = wx.ComboBox(self, -1, choices = NameList)
+		self.Contact_Dropdown.SetFont(self.TextBoxFont)
+		if self.parent.GetConfigValue('missing.missingname') in NameList:
+			self.Contact_Dropdown.SetStringSelection(self.parent.GetConfigValue('missing.missingname'))
+		MissingBoxSizer.Add(self.Contact_Dropdown, 0, wx.TOP | wx.LEFT, 10)
 
-		StaticPhone = wx.StaticText(self, -1, "Contact Phone:")
-		StaticPhone.SetFont(self.StandardFont)
-		MissingBoxSizer.Add(StaticPhone, 0, wx.TOP | wx.LEFT, 10)
+		self.StaticPhone = wx.StaticText(self, -1, "Contact Phone:")
+		self.StaticPhone.SetFont(self.StandardFont)
+		MissingBoxSizer.Add(self.StaticPhone, 0, wx.TOP | wx.LEFT, 10)
 
-		TXT_Author = wx.TextCtrl(self, -1, size=(250,25))
-		TXT_Author.SetFont(self.TextBoxFont)
-		MissingBoxSizer.Add(TXT_Author, 0, wx.TOP | wx.LEFT, 10)
+		self.TXT_Phone = wx.TextCtrl(self, -1, size=(250,25))
+		self.TXT_Phone.SetFont(self.TextBoxFont)
+		if self.parent.GetConfigValue('missing.overridephone') == '1':
+			self.TXT_Phone.Enable(True)
+		else:
+			self.TXT_Phone.Enable(False)
+		MissingBoxSizer.Add(self.TXT_Phone, 0, wx.TOP | wx.LEFT, 10)
 
-		CB_OverridePhone = wx.CheckBox(self, -1, "Override Phone")
-		CB_OverridePhone.SetFont(self.StandardFont)
-		MissingBoxSizer.Add(CB_OverridePhone, 0, wx.TOP | wx.LEFT, 10)
+		self.CB_OverridePhone = wx.CheckBox(self, -1, "Override Phone")
+		self.CB_OverridePhone.SetFont(self.StandardFont)
+		if self.parent.GetConfigValue('missing.overridephone') == '1':
+			self.CB_OverridePhone.SetValue(True)
+		else:
+			self.CB_OverridePhone.SetValue(False)
+		MissingBoxSizer.Add(self.CB_OverridePhone, 0, wx.TOP | wx.LEFT, 10)
 
 		############################################################################
 		## Email Configuration Section
@@ -129,10 +138,18 @@ class ConfigPanel(ColoredPanel):
 		self.SetSizer(border_level0)
 		border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])
 
+		self.Bind(wx.EVT_CHECKBOX, self.OnOverridePhone, self.CB_OverridePhone)
+		self.Bind(wx.EVT_COMBOBOX, self.OnSelectMissing, self.Contact_Dropdown)
+
 		self.Title = "Configuration"
 
 	def NewCSVFileCallback(self, evt):
 		self.parent.SetConfigValue('file.csvlocation', evt.GetString())
+		#This will call an error if the handler is called prior to init being completed
+		try:
+			self.makingActive()
+		except AttributeError:
+			pass
 
 	def NewImagesDirectory(self, evt):
 		self.parent.SetConfigValue('file.imagesdirectory', evt.GetString())
@@ -143,5 +160,35 @@ class ConfigPanel(ColoredPanel):
 	def NewArchiveDirectory(self, evt):
 		self.parent.SetConfigValue('file.imagearchivedir', evt.GetString())
 
+	def OnOverridePhone(self, evt):
+		if evt.Checked():
+			self.parent.SetConfigValue('missing.overridephone', '1')
+			self.TXT_Phone.Enable(True)
+		else:
+			self.parent.SetConfigValue('missing.overridephone', '1')
+			self.TXT_Phone.Enable(False)
+
+	def OnSelectMissing(self, evt):
+		self.parent.SetConfigValue('missing.missingname', evt.GetString())
+
 	def makingActive(self):
-		return
+		if self.parent.isValidCSV():
+			self.StaticName.Enable(True)
+			self.Contact_Dropdown.Enable(True)
+			#Refresh choices to name list
+			NameList = self.parent.parent.AppHandle.GetNameList()
+			self.Contact_Dropdown.Clear()
+			for Name in NameList:
+				self.Contact_Dropdown.Append(Name)
+			if self.parent.GetConfigValue('missing.missingname') in NameList:
+				self.Contact_Dropdown.SetStringSelection(self.parent.GetConfigValue('missing.missingname'))
+			self.StaticPhone.Enable(True)
+			if self.parent.GetConfigValue('missing.overridephone') == '1':
+				self.TXT_Phone.Enable(True)
+			self.CB_OverridePhone.Enable(True)
+		else:
+			self.StaticName.Enable(False)
+			self.Contact_Dropdown.Enable(False)
+			self.StaticPhone.Enable(False)
+			self.TXT_Phone.Enable(False)
+			self.CB_OverridePhone.Enable(False)

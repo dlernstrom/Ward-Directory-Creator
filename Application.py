@@ -123,13 +123,13 @@ class Application:
 						EmailList.append(Result)
 		return EmailList
 
-	def GetNamePhoneList(self):
+	def GetNameList(self):
 		#This will return a list of all HeadOfHousehold/Spouses in ward
-		Name_Phone = []
+		Name = []
 		for Family in self.MembershipList:
-			for Name in Family[1][0]:
-				Name_Phone.append([Family[0] + ', ' + Name.split('<')[0], Name.split('<')[0] + Family[0], Family[2][1]])
-		return Name_Phone
+			for Result in Family[1][0]:
+				Name.append(Family[0] + ', ' + Result.split('<')[0])
+		return Name
 
 	def SendEmails(self):
 		if self.SEND_EMAILS:
