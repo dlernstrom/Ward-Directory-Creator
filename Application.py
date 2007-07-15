@@ -2,10 +2,27 @@ import PDFTools
 import CSVMembershipParser
 from Email import mail
 import os
+import Configuration
 
 __version__ = "$Rev$".split()[1]
 VersionString = '1.0'
 State = 'dev'
+ConfigFilename = "WardDirectoryCreator.cfg"
+ConfigDefaults = {
+	"unit.unitname":			"Your Ward Name Here",
+	"unit.unit_type":			"Ward",
+	"unit.stakename":			"Your Stake Name Here",
+	"quote.usequote":			"1",
+	"quote.quotecontent":		"As children of the Lord\nwe should strive every day to rise to a higher level of personal rightousness in all of our actions.",
+	"quote.quoteauthor":		"President James E. Faust",
+	"block.displaySac":			"0",
+	"block.sacstart":			"",#9:00 AM",
+	"block.displayss":			"0",
+	"block.ssstart":			"",#10:20 AM",
+	"block.display_pr_rs":		"0",
+	"block.pr_rs_start":		""#11:10 AM"
+	}
+
 
 class Application:
 	def __init__(self,
@@ -21,6 +38,7 @@ class Application:
 				 SMTP_SERVER = None,
 				 MISSING_PEOPLE_EMAILS = ['david.ernstrom@usa.dupont.com'],
 				 DEBUG = 0):
+		self.ConfigHandle = Configuration.Configuration(ConfigFilename, ConfigDefaults)
 		self.filename = filename
 		self.front = front
 		self.back = back
@@ -34,6 +52,12 @@ class Application:
 		self.DEBUG = DEBUG
 
 		self.MembershipList = []
+
+	def GetConfigValue(self, DictionaryField):
+		return self.ConfigHandle.GetValueByKey(DictionaryField)
+
+	def SetConfigValue(self, DictionaryField, value):
+		self.ConfigHandle.SetValueByKey(DictionaryField, value)
 
 	def InitiatePDF(self):
 		PDFToolHandle = PDFTools.PDFTools(self.DEBUG,
