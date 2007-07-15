@@ -15,12 +15,12 @@ ConfigDefaults = {
 	"quote.usequote":			"1",
 	"quote.quotecontent":		"As children of the Lord\nwe should strive every day to rise to a higher level of personal rightousness in all of our actions.",
 	"quote.quoteauthor":		"President James E. Faust",
-	"block.displaySac":			"0",
-	"block.sacstart":			"",#9:00 AM",
-	"block.displayss":			"0",
-	"block.ssstart":			"",#10:20 AM",
-	"block.display_pr_rs":		"0",
-	"block.pr_rs_start":		""#11:10 AM"
+	"block.displaySac":			"1",
+	"block.sacstart":			"09:00 AM",
+	"block.displayss":			"1",
+	"block.ssstart":			"10:20 AM",
+	"block.display_pr_rs":		"1",
+	"block.pr_rs_start":		"11:10 AM"
 	}
 
 
