@@ -39,3 +39,7 @@ class GeneratePanel(ColoredPanel):
 		#gbs.Add(StaticBoxSizer,
 		#		pos = (7,0), span = (5,1), flag = wx.ALIGN_CENTER_HORIZONTAL)
 		self.Title = "Generate"
+
+	def makingActive(self):
+		return
+

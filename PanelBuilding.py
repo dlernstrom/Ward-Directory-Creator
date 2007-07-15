@@ -243,3 +243,6 @@ class BuildingPanel(ColoredPanel):
 
 	def OnPhoneChanged(self, evt):
 		self.parent.SetConfigValue('bldg.phone', evt.GetString())
+
+	def makingActive(self):
+		return

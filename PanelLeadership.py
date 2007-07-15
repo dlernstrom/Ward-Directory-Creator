@@ -89,9 +89,8 @@ class LeadershipPanel(ColoredPanel):
 		self.SetSizer(border_level0)
 		border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])
 
-		
-
-
-
-
 		self.Title = "Leadership"
+
+	def makingActive(self):
+		return
+

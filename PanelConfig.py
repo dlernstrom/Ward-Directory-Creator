@@ -133,7 +133,6 @@ class ConfigPanel(ColoredPanel):
 
 	def NewCSVFileCallback(self, evt):
 		self.parent.SetConfigValue('file.csvlocation', evt.GetString())
-		#Need to add something in here to read the file on a new CSV entry
 
 	def NewImagesDirectory(self, evt):
 		self.parent.SetConfigValue('file.imagesdirectory', evt.GetString())
@@ -143,3 +142,6 @@ class ConfigPanel(ColoredPanel):
 
 	def NewArchiveDirectory(self, evt):
 		self.parent.SetConfigValue('file.imagearchivedir', evt.GetString())
+
+	def makingActive(self):
+		return

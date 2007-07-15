@@ -12,3 +12,6 @@ class HelpPanel(ColoredPanel):
 		#st.SetForegroundColour(wx.WHITE)
 		#st.SetBackgroundColour(wx.GREEN)
 		self.Title = "Help"
+
+	def makingActive(self):
+		return

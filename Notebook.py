@@ -43,10 +43,15 @@ class Notebook(wx.Notebook):
 	def SetConfigValue(self, DictionaryField, value):
 		self.AppHandle.SetConfigValue(DictionaryField, value)
 
+	def isValidCSV(self):
+		self.AppHandle.GetMembershipList()
+		return self.AppHandle.isValidCSV()
+
 	def OnPageChanged(self, event):
 		old = event.GetOldSelection()
 		new = event.GetSelection()
 		sel = self.GetSelection()
+		self.GetPage(new).makingActive()
 		event.Skip()
 
 	def OnPageChanging(self, event):
