@@ -18,11 +18,11 @@ class Notebook(wx.Notebook):
 		self.myMainPanel = MainPanel(self)
 		self.AddPage(self.myMainPanel, self.myMainPanel.Title)
 
-		self.myConfigPanel = ConfigPanel(self)
-		self.AddPage(self.myConfigPanel, self.myConfigPanel.Title)
-
 		self.myBuildingPanel = BuildingPanel(self)
 		self.AddPage(self.myBuildingPanel, self.myBuildingPanel.Title)
+
+		self.myConfigPanel = ConfigPanel(self)
+		self.AddPage(self.myConfigPanel, self.myConfigPanel.Title)
 
 		self.myLeadershipPanel = LeadershipPanel(self)
 		self.AddPage(self.myLeadershipPanel, self.myLeadershipPanel.Title)
