@@ -71,15 +71,15 @@ class ConfigPanel(ColoredPanel):
 		EmailBox.SetFont(self.StandardFont)
 		self.EmailBoxSizer = EmailBoxSizer = wx.StaticBoxSizer(EmailBox, wx.VERTICAL)
 
-		StaticInspQuote = wx.StaticText(self, -1, "Email Recipients")
-		StaticInspQuote.SetFont(self.StandardFont)
-		EmailBoxSizer.Add(StaticInspQuote, 0, wx.TOP | wx.LEFT, 10)
+		self.StaticRecipients = wx.StaticText(self, -1, "Email Recipients")
+		self.StaticRecipients.SetFont(self.StandardFont)
+		EmailBoxSizer.Add(self.StaticRecipients, 0, wx.TOP | wx.LEFT, 10)
 
-		self.EmailList = self.parent.parent.AppHandle.GetMemberEmails()
-		Email_Dropdown = wx.ComboBox(self, -1, size = (390, 24),
-									 choices = self.EmailList, style = wx.CB_READONLY)
-		Email_Dropdown.SetFont(self.TextBoxFont)
-		EmailBoxSizer.Add(Email_Dropdown, 0, wx.TOP | wx.LEFT, 10)
+		self.EmailAddys = self.parent.parent.AppHandle.GetMemberEmails()
+		self.Email_Dropdown = wx.ComboBox(self, -1, size = (390, 24),
+									 choices = self.EmailAddys, style = wx.CB_READONLY)
+		self.Email_Dropdown.SetFont(self.TextBoxFont)
+		EmailBoxSizer.Add(self.Email_Dropdown, 0, wx.TOP | wx.LEFT, 10)
 
 		self.BTN_AddEmail = wx.Button(self, wx.ID_ADD)
 		self.BTN_AddEmail.SetFont(self.TextBoxFont)
@@ -185,6 +185,11 @@ class ConfigPanel(ColoredPanel):
 			self.StaticName.Enable(True)
 			self.Contact_Dropdown.Enable(True)
 			self.StaticPhone.Enable(True)
+			self.StaticRecipients.Enable(True)
+			self.Email_Dropdown.Enable(True)
+			self.BTN_AddEmail.Enable(True)
+			self.EmailList.Enable(True)
+			self.BTN_RemoveEmail.Enable(True)
 
 			#Refresh choices to name list
 			self.Contact_Dropdown.Clear()
@@ -210,3 +215,8 @@ class ConfigPanel(ColoredPanel):
 			self.StaticPhone.Enable(False)
 			self.TXT_Phone.Enable(False)
 			self.CB_OverridePhone.Enable(False)
+			self.StaticRecipients.Enable(False)
+			self.Email_Dropdown.Enable(False)
+			self.BTN_AddEmail.Enable(False)
+			self.EmailList.Enable(False)
+			self.BTN_RemoveEmail.Enable(False)
