@@ -42,9 +42,7 @@ class Application:
 	def SetConfigValue(self, DictionaryField, value):
 		self.ConfigHandle.SetValueByKey(DictionaryField, value)
 		if DictionaryField == 'file.csvlocation':
-			print "New CSV File"
 			self.GetMembershipList()
-			print "List has:", str(len(self.MembershipList)), "Households"
 
 	def InitiatePDF(self):
 		PDFToolHandle = PDFTools.PDFTools(self.DEBUG,
