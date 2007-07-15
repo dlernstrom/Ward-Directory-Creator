@@ -32,19 +32,9 @@ class MyFrame(wx.Frame):
 			size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE
 			):
 		wx.Frame.__init__(self, parent, ID, title, pos, size, style)
-		self.AppHandle = Application.Application(self,
-								'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf',
-								'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf',
-								'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf',
-								APPDATAFOLDER,
-								DIRECTORY_IMAGES,
-								MOVED_OUT,
-								CSV_LOCATION,
-								SEND_EMAILS,
-								SMTP_SERVER,
-								MISSING_PEOPLE_EMAILS,
-								DEBUG
-								)
+
+		self.AppHandle = Application.Application(self, DEBUG)
+
 		self.FullAppVersion = self.AppHandle.GetFullVersion()
 		self.MajorAppVersion = self.AppHandle.GetMajorVersion()
 		self.SetTitle("Ward Directory Creator " + self.MajorAppVersion)

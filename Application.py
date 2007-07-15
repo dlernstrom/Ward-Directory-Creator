@@ -27,38 +27,24 @@ ConfigDefaults = {
 class Application:
 	def __init__(self,
 				 parent,
-				 filename,
-				 front,
-				 back,
-				 APPDATAFOLDER = 'Ward Directory',
-				 DIRECTORY_IMAGES = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\WardPictures\\',
-				 MOVED_OUT = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\ImageArchive\\',
-				 CSV_LOCATION = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\',
-				 SEND_EMAILS = 0,
-				 SMTP_SERVER = None,
-				 MISSING_PEOPLE_EMAILS = ['david.ernstrom@usa.dupont.com'],
 				 DEBUG = 0):
+
 		self.ConfigHandle = Configuration.Configuration(ConfigFilename, ConfigDefaults)
 		self.ConfigDefaults = ConfigDefaults
-		self.filename = filename
-		self.front = front
-		self.back = back
-		self.APPDATAFOLDER = APPDATAFOLDER
-		self.DIRECTORY_IMAGES = DIRECTORY_IMAGES
-		self.MOVED_OUT = MOVED_OUT
-		self.CSV_LOCATION = CSV_LOCATION
-		self.SEND_EMAILS = SEND_EMAILS
-		self.SMTP_SERVER = SMTP_SERVER
-		self.MISSING_PEOPLE_EMAILS = MISSING_PEOPLE_EMAILS
+
 		self.DEBUG = DEBUG
 
-		self.MembershipList = []
+		self.GetMembershipList()
 
 	def GetConfigValue(self, DictionaryField):
 		return self.ConfigHandle.GetValueByKey(DictionaryField)
 
 	def SetConfigValue(self, DictionaryField, value):
 		self.ConfigHandle.SetValueByKey(DictionaryField, value)
+		if DictionaryField == 'file.csvlocation':
+			print "New CSV File"
+			self.GetMembershipList()
+			print "List has:", str(len(self.MembershipList)), "Households"
 
 	def InitiatePDF(self):
 		PDFToolHandle = PDFTools.PDFTools(self.DEBUG,
@@ -91,18 +77,25 @@ class Application:
 	def GetMajorVersion(self):
 		return VersionString
 
+	def isValidCSV(self):
+		return self.ValidCSV
+
 	def GetMembershipList(self):
+		self.ValidCSV = False
 		self.MembershipList = []
-		MembershipHandle = CSVMembershipParser.CSVMembershipParser(self.CSV_LOCATION + "Greenfield Ward member directory.csv")
+		if self.GetConfigValue('file.csvlocation') == None or not self.GetConfigValue('file.csvlocation')[-4:] == '.csv':
+			print "Not valid"
+			return
+		MembershipHandle = CSVMembershipParser.CSVMembershipParser(self.GetConfigValue('file.csvlocation'))
 		for Household in MembershipHandle.next():
 			self.MembershipList.append(Household)
+		if len(self.MembershipList) > 0:
+			self.ValidCSV = True
 
 	def GetNeededImageList(self):
-		self.GetMembershipList()
 		return map(lambda Member: Member[3], self.MembershipList)
 
 	def GetMissingList(self):
-		self.GetMembershipList()
 		MissingImages = []
 		for Family in self.MembershipList:
 			if not os.path.exists(self.DIRECTORY_IMAGES + Family[3]):
@@ -117,7 +110,6 @@ class Application:
 		return message
 
 	def GetMemberEmails(self):
-		self.GetMembershipList()
 		EmailList = []
 		for Family in self.MembershipList:
 			# Family[1] is the name/email list
@@ -133,7 +125,6 @@ class Application:
 
 	def GetNamePhoneList(self):
 		#This will return a list of all HeadOfHousehold/Spouses in ward
-		self.GetMembershipList()
 		Name_Phone = []
 		for Family in self.MembershipList:
 			for Name in Family[1][0]:
