@@ -6,14 +6,17 @@ class CSVMembershipParser:
 		self.MembershipHandle = CSVMembershipReader.CSVMembershipReader(self.filename)
 
 	def next(self):
-		for FamilyData in self.MembershipHandle:
-			self.CurrentFamily = FamilyData
-			yield [self.GetSurname(),
-				   [self.GetParentNames(), self.GetChildrenNames()],
-				   [self.GetAddy1(), self.GetPhoneNumber()],
-				   self.GetFileName(),
-				   self.GetFamilySalutation()
-				   ]
+		try:
+			for FamilyData in self.MembershipHandle:
+				self.CurrentFamily = FamilyData
+				yield [self.GetSurname(),
+					   [self.GetParentNames(), self.GetChildrenNames()],
+					   [self.GetAddy1(), self.GetPhoneNumber()],
+					   self.GetFileName(),
+					   self.GetFamilySalutation()
+					   ]
+		except IOError:
+			return
 
 	def GetSurname(self):
 		return self.CurrentFamily[0].split(',')[0]
