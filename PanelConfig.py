@@ -123,6 +123,8 @@ class ConfigPanel(ColoredPanel):
 		self.Bind(wx.EVT_TEXT, self.OnPhoneText, self.TXT_Phone)
 		self.Bind(wx.EVT_COMBOBOX, self.OnSelectEmail, self.Email_Dropdown)
 		self.Bind(wx.EVT_BUTTON, self.OnAddEmail, self.BTN_AddEmail)
+		self.Bind(wx.EVT_LISTBOX, self.ListboxClicked, self.EmailList)
+		self.Bind(wx.EVT_LISTBOX_DCLICK, self.ListboxDClicked, self.EmailList)
 
 		self.Title = "Configuration"
 
@@ -186,9 +188,16 @@ class ConfigPanel(ColoredPanel):
 	def OnAddEmail(self, evt):
 		#TODO: Remove the entry from the list of choices...
 		self.BTN_AddEmail.Enable(False)
-		print self.Email_Dropdown.GetStringSelection()
+		self.EmailList.Append(self.Email_Dropdown.GetStringSelection())
 		#Clear for next usage
 		self.Email_Dropdown.SetSelection(wx.NOT_FOUND)
+
+	def ListboxClicked(self, evt):
+		self.BTN_RemoveEmail.Enable(True)
+
+	def ListboxDClicked(self, evt):
+		self.EmailList.Delete(self.EmailList.GetSelection())
+		self.BTN_RemoveEmail.Enable(False)
 
 	def makingActive(self):
 		if self.parent.isValidCSV():
