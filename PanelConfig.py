@@ -19,32 +19,24 @@ class ConfigPanel(ColoredPanel):
 			labelText = "Membership File",
 			fileMask = "*.csv", changeCallback = self.NewCSVFileCallback
 			)
-		if self.parent.GetConfigValue('file.csvlocation'):
-			self.csvFile.SetValue(self.parent.GetConfigValue('file.csvlocation'))
 		FolderBoxSizer.Add(self.csvFile, 0, wx.TOP | wx.LEFT, 10)
 
 		self.ImagesDirectory = filebrowse.DirBrowseButton(
 			self, -1, size=(700, 30),
 			labelText = "Images Directory", changeCallback = self.NewImagesDirectory
 			)
-		if self.parent.GetConfigValue('file.imagesdirectory'):
-			self.ImagesDirectory.SetValue(self.parent.GetConfigValue('file.imagesdirectory'))
 		FolderBoxSizer.Add(self.ImagesDirectory, 0, wx.TOP | wx.LEFT, 10)
 
 		self.PDF_Out_Directory = filebrowse.DirBrowseButton(
 			self, -1, size=(700, 30),
 			labelText = "PDF Output Directory", changeCallback = self.NewPDFDirectory
 			)
-		if self.parent.GetConfigValue('file.pdf_outdirectory'):
-			self.PDF_Out_Directory.SetValue(self.parent.GetConfigValue('file.pdf_outdirectory'))
 		FolderBoxSizer.Add(self.PDF_Out_Directory, 0, wx.TOP | wx.LEFT, 10)
 
 		self.Image_Archive_Directory = filebrowse.DirBrowseButton(
 			self, -1, size=(700, 30),
 			labelText = "Image Archive Directory", changeCallback = self.NewArchiveDirectory
 			)
-		if self.parent.GetConfigValue('file.imagearchivedir'):
-			self.Image_Archive_Directory.SetValue(self.parent.GetConfigValue('file.imagearchivedir'))
 		FolderBoxSizer.Add(self.Image_Archive_Directory, 0, wx.TOP | wx.LEFT | wx.BOTTOM, 10)
 
 		############################################################################
@@ -57,31 +49,20 @@ class ConfigPanel(ColoredPanel):
 		self.StaticName.SetFont(self.StandardFont)
 		MissingBoxSizer.Add(self.StaticName, 0, wx.TOP | wx.LEFT, 10)
 
-		NameList = self.parent.parent.AppHandle.GetNameList()
-		self.Contact_Dropdown = wx.ComboBox(self, -1, choices = NameList)
+		self.Contact_Dropdown = wx.ComboBox(self, -1, size=(250,-1))
 		self.Contact_Dropdown.SetFont(self.TextBoxFont)
-		if self.parent.GetConfigValue('missing.missingname') in NameList:
-			self.Contact_Dropdown.SetStringSelection(self.parent.GetConfigValue('missing.missingname'))
 		MissingBoxSizer.Add(self.Contact_Dropdown, 0, wx.TOP | wx.LEFT, 10)
 
 		self.StaticPhone = wx.StaticText(self, -1, "Contact Phone:")
 		self.StaticPhone.SetFont(self.StandardFont)
 		MissingBoxSizer.Add(self.StaticPhone, 0, wx.TOP | wx.LEFT, 10)
 
-		self.TXT_Phone = wx.TextCtrl(self, -1, size=(250,25))
+		self.TXT_Phone = wx.TextCtrl(self, -1, size=(250,-1))
 		self.TXT_Phone.SetFont(self.TextBoxFont)
-		if self.parent.GetConfigValue('missing.overridephone') == '1':
-			self.TXT_Phone.Enable(True)
-		else:
-			self.TXT_Phone.Enable(False)
 		MissingBoxSizer.Add(self.TXT_Phone, 0, wx.TOP | wx.LEFT, 10)
 
 		self.CB_OverridePhone = wx.CheckBox(self, -1, "Override Phone")
 		self.CB_OverridePhone.SetFont(self.StandardFont)
-		if self.parent.GetConfigValue('missing.overridephone') == '1':
-			self.CB_OverridePhone.SetValue(True)
-		else:
-			self.CB_OverridePhone.SetValue(False)
 		MissingBoxSizer.Add(self.CB_OverridePhone, 0, wx.TOP | wx.LEFT, 10)
 
 		############################################################################
@@ -140,8 +121,24 @@ class ConfigPanel(ColoredPanel):
 
 		self.Bind(wx.EVT_CHECKBOX, self.OnOverridePhone, self.CB_OverridePhone)
 		self.Bind(wx.EVT_COMBOBOX, self.OnSelectMissing, self.Contact_Dropdown)
+		self.Bind(wx.EVT_TEXT, self.OnPhoneText, self.TXT_Phone)
 
 		self.Title = "Configuration"
+
+		#Here's the logic to set up the prevalues from config file
+		if self.parent.GetConfigValue('file.csvlocation'):
+			self.csvFile.SetValue(self.parent.GetConfigValue('file.csvlocation'))
+		if self.parent.GetConfigValue('file.imagesdirectory'):
+			self.ImagesDirectory.SetValue(self.parent.GetConfigValue('file.imagesdirectory'))
+		if self.parent.GetConfigValue('file.pdf_outdirectory'):
+			self.PDF_Out_Directory.SetValue(self.parent.GetConfigValue('file.pdf_outdirectory'))
+		if self.parent.GetConfigValue('file.imagearchivedir'):
+			self.Image_Archive_Directory.SetValue(self.parent.GetConfigValue('file.imagearchivedir'))
+		if self.parent.GetConfigValue('missing.overridephone') == '1':
+			self.CB_OverridePhone.SetValue(True)
+		else:
+			self.CB_OverridePhone.SetValue(False)
+
 
 	def NewCSVFileCallback(self, evt):
 		self.parent.SetConfigValue('file.csvlocation', evt.GetString())
@@ -160,32 +157,55 @@ class ConfigPanel(ColoredPanel):
 	def NewArchiveDirectory(self, evt):
 		self.parent.SetConfigValue('file.imagearchivedir', evt.GetString())
 
+	def OnSelectMissing(self, evt):
+		self.parent.SetConfigValue('missing.missingname', evt.GetString())
+		self.CB_OverridePhone.SetValue(False)
+		self.CB_OverridePhone.Enable(True)
+		NameInQuestion = self.parent.GetConfigValue('missing.missingname')
+		Phone = self.parent.parent.AppHandle.GetPhoneNumber(NameInQuestion)
+		self.TXT_Phone.SetValue(Phone)
+		self.TXT_Phone.Enable(False)
+
+	def OnPhoneText(self, evt):
+		self.parent.SetConfigValue('missing.missingphone', evt.GetString())
+
 	def OnOverridePhone(self, evt):
 		if evt.Checked():
 			self.parent.SetConfigValue('missing.overridephone', '1')
 			self.TXT_Phone.Enable(True)
 		else:
-			self.parent.SetConfigValue('missing.overridephone', '1')
+			self.parent.SetConfigValue('missing.overridephone', '0')
 			self.TXT_Phone.Enable(False)
-
-	def OnSelectMissing(self, evt):
-		self.parent.SetConfigValue('missing.missingname', evt.GetString())
+			NameInQuestion = self.parent.GetConfigValue('missing.missingname')
+			Phone = self.parent.parent.AppHandle.GetPhoneNumber(NameInQuestion)
+			self.TXT_Phone.SetValue(Phone)
 
 	def makingActive(self):
 		if self.parent.isValidCSV():
 			self.StaticName.Enable(True)
 			self.Contact_Dropdown.Enable(True)
+			self.StaticPhone.Enable(True)
+
 			#Refresh choices to name list
-			NameList = self.parent.parent.AppHandle.GetNameList()
 			self.Contact_Dropdown.Clear()
+			NameList = self.parent.parent.AppHandle.GetNameList()
 			for Name in NameList:
 				self.Contact_Dropdown.Append(Name)
 			if self.parent.GetConfigValue('missing.missingname') in NameList:
+				print "missing name is in name list"
+				print "MissingName from config is:", self.parent.GetConfigValue('missing.missingname')
 				self.Contact_Dropdown.SetStringSelection(self.parent.GetConfigValue('missing.missingname'))
-			self.StaticPhone.Enable(True)
-			if self.parent.GetConfigValue('missing.overridephone') == '1':
-				self.TXT_Phone.Enable(True)
-			self.CB_OverridePhone.Enable(True)
+				self.CB_OverridePhone.Enable(True)
+				if self.parent.GetConfigValue('missing.overridephone') == '1':
+					self.TXT_Phone.Enable(True)
+					if self.parent.GetConfigValue('missing.missingphone'):
+						self.TXT_Phone.SetValue(self.parent.GetConfigValue('missing.missingphone'))
+				else:
+					self.TXT_Phone.Enable(False)
+					self.TXT_Phone.SetValue(self.parent.parent.AppHandle.GetPhoneNumber(self.parent.GetConfigValue('missing.missingname')))
+			else:
+				self.TXT_Phone.Enable(False)
+				self.CB_OverridePhone.Enable(False)
 		else:
 			self.StaticName.Enable(False)
 			self.Contact_Dropdown.Enable(False)
