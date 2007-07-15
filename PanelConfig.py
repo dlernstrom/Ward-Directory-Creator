@@ -17,26 +17,34 @@ class ConfigPanel(ColoredPanel):
 		self.csvFile = filebrowse.FileBrowseButton(
 			self, -1, size=(700, 30),
 			labelText = "Membership File",
-			fileMask = "*.csv"#, changeCallback = self.fbbCallback
+			fileMask = "*.csv", changeCallback = self.NewCSVFileCallback
 			)
+		if self.parent.GetConfigValue('file.csvlocation'):
+			self.csvFile.SetValue(self.parent.GetConfigValue('file.csvlocation'))
 		FolderBoxSizer.Add(self.csvFile, 0, wx.TOP | wx.LEFT, 10)
 
 		self.ImagesDirectory = filebrowse.DirBrowseButton(
 			self, -1, size=(700, 30),
-			labelText = "Images Directory",
+			labelText = "Images Directory", changeCallback = self.NewImagesDirectory
 			)
+		if self.parent.GetConfigValue('file.imagesdirectory'):
+			self.ImagesDirectory.SetValue(self.parent.GetConfigValue('file.imagesdirectory'))
 		FolderBoxSizer.Add(self.ImagesDirectory, 0, wx.TOP | wx.LEFT, 10)
 
 		self.PDF_Out_Directory = filebrowse.DirBrowseButton(
 			self, -1, size=(700, 30),
-			labelText = "PDF Output Directory",
+			labelText = "PDF Output Directory", changeCallback = self.NewPDFDirectory
 			)
+		if self.parent.GetConfigValue('file.pdf_outdirectory'):
+			self.PDF_Out_Directory.SetValue(self.parent.GetConfigValue('file.pdf_outdirectory'))
 		FolderBoxSizer.Add(self.PDF_Out_Directory, 0, wx.TOP | wx.LEFT, 10)
 
 		self.Image_Archive_Directory = filebrowse.DirBrowseButton(
 			self, -1, size=(700, 30),
-			labelText = "Image Archive Directory",
+			labelText = "Image Archive Directory", changeCallback = self.NewArchiveDirectory
 			)
+		if self.parent.GetConfigValue('file.imagearchivedir'):
+			self.Image_Archive_Directory.SetValue(self.parent.GetConfigValue('file.imagearchivedir'))
 		FolderBoxSizer.Add(self.Image_Archive_Directory, 0, wx.TOP | wx.LEFT | wx.BOTTOM, 10)
 
 		############################################################################
@@ -123,7 +131,15 @@ class ConfigPanel(ColoredPanel):
 
 		self.Title = "Configuration"
 
+	def NewCSVFileCallback(self, evt):
+		self.parent.SetConfigValue('file.csvlocation', evt.GetString())
+		#Need to add something in here to read the file on a new CSV entry
 
+	def NewImagesDirectory(self, evt):
+		self.parent.SetConfigValue('file.imagesdirectory', evt.GetString())
 
+	def NewPDFDirectory(self, evt):
+		self.parent.SetConfigValue('file.pdf_outdirectory', evt.GetString())
 
-
+	def NewArchiveDirectory(self, evt):
+		self.parent.SetConfigValue('file.imagearchivedir', evt.GetString())
