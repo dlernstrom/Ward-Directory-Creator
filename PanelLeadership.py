@@ -16,7 +16,7 @@ class LeadershipRow(wx.BoxSizer):
 		self.DescriptionText.SetFont(parent.StandardFont)
 		self.Add(self.DescriptionText, 1, wx.ALIGN_CENTER_VERTICAL)
 
-		self.Contact_Dropdown = wx.ComboBox(parent, -1, size = (265, -1))
+		self.Contact_Dropdown = wx.ComboBox(parent, -1, size = (265, -1), style = wx.CB_READONLY)
 		self.Contact_Dropdown.SetFont(parent.TextBoxFont)
 		self.Add(self.Contact_Dropdown, 0, wx.TOP | wx.LEFT | wx.ALIGN_CENTER_VERTICAL, 10)
 
