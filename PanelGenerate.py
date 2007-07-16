@@ -1,6 +1,8 @@
 #PanelGenerate.py
 
 import wx
+import wx.lib
+import wx.lib.dialogs
 from ColoredPanel import *
 import  wx.lib.filebrowsebutton as filebrowse
 
@@ -131,8 +133,6 @@ class GeneratePanel(ColoredPanel):
 
 	def OnGoButton(self, evt):
 		#Here, I need to check each of the (7) things to do and do them
-		if self.parent.GetConfigValue('task.missreport') == '1':
-			print "Generating missing report"
 		if self.parent.GetConfigValue('task.sendemail') == '1':
 			print "Sending Emails"
 		if self.parent.GetConfigValue('task.genmissfile') == '1':
@@ -142,10 +142,28 @@ class GeneratePanel(ColoredPanel):
 			LiveFolder = self.parent.GetConfigValue('file.imagesdirectory')
 			ArchiveFolder = self.parent.GetConfigValue('file.imagearchivedir')
 			self.AppHandle.MoveSuperflousImages(LiveFolder, ArchiveFolder)
+
+		#Generate PDF Stuff Here
+		Full = 0
 		if self.parent.GetConfigValue('task.genfull') == '1':
 			print "Generating Full PDF"
+			Full = 1
+
+		Booklet = 0
 		if self.parent.GetConfigValue('task.genbooklet') == '1':
 			print "Generating Booklet PDF"
+			Booklet = 1
+		if Full or Booklet:
+			ImageDirectory = self.parent.GetConfigValue('file.imagesdirectory')
+			OutputFolder = self.parent.GetConfigValue('file.pdf_outdirectory')
+			self.AppHandle.InitiatePDF(ImageDirectory, OutputFolder, Full, Booklet)
+		#Generate Missing Image Report
+		if self.parent.GetConfigValue('task.missreport') == '1':
+			print "Generating missing report"
+			LiveFolder = self.parent.GetConfigValue('file.imagesdirectory')
+			msg = self.AppHandle.GetMissingMsg(LiveFolder)
+			dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg, caption = "Missing Images Report", size=(500,600))
+			dlg.ShowModal()
 
 	def makingActive(self):
 		if self.parent.GetConfigValue('task.missreport') == '1':
