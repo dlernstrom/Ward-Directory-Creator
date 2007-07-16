@@ -1,5 +1,4 @@
 # PDFTools.py
-import win32api
 import os
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.styles import getSampleStyleSheet
@@ -13,20 +12,21 @@ import time
 import datetime
 
 class PDFTools:
-	def __init__(self, DEBUG = 0,
+	def __init__(self, DEBUG,
 				 ImagesFolder,
 				 OutputFolder,
 				 Full,
 				 Booklet
 				 ):
 		self.DEBUG = DEBUG
-		self.ImagesFolder = ImagesFolder
+		self.ImagesFolder = str(ImagesFolder)
+		self.OutputFolder = str(OutputFolder)
 		self.Full = Full
 		self.Booklet = Booklet
 
-		self.filename = OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf'
-		self.front = OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf'
-		self.back = OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf'
+		self.filename = self.OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf'
+		self.front = self.OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf'
+		self.back = self.OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf'
 		
 		styles = getSampleStyleSheet()
 		styles.add(ParagraphStyle(name='DaveFooter',
@@ -127,6 +127,7 @@ class PDFTools:
 
 	def AddDirectoryWrapperImages(self):
 		#Let's make some stock flowables for 'FOR CHURCH USE ONLY' and 'PAGE NUMBER'
+		self.DIRECTORY_IMAGES = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\WardPictures\\'
 		self.CurrentWardDirectory.insert(0, Image(self.ImagesFolder + os.sep + '001.jpg', width=self.FrameWidth, height=self.FrameHeight))
 		self.CurrentWardDirectory.insert(0, Image(self.ImagesFolder + os.sep + '000.jpg', width=self.FrameWidth, height=self.FrameHeight))
 		self.CurrentWardDirectory.append(Image(self.ImagesFolder + os.sep + '-003.jpg', width=self.FrameWidth, height=self.FrameHeight))
@@ -153,6 +154,7 @@ class PDFTools:
 		CurrentPage = -1
 		FamiliesOnPages = []
 		TotalFlowables = len(self.CurrentWardDirectory)
+		print "Start Length",len(self.CurrentWardDirectory)
 		while len(self.CurrentWardDirectory):
 			LeftFrame = Frame(self.FarLeft, self.Bottom, self.FrameWidth, self.FrameHeight, leftPadding=0, bottomPadding=0, rightPadding=0, topPadding=0, showBoundary = self.DEBUG)
 			RightFrame = Frame(self.NotSoFarLeft, self.Bottom, self.FrameWidth, self.FrameHeight, leftPadding=0, bottomPadding=0, rightPadding=0, topPadding=0, showBoundary = self.DEBUG)
@@ -307,8 +309,8 @@ class PDFTools:
 
 	def TableizeFamily(self, Household):
 		Family = []
-		print Household[0],'Family'
-		print "Number of Members", str(len(Household[1][0]) + len(Household[1][1]))
+		#print Household[0],'Family'
+		#print "Number of Members", str(len(Household[1][0]) + len(Household[1][1]))
 		for Parent in Household[1][0]:
 			Family.append([Parent,'P'])
 		for Child in Household[1][1]:
@@ -328,16 +330,18 @@ class PDFTools:
 		data[0][3] = Paragraph(Household[2][0], self.styles['DaveHeading'])
 		data[0][4] = Paragraph(Household[2][1], self.styles['DaveBoldSmall'])
 		try:
-			FamilyPicture = Image(self.DIRECTORY_IMAGES + Household[3])
+			FamilyPicture = Image(self.ImagesFolder + os.sep + Household[3])
+			print self.ImagesFolder + os.sep + Household[3]
 			FamilyPicture.drawHeight = 1.125 * inch
 		except:
-			FamilyPicture = Image(self.DIRECTORY_IMAGES + 'Missing.jpg')
+			FamilyPicture = Image(self.ImagesFolder + os.sep + 'Missing.jpg')
+			print self.ImagesFolder + os.sep + 'Missing.jpg'
 			FamilyPicture.drawHeight = (1.5 * inch /180) * 100.0
 		FamilyPicture.drawWidth = 1.5 * inch
 
 		#Add the family Members
 		CurrentRow = 0
-		print "Family:",Family
+		#print "Family:",Family
 		for Member in Family:
 			CurrentRow += 1
 			if Member[1] == 'P':
