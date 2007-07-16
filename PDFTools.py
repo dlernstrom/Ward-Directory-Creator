@@ -14,18 +14,19 @@ import datetime
 
 class PDFTools:
 	def __init__(self, DEBUG = 0,
-				 DIRECTORY_IMAGES = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\WardPictures\\',
-				 APPDATAFOLDER = 'Ward Directory',
-				 filename = 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf',
-				 front = 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf',
-				 back = 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf'
+				 ImagesFolder,
+				 OutputFolder,
+				 Full,
+				 Booklet
 				 ):
 		self.DEBUG = DEBUG
-		self.DIRECTORY_IMAGES = DIRECTORY_IMAGES
+		self.ImagesFolder = ImagesFolder
+		self.Full = Full
+		self.Booklet = Booklet
 
-		self.filename = win32api.GetEnvironmentVariable('APPDATA') + os.sep + APPDATAFOLDER + os.sep + filename
-		self.front = win32api.GetEnvironmentVariable('APPDATA') + os.sep + APPDATAFOLDER + os.sep + front
-		self.back = win32api.GetEnvironmentVariable('APPDATA') + os.sep + APPDATAFOLDER + os.sep + back
+		self.filename = OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf'
+		self.front = OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf'
+		self.back = OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf'
 		
 		styles = getSampleStyleSheet()
 		styles.add(ParagraphStyle(name='DaveFooter',
@@ -126,12 +127,12 @@ class PDFTools:
 
 	def AddDirectoryWrapperImages(self):
 		#Let's make some stock flowables for 'FOR CHURCH USE ONLY' and 'PAGE NUMBER'
-		self.CurrentWardDirectory.insert(0, Image(self.DIRECTORY_IMAGES + '001.jpg', width=self.FrameWidth, height=self.FrameHeight))
-		self.CurrentWardDirectory.insert(0, Image(self.DIRECTORY_IMAGES + '000.jpg', width=self.FrameWidth, height=self.FrameHeight))
-		self.CurrentWardDirectory.append(Image(self.DIRECTORY_IMAGES + '-003.jpg', width=self.FrameWidth, height=self.FrameHeight))
-		self.CurrentWardDirectory.append(Image(self.DIRECTORY_IMAGES + '-002.jpg', width=self.FrameWidth, height=self.FrameHeight))
-		self.CurrentWardDirectory.append(Image(self.DIRECTORY_IMAGES + '-001.jpg', width=self.FrameWidth, height=self.FrameHeight))
-		self.CurrentWardDirectory.append(Image(self.DIRECTORY_IMAGES + '-000.jpg', width=self.FrameWidth, height=self.FrameHeight))
+		self.CurrentWardDirectory.insert(0, Image(self.ImagesFolder + os.sep + '001.jpg', width=self.FrameWidth, height=self.FrameHeight))
+		self.CurrentWardDirectory.insert(0, Image(self.ImagesFolder + os.sep + '000.jpg', width=self.FrameWidth, height=self.FrameHeight))
+		self.CurrentWardDirectory.append(Image(self.ImagesFolder + os.sep + '-003.jpg', width=self.FrameWidth, height=self.FrameHeight))
+		self.CurrentWardDirectory.append(Image(self.ImagesFolder + os.sep + '-002.jpg', width=self.FrameWidth, height=self.FrameHeight))
+		self.CurrentWardDirectory.append(Image(self.ImagesFolder + os.sep + '-001.jpg', width=self.FrameWidth, height=self.FrameHeight))
+		self.CurrentWardDirectory.append(Image(self.ImagesFolder + os.sep + '-000.jpg', width=self.FrameWidth, height=self.FrameHeight))
 
 	def AddFooter(self, FooterText):
 		self.CurrentWardDirectory.append(Paragraph(FooterText, self.styles['DaveFooter']))
@@ -191,7 +192,7 @@ class PDFTools:
 
 		##Insert filler flowables
 		for Count in range(Fillers):
-			FlowableBackup.insert(-4, Image(self.DIRECTORY_IMAGES + 'blank.jpg', width=self.FrameWidth, height=self.FrameHeight))
+			FlowableBackup.insert(-4, Image(self.ImagesFolder + os.sep + 'blank.jpg', width=self.FrameWidth, height=self.FrameHeight))
 
 		##Renumber FamiliesOnPages
 		NewPageCounts = []
@@ -242,9 +243,12 @@ class PDFTools:
 		pdf_BACK.setTitle('Ward Directory')
 		pdf_BACK.setSubject('Subject Line')
 
-		ThingsToPrint = [[NormalPageLayout, pdf],
-						 [FrontPageLayout, pdf_FRONT],
-						 [BackPageLayout, pdf_BACK]]
+		ThingsToPrint = []
+		if self.Full:
+			ThingsToPrint.append([NormalPageLayout, pdf])
+		if self.Booklet:
+			ThingsToPrint.append([FrontPageLayout, pdf_FRONT])
+			ThingsToPrint.append([BackPageLayout, pdf_BACK])
 
 		for PrintJob in ThingsToPrint:
 			for page in PrintJob[0]:
@@ -287,15 +291,19 @@ class PDFTools:
 			print "PDF Completed"
 
 		try:
-			pdf.save()
-			pdf_FRONT.save()
-			pdf_BACK.save()
+			if self.Full:
+				pdf.save()
+			if self.Booklet:
+				pdf_FRONT.save()
+				pdf_BACK.save()
 		except IOError:
 			os.mkdir(win32api.GetEnvironmentVariable('APPDATA') + os.sep + APPDATAFOLDER)
-			pdf.save()
-			pdf_FRONT.save()
-			pdf_BACK.save()
-		os.system('\"' + self.filename + '\"')
+			if self.Full:
+				pdf.save()
+			if self.Booklet:
+				pdf_FRONT.save()
+				pdf_BACK.save()
+		#os.system('\"' + self.filename + '\"')
 
 	def TableizeFamily(self, Household):
 		Family = []
