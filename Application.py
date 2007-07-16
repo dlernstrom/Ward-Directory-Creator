@@ -23,7 +23,6 @@ ConfigDefaults = {
 	"block.pr_rs_start":		"11:10 AM"
 	}
 
-
 class Application:
 	def __init__(self,
 				 parent,
@@ -121,12 +120,18 @@ class Application:
 						EmailList.append(Result)
 		return EmailList
 
-	def GetNameList(self):
+	def GetNameList(self, NameType = 'HoH'):
 		#This will return a list of all HeadOfHousehold/Spouses in ward
 		Name = []
-		for Family in self.MembershipList:
-			for Result in Family[1][0]:
-				Name.append((Family[0] + ', ' + Result.split('<')[0]).strip())
+		if NameType == 'HoH':
+			for Family in self.MembershipList:
+				Name.append((Family[0] + ', ' + Family[1][0][0].split('<')[0]).strip())
+		elif NameType == 'Parent':
+			for Family in self.MembershipList:
+				for Result in Family[1][0]:
+					Name.append((Family[0] + ', ' + Result.split('<')[0]).strip())
+		else:
+			print "I haven't implimented 'Family' type yet."
 		return Name
 
 	def GetPhoneNumber(self, Name):
