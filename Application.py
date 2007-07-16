@@ -42,6 +42,7 @@ class Application:
 		self.ConfigHandle.SetValueByKey(DictionaryField, value)
 		if DictionaryField == 'file.csvlocation':
 			self.GetMembershipList()
+			self.SetLists()
 
 	def InitiatePDF(self):
 		PDFToolHandle = PDFTools.PDFTools(self.DEBUG,
@@ -120,19 +121,30 @@ class Application:
 						EmailList.append(Result)
 		return EmailList
 
+	def SetLists(self):
+		self.SetNameList(NameType = 'HoH')
+		self.SetNameList(NameType = 'Parent')
+
 	def GetNameList(self, NameType = 'HoH'):
+		if NameType == 'HoH':
+			return self.NameList_HoH
+		elif NameType == 'Parent':
+			return self.NameList_Parent
+		else:
+			print "I haven't implimented 'Family' type yet."
+
+	def SetNameList(self, NameType = 'HoH'):
 		#This will return a list of all HeadOfHousehold/Spouses in ward
 		Name = []
 		if NameType == 'HoH':
 			for Family in self.MembershipList:
 				Name.append((Family[0] + ', ' + Family[1][0][0].split('<')[0]).strip())
+			self.NameList_HoH = Name
 		elif NameType == 'Parent':
 			for Family in self.MembershipList:
 				for Result in Family[1][0]:
 					Name.append((Family[0] + ', ' + Result.split('<')[0]).strip())
-		else:
-			print "I haven't implimented 'Family' type yet."
-		return Name
+			self.NameList_Parent = Name
 
 	def GetPhoneNumber(self, Name):
 		for Family in self.MembershipList:
