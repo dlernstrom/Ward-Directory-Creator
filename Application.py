@@ -3,6 +3,7 @@ import CSVMembershipParser
 from Email import mail
 import os
 import Configuration
+import string
 
 __version__ = "$Rev$".split()[1]
 VersionString = '1.0'
@@ -162,22 +163,22 @@ class Application:
 		Handle.write(self.GetMissingMsg())
 		Handle.close()
 
-	def GetSuperfluousImageList(self):
+	def GetSuperfluousImageList(self, LiveFolder):
 		IgnoreList = ['000.jpg', '-000.jpg', '-001.jpg', '-002.jpg', 'blank.jpg',
 					  '-003.jpg', '001.jpg', 'Thumbs.db', 'Missing.jpg']
 		NeededList = self.GetNeededImageList()
 		ExtraImages = []
-		for root, dirs, files in os.walk(self.DIRECTORY_IMAGES):
+		for root, dirs, files in os.walk(LiveFolder):
 			for file in files:
-				if not file in IgnoreList and not file in NeededList:
+				if not file in IgnoreList and not string.lower(file) in map(lambda x: string.lower(x), NeededList):
 					ExtraImages.append(file)
 		return ExtraImages
 
 	def MoveSuperflousImages(self, LiveFolder, ArchiveFolder):
-		for Image in self.GetSuperfluousImageList():
+		for Image in self.GetSuperfluousImageList(LiveFolder):
 			try:
 				os.rename(LiveFolder + os.sep + Image, ArchiveFolder + os.sep + Image)
 			except WindowsError:
 				os.mkdir(ArchiveFolder)
 				os.rename(LiveFolder + os.sep + Image, ArchiveFolder + os.sep + Image)
-			print Image,"moved to archive"
+			print Image, "moved to archive"
