@@ -4,35 +4,33 @@ import wx
 from ColoredPanel import *
 import  wx.lib.filebrowsebutton as filebrowse
 
-HoH = 1
-Parent = 2
-All = 4
-
 class LeadershipRow(wx.BoxSizer):
-	def __init__(self, parent, Description, NameType = HoH):
+	def __init__(self, parent, Description, ShortDesc, NameType = 'HoH'):
 		wx.BoxSizer.__init__(self, wx.HORIZONTAL)
 		self.parent = parent
+		self.Description = Description
+		self.ShortDesc = ShortDesc
+		self.NameType = NameType
 
-		DescriptionText = wx.StaticText(parent, -1, Description)
-		DescriptionText.SetFont(parent.StandardFont)
-		self.Add(DescriptionText, 1, wx.ALIGN_CENTER_VERTICAL)
+		self.DescriptionText = wx.StaticText(parent, -1, Description)
+		self.DescriptionText.SetFont(parent.StandardFont)
+		self.Add(self.DescriptionText, 1, wx.ALIGN_CENTER_VERTICAL)
 
-		NameList = self.parent.parent.parent.AppHandle.GetNameList()
-		Contact_Dropdown = wx.ComboBox(parent, -1, choices = NameList)
-		Contact_Dropdown.SetFont(parent.TextBoxFont)
-		self.Add(Contact_Dropdown, 0, wx.TOP | wx.LEFT | wx.ALIGN_CENTER_VERTICAL, 10)
+		self.Contact_Dropdown = wx.ComboBox(parent, -1, size = (265, -1))
+		self.Contact_Dropdown.SetFont(parent.TextBoxFont)
+		self.Add(self.Contact_Dropdown, 0, wx.TOP | wx.LEFT | wx.ALIGN_CENTER_VERTICAL, 10)
 
-		TXT_Phone = wx.TextCtrl(parent, -1, size = (150, -1))
-		TXT_Phone.SetFont(parent.TextBoxFont)
-		self.Add(TXT_Phone, 0, wx.TOP | wx.LEFT | wx.ALIGN_CENTER_VERTICAL, 10)
+		self.TXT_Phone = wx.TextCtrl(parent, -1, size = (150, -1))
+		self.TXT_Phone.SetFont(parent.TextBoxFont)
+		self.Add(self.TXT_Phone, 0, wx.TOP | wx.LEFT | wx.ALIGN_CENTER_VERTICAL, 10)
 
-		CB_Override = wx.CheckBox(parent, -1, "Override")
-		CB_Override.SetFont(parent.TextBoxFont)
-		self.Add(CB_Override, 0, wx.TOP | wx.LEFT | wx.ALIGN_CENTER_VERTICAL, 10)
+		self.CB_Override = wx.CheckBox(parent, -1, "Override")
+		self.CB_Override.SetFont(parent.TextBoxFont)
+		self.Add(self.CB_Override, 0, wx.TOP | wx.LEFT | wx.ALIGN_CENTER_VERTICAL, 10)
 
-		CB_Disp = wx.CheckBox(parent, -1, "Display")
-		CB_Disp.SetFont(parent.TextBoxFont)
-		self.Add(CB_Disp, 0, wx.TOP | wx.LEFT | wx.ALIGN_CENTER_VERTICAL, 10)
+		self.CB_Disp = wx.CheckBox(parent, -1, "Display")
+		self.CB_Disp.SetFont(parent.TextBoxFont)
+		self.Add(self.CB_Disp, 0, wx.TOP | wx.LEFT | wx.ALIGN_CENTER_VERTICAL, 10)
 
 class LeadershipPanel(ColoredPanel):
 	def __init__(self, parent):
@@ -41,22 +39,26 @@ class LeadershipPanel(ColoredPanel):
 
 		############################################################################
 		## Leadership Name Configuration
-		self.Bishop = LeadershipRow(self, "Bishop", HoH)
-		self.First = LeadershipRow(self, "1st Counselor", HoH)
-		self.Second = LeadershipRow(self, "2nd Counselor", HoH)
-		self.WardClerk = LeadershipRow(self, "Ward Clerk", HoH)
-		self.Financial = LeadershipRow(self, "Financial Clerk", HoH)
-		self.Membership = LeadershipRow(self, "Membership Clerk", HoH)
-		self.EQ = LeadershipRow(self, "Elders Quorum", HoH)
-		self.HP = LeadershipRow(self, "High Priests", HoH)
-		self.RS = LeadershipRow(self, "Relief Society", HoH)
-		self.YM = LeadershipRow(self, "Young Mens", HoH)
-		self.YW = LeadershipRow(self, "Young Womens", HoH)
-		self.Primary = LeadershipRow(self, "Primary", HoH)
-		self.WM = LeadershipRow(self, "Ward Mission Leader", HoH)
-		self.Act = LeadershipRow(self, "Activities Committee", HoH)
-		self.Newsletter = LeadershipRow(self, "Ward Newsletter", HoH)
-		self.Directory = LeadershipRow(self, "Ward Directory", HoH)
+		self.Bishop = LeadershipRow(self, "Bishop", ShortDesc = 'leadership.bish')
+		self.First = LeadershipRow(self, "1st Counselor", ShortDesc = 'leadership.first')
+		self.Second = LeadershipRow(self, "2nd Counselor", ShortDesc = 'leadership.second')
+		self.WardClerk = LeadershipRow(self, "Ward Clerk", ShortDesc = 'leadership.clerk')
+		self.Financial = LeadershipRow(self, "Financial Clerk", ShortDesc = 'leadership.fin')
+		self.Membership = LeadershipRow(self, "Membership Clerk", ShortDesc = 'leadership.mem')
+		self.EQ = LeadershipRow(self, "Elders Quorum", ShortDesc = 'leadership.eq')
+		self.HP = LeadershipRow(self, "High Priests", ShortDesc = 'leadership.hp')
+		self.RS = LeadershipRow(self, "Relief Society", ShortDesc = 'leadership.rs', NameType = 'Parent')
+		self.YM = LeadershipRow(self, "Young Mens", ShortDesc = 'leadership.ym')
+		self.YW = LeadershipRow(self, "Young Womens", ShortDesc = 'leadership.yw', NameType = 'Parent')
+		self.Primary = LeadershipRow(self, "Primary", ShortDesc = 'leadership.primary', NameType = 'Parent')
+		self.WM = LeadershipRow(self, "Ward Mission Leader", ShortDesc = 'leadership.wml')
+		self.Act = LeadershipRow(self, "Activities Committee", ShortDesc = 'leadership.act', NameType = 'Parent')
+		self.Newsletter = LeadershipRow(self, "Ward Newsletter", ShortDesc = 'leadership.news', NameType = 'Parent')
+		self.Directory = LeadershipRow(self, "Ward Directory", ShortDesc = 'leadership.dir', NameType = 'Parent')
+
+		self.PageRows = [self.Bishop, self.First, self.Second, self.WardClerk, self.Financial,
+						 self.Membership, self.EQ, self.HP, self.RS, self.YM, self.YW,
+						 self.Primary, self.WM, self.Act, self.Newsletter, self.Directory]
 
 		#######################################################################
 		## Non wrapped items
@@ -64,32 +66,129 @@ class LeadershipPanel(ColoredPanel):
 
 		#######################################################################
 		## Sizer encapsulation section
-
 		inside_border_level1 = wx.BoxSizer(wx.VERTICAL)
-		inside_border_level1.Add(self.Bishop, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
-		inside_border_level1.Add(self.First, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
-		inside_border_level1.Add(self.Second, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
-		inside_border_level1.Add(self.WardClerk, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
-		inside_border_level1.Add(self.Financial, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
-		inside_border_level1.Add(self.Membership, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
-		inside_border_level1.Add(self.EQ, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
-		inside_border_level1.Add(self.HP, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
-		inside_border_level1.Add(self.RS, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
-		inside_border_level1.Add(self.YM, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
-		inside_border_level1.Add(self.YW, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
-		inside_border_level1.Add(self.Primary, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
-		inside_border_level1.Add(self.WM, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
-		inside_border_level1.Add(self.Act, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
-		inside_border_level1.Add(self.Newsletter, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
-		inside_border_level1.Add(self.Directory, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
+		for Row in self.PageRows:
+			inside_border_level1.Add(Row, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
 
 		border_level0 = wx.BoxSizer()
 		border_level0.Add(inside_border_level1, 1, wx.EXPAND | wx.ALL | wx.ALIGN_CENTER_VERTICAL, 25)
 		self.SetSizer(border_level0)
 		border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])
 
+		self.Bind(wx.EVT_TEXT, self.OnChange)
+		self.Bind(wx.EVT_CHECKBOX, self.OnChange)
+
 		self.Title = "Leadership"
 
-	def makingActive(self):
-		return
+		#self.makingActive()
 
+	def OnChange(self, evt):
+		for Row in self.PageRows:
+			if Row.Contact_Dropdown.GetId() == evt.GetId():
+				self.DropdownChange(Row, evt.GetString())
+				return
+			elif Row.CB_Override.GetId() == evt.GetId():
+				self.OverrideChange(Row, evt.Checked())
+				return
+			elif Row.TXT_Phone.GetId() == evt.GetId():
+				self.PhoneNumberChange(Row, evt.GetString())
+				return
+			elif Row.CB_Disp.GetId() == evt.GetId():
+				self.DispChange(Row, evt.Checked())
+				return
+		raise Exception('problem')
+
+	def DropdownChange(self, Row, NewValue):
+		#Save the new value
+		self.parent.SetConfigValue(Row.ShortDesc + 'name', NewValue)
+		#Uncheck the override box
+		Row.CB_Override.SetValue(False)
+		#Save the override box status
+		self.parent.SetConfigValue(Row.ShortDesc + 'overph', '0')
+		#Enable(True) the override box
+		Row.CB_Override.Enable(True)
+		#Load the phone number from CSV
+		phone = self.parent.parent.AppHandle.GetPhoneNumber(NewValue)
+		Row.TXT_Phone.SetValue(phone)
+		#Check the display box
+		Row.CB_Disp.SetValue(True)
+		#Save the CB_Disp value
+		self.parent.SetConfigValue(Row.ShortDesc + 'disp', '1')
+		#Enable(True) the display box
+		Row.CB_Disp.Enable(True)
+
+	def OverrideChange(self, Row, Checked):
+		if Checked:
+			#save the new value
+			self.parent.SetConfigValue(Row.ShortDesc + 'overph', '1')
+			#Enable the phone field
+			Row.TXT_Phone.Enable(True)
+		else:
+			#save the new value
+			self.parent.SetConfigValue(Row.ShortDesc + 'overph', '0')
+			#Disable the phone field
+			Row.TXT_Phone.Enable(False)
+			#Reset the values for the phone field to CSV like
+			phone = self.parent.parent.AppHandle.GetPhoneNumber(self.parent.GetConfigValue(Row.ShortDesc + 'name'))
+			Row.TXT_Phone.SetValue(phone)
+
+	def PhoneNumberChange(self, Row, NewNumber):
+		self.parent.SetConfigValue(Row.ShortDesc + 'phone', NewNumber)
+
+	def DispChange(self, Row, NewStatus):
+		if NewStatus:
+			self.parent.SetConfigValue(Row.ShortDesc + 'disp', '1')
+		else:
+			self.parent.SetConfigValue(Row.ShortDesc + 'disp', '0')
+
+	def makingActive(self):
+		if self.parent.isValidCSV():
+			NameType = None
+			#optimized for repeat searches
+			for Row in self.PageRows:
+				print "Row Label", Row.ShortDesc
+				#Setup the dropdown lists
+				if not Row.NameType == NameType:
+					NameType = Row.NameType
+					NameList = self.parent.parent.AppHandle.GetNameList(NameType)
+				Row.Contact_Dropdown.Clear()
+				for Name in NameList:
+					Row.Contact_Dropdown.Append(Name)
+				#Enable things
+				Row.DescriptionText.Enable(True)
+				Row.Contact_Dropdown.Enable(True)
+				#What else can I enable?
+				if self.parent.GetConfigValue(Row.ShortDesc + 'name') in NameList:
+					#The name is in the list, I may as well set the data
+					Row.Contact_Dropdown.SetStringSelection(self.parent.GetConfigValue(Row.ShortDesc + 'name'))
+					if self.parent.GetConfigValue(Row.ShortDesc + 'disp') == '1':
+						Row.CB_Disp.SetValue(True)
+					else:
+						Row.CB_Disp.SetValue(False)
+					Row.CB_Override.Enable(True)
+					if self.parent.GetConfigValue(Row.ShortDesc + 'overph') == '1':
+						Row.CB_Override.SetValue(True)
+						Row.TXT_Phone.Enable(True)
+						Row.TXT_Phone.SetValue(self.parent.GetConfigValue(Row.ShortDesc + 'phone'))
+					else:
+						Row.CB_Override.SetValue(False)
+						Row.TXT_Phone.Enable(False)
+						phone = self.parent.parent.AppHandle.GetPhoneNumber(self.parent.GetConfigValue(Row.ShortDesc + 'name'))
+						Row.TXT_Phone.SetValue(phone)
+					Row.CB_Disp.Enable(True)
+				else:
+					if self.parent.GetConfigValue(Row.ShortDesc + 'name'):
+						#Name not in list
+						print self.parent.GetConfigValue(Row.ShortDesc + 'name') + " Not in list"
+					Row.TXT_Phone.Enable(False)
+					Row.CB_Override.Enable(False)
+					Row.CB_Override.SetValue(False)
+					Row.CB_Disp.Enable(False)
+					Row.CB_Disp.SetValue(False)
+		else:
+			for Row in self.PageRows:
+				Row.Contact_Dropdown.Enable(False)
+				Row.DescriptionText.Enable(False)
+				Row.TXT_Phone.Enable(False)
+				Row.CB_Override.Enable(False)
+				Row.CB_Disp.Enable(False)
