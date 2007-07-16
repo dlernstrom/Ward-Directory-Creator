@@ -173,11 +173,11 @@ class Application:
 					ExtraImages.append(file)
 		return ExtraImages
 
-	def MoveSuperflousImages(self):
+	def MoveSuperflousImages(self, LiveFolder, ArchiveFolder):
 		for Image in self.GetSuperfluousImageList():
 			try:
-				os.rename(self.DIRECTORY_IMAGES + Image, self.MOVED_OUT + Image)
+				os.rename(LiveFolder + os.sep + Image, ArchiveFolder + os.sep + Image)
 			except WindowsError:
-				os.mkdir(self.MOVED_OUT)
-				os.rename(self.DIRECTORY_IMAGES + Image, self.MOVED_OUT + Image)
+				os.mkdir(ArchiveFolder)
+				os.rename(LiveFolder + os.sep + Image, ArchiveFolder + os.sep + Image)
 			print Image,"moved to archive"
