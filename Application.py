@@ -45,13 +45,12 @@ class Application:
 			self.GetMembershipList()
 			self.SetLists()
 
-	def InitiatePDF(self):
+	def InitiatePDF(self, ImageDirectory, OutputFolder, Full, Booklet):
 		PDFToolHandle = PDFTools.PDFTools(self.DEBUG,
-										  self.DIRECTORY_IMAGES,
-										  self.APPDATAFOLDER,
-										  self.filename,
-										  self.front,
-										  self.back
+										  ImageDirectory,
+										  OutputFolder,
+										  Full,
+										  Booklet
 										  )
 
 		#Here I start adding flowables
@@ -94,18 +93,18 @@ class Application:
 	def GetNeededImageList(self):
 		return map(lambda Member: Member[3], self.MembershipList)
 
-	def GetMissingList(self):
+	def GetMissingList(self, ImagesDirectory):
 		MissingImages = []
 		for Family in self.MembershipList:
-			if not os.path.exists(self.DIRECTORY_IMAGES + Family[3]):
+			if not os.path.exists(ImagesDirectory + os.sep + Family[3]):
 				MissingImages.append(Family[4])
 		return MissingImages
 
-	def GetMissingMsg(self):
-		message = "The following " + str(len(self.GetMissingList())) + " people are missing pictures\n\n"
-		for Name in self.GetMissingList():
+	def GetMissingMsg(self, ImagesDirectory):
+		MissingList = self.GetMissingList(ImagesDirectory)
+		message = "The following " + str(len(MissingList)) + " people are missing pictures\n\n"
+		for Name in MissingList:
 			message += Name + '\n'
-		#print message
 		return message
 
 	def GetMemberEmails(self):
