@@ -124,7 +124,8 @@ class ConfigPanel(ColoredPanel):
 		self.Bind(wx.EVT_COMBOBOX, self.OnSelectEmail, self.Email_Dropdown)
 		self.Bind(wx.EVT_BUTTON, self.OnAddEmail, self.BTN_AddEmail)
 		self.Bind(wx.EVT_LISTBOX, self.ListboxClicked, self.EmailList)
-		self.Bind(wx.EVT_LISTBOX_DCLICK, self.ListboxDClicked, self.EmailList)
+		self.Bind(wx.EVT_LISTBOX_DCLICK, self.OnRemoveEmail, self.EmailList)
+		self.Bind(wx.EVT_BUTTON, self.OnRemoveEmail, self.BTN_RemoveEmail)
 
 		self.Title = "Configuration"
 
@@ -191,15 +192,30 @@ class ConfigPanel(ColoredPanel):
 		self.EmailList.Append(self.Email_Dropdown.GetStringSelection())
 		#Clear for next usage
 		self.Email_Dropdown.SetSelection(wx.NOT_FOUND)
+		self.SaveEmails()
+
+	def SaveEmails(self):
+		AllEmails = ''
+		for email in self.EmailList.GetStrings():
+			AllEmails += email + ','
+		AllEmails = AllEmails[:-1]
+		self.parent.SetConfigValue('email.recipients', AllEmails)
+
+	def LoadEmails(self):
+		RecipientList = self.parent.GetConfigValue('email.recipients').split(',')
+		self.EmailList.Clear()
+		self.EmailList.InsertItems(RecipientList, 0)
 
 	def ListboxClicked(self, evt):
 		self.BTN_RemoveEmail.Enable(True)
 
-	def ListboxDClicked(self, evt):
+	def OnRemoveEmail(self, evt):
 		self.EmailList.Delete(self.EmailList.GetSelection())
 		self.BTN_RemoveEmail.Enable(False)
+		self.SaveEmails()
 
 	def makingActive(self):
+		self.LoadEmails()
 		if self.parent.isValidCSV():
 			self.StaticName.Enable(True)
 			self.Contact_Dropdown.Enable(True)
