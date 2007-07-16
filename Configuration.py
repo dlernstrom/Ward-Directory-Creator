@@ -24,7 +24,7 @@ class Configuration:
 		if not len(config):
 			config = self.defaults
 		self.CurrentConfig = config
-		print "Config:", str(config)
+		#print "Config:", str(config)
 
 	def SetValueByKey(self, key, value):
 		section, option = key.split('.')
