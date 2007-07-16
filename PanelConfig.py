@@ -202,9 +202,10 @@ class ConfigPanel(ColoredPanel):
 		self.parent.SetConfigValue('email.recipients', AllEmails)
 
 	def LoadEmails(self):
-		RecipientList = self.parent.GetConfigValue('email.recipients').split(',')
-		self.EmailList.Clear()
-		self.EmailList.InsertItems(RecipientList, 0)
+		if not self.parent.GetConfigValue('email.recipients') == None:
+			RecipientList = self.parent.GetConfigValue('email.recipients').split(',')
+			self.EmailList.Clear()
+			self.EmailList.InsertItems(RecipientList, 0)
 
 	def ListboxClicked(self, evt):
 		self.BTN_RemoveEmail.Enable(True)
@@ -228,7 +229,7 @@ class ConfigPanel(ColoredPanel):
 
 			#Refresh choices to name list
 			self.Contact_Dropdown.Clear()
-			NameList = self.parent.parent.AppHandle.GetNameList()
+			NameList = self.parent.parent.AppHandle.GetNameList(NameType = 'Parent')
 			for Name in NameList:
 				self.Contact_Dropdown.Append(Name)
 			if self.parent.GetConfigValue('missing.missingname') in NameList:

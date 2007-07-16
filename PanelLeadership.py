@@ -146,7 +146,6 @@ class LeadershipPanel(ColoredPanel):
 			NameType = None
 			#optimized for repeat searches
 			for Row in self.PageRows:
-				print "Row Label", Row.ShortDesc
 				#Setup the dropdown lists
 				if not Row.NameType == NameType:
 					NameType = Row.NameType
@@ -157,6 +156,8 @@ class LeadershipPanel(ColoredPanel):
 				#Enable things
 				Row.DescriptionText.Enable(True)
 				Row.Contact_Dropdown.Enable(True)
+				if self.parent.GetConfigValue(Row.ShortDesc + 'name'):
+					print "Found name in namelist", self.parent.GetConfigValue(Row.ShortDesc + 'name')
 				#What else can I enable?
 				if self.parent.GetConfigValue(Row.ShortDesc + 'name') in NameList:
 					#The name is in the list, I may as well set the data
