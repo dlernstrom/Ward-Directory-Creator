@@ -6,12 +6,7 @@ import Notebook
 SEND_EMAILS = 0
 #SMTP_SERVER = 'smtp.forward.email.dupont.com'
 #SMTP_SERVER = 'smtp.comcast.net'
-APPDATAFOLDER = 'Ward Directory'
 DEBUG = 0
-MISSING_PEOPLE_EMAILS = ['david.ernstrom@usa.dupont.com', 'tina@ernstrom.net', 'david@ernstrom.net']
-DIRECTORY_IMAGES = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\WardPictures\\'
-MOVED_OUT = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\ImageArchive\\'
-CSV_LOCATION = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\'
 
 ########################
 ## Application Options:
@@ -55,7 +50,6 @@ class MyApp(wx.App):
 		win = MyFrame(None, -1, "Ward Directory Creator", size=wx.DefaultSize,
 				style = wx.MINIMIZE_BOX | wx.MAXIMIZE_BOX
 					  | wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
-		#win.AppHandle.InitiatePDF()
 		win.Show(True)
 		return True
 
