@@ -4,7 +4,7 @@ import Application
 import Notebook
 
 SEND_EMAILS = 0
-SMTP_SERVER = 'smtp.forward.email.dupont.com'
+#SMTP_SERVER = 'smtp.forward.email.dupont.com'
 #SMTP_SERVER = 'smtp.comcast.net'
 APPDATAFOLDER = 'Ward Directory'
 DEBUG = 0
