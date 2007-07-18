@@ -236,14 +236,22 @@ class PDFTools:
 		pdf.setAuthor('David Ernstrom')
 		pdf.setTitle('Ward Directory')
 		pdf.setSubject('Subject Line')
+		#from reportlab.pdfbase import pdfmetrics
+		#from reportlab.pdfbase.ttfonts import TTFont
+		#pdfmetrics.registerFont(TTFont('Georgia', 'c:\\WINDOWS\\fonts\\georgia.TTF'))
+		pdf.setFont('Helvetica', 18)
+		
 		pdf_FRONT = Canvas(self.front, pagesize = landscape(letter))
 		pdf_FRONT.setAuthor('David Ernstrom')
 		pdf_FRONT.setTitle('Ward Directory')
 		pdf_FRONT.setSubject('Subject Line')
+		pdf_FRONT.setFont('Helvetica', 18)
+
 		pdf_BACK = Canvas(self.back, pagesize = landscape(letter))
 		pdf_BACK.setAuthor('David Ernstrom')
 		pdf_BACK.setTitle('Ward Directory')
 		pdf_BACK.setSubject('Subject Line')
+		pdf_BACK.setFont('Helvetica', 18)
 
 		ThingsToPrint = []
 		if self.Full:
