@@ -45,6 +45,9 @@ class Configuration:
 			value = None
 		return value
 
+	def GetConfigData(self):
+		return self.CurrentConfig
+
 	def WriteConfigFile(self):
 		"""
 		given a dictionary with key's of the form 'section.option: value'
