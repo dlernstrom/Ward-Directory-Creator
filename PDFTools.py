@@ -209,7 +209,8 @@ class PDFTools:
 		self.CurrentWardDirectory.append(Paragraph(text = self.DictionaryData['bldg.addy1'], style = self.styles['PrefixBase']))
 		self.CurrentWardDirectory.append(Paragraph(text = self.DictionaryData['bldg.addy2'], style = self.styles['PrefixBase']))
 		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = 2.0 * inch))
-		self.CurrentWardDirectory.append(Paragraph(text = "Published: TODAY", style = self.styles['PrefixBase']))
+		CurrentDateString = datetime.date.today().strftime("%d %B %Y")
+		self.CurrentWardDirectory.append(Paragraph(text = "Published: " + CurrentDateString, style = self.styles['PrefixBase']))
 		self.CurrentWardDirectory.append(PageBreak())
 
 		#Page 2 Data
@@ -415,12 +416,6 @@ class PDFTools:
 				if not RightFrameFlowablesConsumed == 1:
 					RightFrame.addFromList([self.ChurchFlowable], PrintJob[1])
 
-				#page[0] is the left side
-				#CurrentDateString = datetime.date.today().strftime("%d %B %Y")
-				#if page[0] == 0:
-				#	PrintJob[1].drawString(self.FarLeft + self.FrameWidth/2, 75, CurrentDateString)
-				#if page[1] == 0:
-				#	PrintJob[1].drawString(self.NotSoFarLeft + self.FrameWidth/2, 75, CurrentDateString)
 				PrintJob[1].showPage()
 			print "PDF Completed"
 
