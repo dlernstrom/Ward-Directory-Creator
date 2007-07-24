@@ -4,6 +4,7 @@ from Email import mail
 import os
 import Configuration
 import string
+import time
 
 __version__ = "$Rev$".split()[1]
 VersionString = '1.0'
@@ -46,14 +47,38 @@ class Application:
 			self.GetMembershipList()
 			self.SetLists()
 
+	def StructureBlockData(self):
+		#Here, I need to return a list of lists about the current block data
+		BlockData = []
+		format = '%I:%M %p'
+		if self.GetConfigValue('block.displaysac'):
+			BlockData.append([time.strptime(self.GetConfigValue('block.sacstart'), format),
+							  "Sacrament Meeting"])
+		if self.GetConfigValue('block.displayss'):
+			BlockData.append([time.strptime(self.GetConfigValue('block.ssstart'), format),
+							  "Sunday School"])
+		if self.GetConfigValue('block.display_pr_rs'):
+			BlockData.append([time.strptime(self.GetConfigValue('block.pr_rs_start'), format),
+							  "Priesthood / Relief Society"])
+		if self.DEBUG:
+			print BlockData
+		BlockData.sort()
+		for Mtg in BlockData:
+			Mtg[0] = time.strftime(format, Mtg[0])
+			if Mtg[0][0] == '0':
+				Mtg[0] = Mtg[0][1:]
+		if self.DEBUG:
+			print BlockData
+		return BlockData
+
 	def InitiatePDF(self, ImageDirectory, OutputFolder, Full, Booklet):
-		DictionaryData = self.ConfigHandle.GetConfigData()
 		PDFToolHandle = PDFTools.PDFTools(self.DEBUG,
 										  ImageDirectory,
 										  OutputFolder,
 										  Full,
 										  Booklet,
-										  DictionaryData
+										  DictionaryData = self.ConfigHandle.GetConfigData(),
+										  BlockData = self.StructureBlockData()
 										  )
 
 		#Here I start adding flowables
@@ -86,7 +111,7 @@ class Application:
 		self.ValidCSV = False
 		self.MembershipList = []
 		if self.GetConfigValue('file.csvlocation') == None or not self.GetConfigValue('file.csvlocation')[-4:] == '.csv':
-			print "Not valid"
+			print "Not a valid membership list"
 			return
 		MembershipHandle = CSVMembershipParser.CSVMembershipParser(self.GetConfigValue('file.csvlocation'))
 		for Household in MembershipHandle.next():

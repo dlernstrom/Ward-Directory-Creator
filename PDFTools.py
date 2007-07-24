@@ -13,12 +13,14 @@ import time
 import datetime
 
 class PDFTools:
-	def __init__(self, DEBUG,
+	def __init__(self,
+				 DEBUG,
 				 ImagesFolder,
 				 OutputFolder,
 				 Full,
 				 Booklet,
-				 DictionaryData
+				 DictionaryData,
+				 BlockData
 				 ):
 		self.DEBUG = DEBUG
 		self.ImagesFolder = str(ImagesFolder)
@@ -26,6 +28,7 @@ class PDFTools:
 		self.Full = Full
 		self.Booklet = Booklet
 		self.DictionaryData = DictionaryData
+		self.BlockData = BlockData
 
 		self.filename = self.OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf'
 		self.front = self.OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf'
@@ -141,6 +144,7 @@ class PDFTools:
 
 	def GetPositionData(self):
 		#Return a list of dictionaries of the positions ordered correctly
+		#TODO: This should happen by my parent... I am the customer and should get it how I want it already
 		RoleList = ['bish', 'first', 'second', 'exec', 'clerk', 'fin', 'mem', "NULL",
 					'hp', 'eq', 'rs', 'ym', 'yw', 'primary', "NULL",
 					'wml', 'act', 'news', 'dir']
@@ -185,6 +189,18 @@ class PDFTools:
 									   "Phone" :	" "})
 		return LeadershipList
 
+	def GetBlockData(self):
+		if self.DEBUG:
+			print "Here, I parse the block data stuff that was sent to me"
+			print self.BlockData
+		myDisplayBlock = []
+		for Mtg in self.BlockData:
+			myDisplayBlock.append([[Paragraph(text = Mtg[0], style = self.styles['PrefixBaseRight'])],
+								   [Paragraph(text = Mtg[1], style = self.styles['PrefixBaseLeft'])]])
+		if self.DEBUG:
+			print "and return a data = [[,],[,],[,]] to be used here"
+		return myDisplayBlock
+
 	def AddDirectoryPrefixData(self):
 		print "Here's the dictionary I received"
 		print self.DictionaryData
@@ -218,14 +234,14 @@ class PDFTools:
 		CurrentYearString = datetime.date.today().strftime("%Y")
 		self.CurrentWardDirectory.append(Paragraph(text = "<u>" + CurrentYearString + " Meeting Schedule</u>", style = self.styles['Subtitle']))
 		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = .125 * inch))
-		data = [[[Paragraph(text = self.DictionaryData['block.sacstart'], style = self.styles['PrefixBaseRight'])],
-				 [Paragraph(text = "Sacrament Meeting", style = self.styles['PrefixBaseLeft'])]],
-				[[Paragraph(text = self.DictionaryData['block.ssstart'], style = self.styles['PrefixBaseRight'])],
-				 [Paragraph(text = "Sunday School", style = self.styles['PrefixBaseLeft'])]],
-				[[Paragraph(text = self.DictionaryData['block.pr_rs_start'], style = self.styles['PrefixBaseRight'])],
-				 [Paragraph(text = "Priesthood/Relief Society", style = self.styles['PrefixBaseLeft'])]]
-				]
-		TextTable = Table(data, [1.5 * inch, 3.0 * inch])
+		#data = [[[Paragraph(text = self.DictionaryData['block.sacstart'], style = self.styles['PrefixBaseRight'])],
+		#		 [Paragraph(text = "Sacrament Meeting", style = self.styles['PrefixBaseLeft'])]],
+		#		[[Paragraph(text = self.DictionaryData['block.ssstart'], style = self.styles['PrefixBaseRight'])],
+		#		 [Paragraph(text = "Sunday School", style = self.styles['PrefixBaseLeft'])]],
+		#		[[Paragraph(text = self.DictionaryData['block.pr_rs_start'], style = self.styles['PrefixBaseRight'])],
+		#		 [Paragraph(text = "Priesthood/Relief Society", style = self.styles['PrefixBaseLeft'])]]
+		#		]
+		TextTable = Table(self.GetBlockData(), [1.5 * inch, 3.0 * inch])
 		if self.DEBUG:
 			TextTable.setStyle(TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
 										   ('BOX', (0,0), (-1,-1), .25, colors.black),
@@ -282,7 +298,8 @@ class PDFTools:
 		CurrentPage = -1
 		FamiliesOnPages = []
 		TotalFlowables = len(self.CurrentWardDirectory)
-		print "Start Length",len(self.CurrentWardDirectory)
+		if self.DEBUG:
+			print "Start Length",len(self.CurrentWardDirectory)
 		while len(self.CurrentWardDirectory):
 			LeftFrame = Frame(self.FarLeft, self.Bottom, self.FrameWidth, self.FrameHeight, leftPadding=0, bottomPadding=0, rightPadding=0, topPadding=0, showBoundary = self.DEBUG)
 			RightFrame = Frame(self.NotSoFarLeft, self.Bottom, self.FrameWidth, self.FrameHeight, leftPadding=0, bottomPadding=0, rightPadding=0, topPadding=0, showBoundary = self.DEBUG)
@@ -316,9 +333,10 @@ class PDFTools:
 		PageCount = (UsedFaces + Fillers) / 4
 		print str(PageCount) + " slices of paper per directory are needed"
 
-		#print "Before Flowable Filler Addition"
-		#for Item in FamiliesOnPages:
-		#	print Item
+		if self.DEBUG:
+			print "Before Flowable Filler Addition"
+			for Item in FamiliesOnPages:
+				print Item
 
 		##Insert filler flowables
 		for Count in range(Fillers):
@@ -339,9 +357,10 @@ class PDFTools:
 		##Recover From Flowable Backup
 		self.CurrentWardDirectory = FlowableBackup[:]
 
-		#print "After Flowable Filler Addition"
-		#for Item in self.FamiliesOnPages:
-		#	print Item
+		if self.DEBUG:
+			print "After Flowable Filler Addition"
+			for Item in self.FamiliesOnPages:
+				print Item
 
 	def GeneratePDFDocs(self):
 		##Print to PDF using the correct formats now and the correct page ordering
@@ -362,9 +381,6 @@ class PDFTools:
 		pdf.setAuthor('David Ernstrom')
 		pdf.setTitle('Ward Directory')
 		pdf.setSubject('Subject Line')
-		#from reportlab.pdfbase import pdfmetrics
-		#from reportlab.pdfbase.ttfonts import TTFont
-		#pdfmetrics.registerFont(TTFont('Georgia', 'c:\\WINDOWS\\fonts\\georgia.TTF'))
 		pdf.setFont('Helvetica', 18)
 		
 		pdf_FRONT = Canvas(self.front, pagesize = landscape(letter))
@@ -439,7 +455,6 @@ class PDFTools:
 		Family = []
 		if self.DEBUG:
 			print Household[0],'Family'
-		if self.DEBUG:
 			print "Number of Members", str(len(Household[1][0]) + len(Household[1][1]))
 		for Parent in Household[1][0]:
 			Family.append([Parent,'P'])
@@ -466,7 +481,6 @@ class PDFTools:
 								  kind = 'proportional')
 			if self.DEBUG:
 				print self.ImagesFolder + os.sep + Household[3]
-			#FamilyPicture.drawHeight = 1.125 * inch
 		except:
 			FamilyPicture = Image(self.ImagesFolder + os.sep + 'Missing.jpg',
 								  width = 1.5 * inch,
@@ -474,7 +488,6 @@ class PDFTools:
 								  kind = 'proportional')
 			if self.DEBUG:
 				print self.ImagesFolder + os.sep + 'Missing.jpg'
-			#FamilyPicture.drawHeight = (1.5 * inch /180) * 100.0
 		FamilyPicture.drawWidth = 1.5 * inch
 
 		#Add the family Members
