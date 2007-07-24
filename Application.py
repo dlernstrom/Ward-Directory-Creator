@@ -90,8 +90,9 @@ class Application:
 			NumberOfHouseholds += 1
 			NumberOfMembers += len(Household[1][0]) + len(Household[1][1])
 			PDFToolHandle.AddFamily(Household)
-			#print str(NumberOfHouseholds), Household[0]
-			#print '------------------------------------------'
+			if self.DEBUG:
+				print str(NumberOfHouseholds), Household[0]
+				print '------------------------------------------'
 		PDFToolHandle.AddFooter(str(NumberOfHouseholds) + ' Total Families')
 		PDFToolHandle.AddFooter(str(NumberOfMembers) + ' Total Individuals')
 		PDFToolHandle.AddDirectorySuffixData()

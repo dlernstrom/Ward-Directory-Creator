@@ -202,8 +202,9 @@ class PDFTools:
 		return myDisplayBlock
 
 	def AddDirectoryPrefixData(self):
-		print "Here's the dictionary I received"
-		print self.DictionaryData
+		if self.DEBUG:
+			print "Here's the dictionary I received"
+			print self.DictionaryData
 		#TODO: Need to validate that I have at least a blank in all of the following fields:
 		"""
 		Send it to a validation function to do the following:
@@ -217,41 +218,36 @@ class PDFTools:
 		bldg.phone
 		"""
 		#Page 1 Data
-		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = 1.5 * inch))
-		self.CurrentWardDirectory.append(Paragraph(text = self.DictionaryData['unit.unitname'], style = self.styles['DocumentTitle']))
-		self.CurrentWardDirectory.append(Paragraph(text = "Member Directory", style = self.styles['Subtitle']))
-		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = 2.0 * inch))
-		self.CurrentWardDirectory.append(Paragraph(text = self.DictionaryData['unit.stakename'], style = self.styles['PrefixBase']))
-		self.CurrentWardDirectory.append(Paragraph(text = self.DictionaryData['bldg.addy1'], style = self.styles['PrefixBase']))
-		self.CurrentWardDirectory.append(Paragraph(text = self.DictionaryData['bldg.addy2'], style = self.styles['PrefixBase']))
-		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = 2.0 * inch))
+		self.PrefixFlowables = []
+		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = 1.5 * inch))
+		self.PrefixFlowables.append(Paragraph(text = self.DictionaryData['unit.unitname'], style = self.styles['DocumentTitle']))
+		self.PrefixFlowables.append(Paragraph(text = "Member Directory", style = self.styles['Subtitle']))
+		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = 2.0 * inch))
+		self.PrefixFlowables.append(Paragraph(text = self.DictionaryData['unit.stakename'], style = self.styles['PrefixBase']))
+		self.PrefixFlowables.append(Paragraph(text = self.DictionaryData['bldg.addy1'], style = self.styles['PrefixBase']))
+		self.PrefixFlowables.append(Paragraph(text = self.DictionaryData['bldg.addy2'], style = self.styles['PrefixBase']))
+		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = 2.0 * inch))
 		CurrentDateString = datetime.date.today().strftime("%d %B %Y")
-		self.CurrentWardDirectory.append(Paragraph(text = "Published: " + CurrentDateString, style = self.styles['PrefixBase']))
-		self.CurrentWardDirectory.append(PageBreak())
+		self.PrefixFlowables.append(Paragraph(text = "Published: " + CurrentDateString, style = self.styles['PrefixBase']))
+		self.PrefixFlowables.append(PageBreak())
+		print "Length of prefix flowables", len(self.PrefixFlowables)
 
 		#Page 2 Data
-		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = .125 * inch))
+		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
 		CurrentYearString = datetime.date.today().strftime("%Y")
-		self.CurrentWardDirectory.append(Paragraph(text = "<u>" + CurrentYearString + " Meeting Schedule</u>", style = self.styles['Subtitle']))
-		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = .125 * inch))
-		#data = [[[Paragraph(text = self.DictionaryData['block.sacstart'], style = self.styles['PrefixBaseRight'])],
-		#		 [Paragraph(text = "Sacrament Meeting", style = self.styles['PrefixBaseLeft'])]],
-		#		[[Paragraph(text = self.DictionaryData['block.ssstart'], style = self.styles['PrefixBaseRight'])],
-		#		 [Paragraph(text = "Sunday School", style = self.styles['PrefixBaseLeft'])]],
-		#		[[Paragraph(text = self.DictionaryData['block.pr_rs_start'], style = self.styles['PrefixBaseRight'])],
-		#		 [Paragraph(text = "Priesthood/Relief Society", style = self.styles['PrefixBaseLeft'])]]
-		#		]
+		self.PrefixFlowables.append(Paragraph(text = "<u>" + CurrentYearString + " Meeting Schedule</u>", style = self.styles['Subtitle']))
+		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
 		TextTable = Table(self.GetBlockData(), [1.5 * inch, 3.0 * inch])
 		if self.DEBUG:
 			TextTable.setStyle(TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
 										   ('BOX', (0,0), (-1,-1), .25, colors.black),
 										   ]))
-		self.CurrentWardDirectory.append(TextTable)
-		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = .125 * inch))
-		self.CurrentWardDirectory.append(Paragraph(text = "Office Phone: " + self.DictionaryData['bldg.phone'], style = self.styles['PrefixBase']))
-		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = .125 * inch))
-		self.CurrentWardDirectory.append(HRFlowable())
-		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = .125 * inch))
+		self.PrefixFlowables.append(TextTable)
+		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
+		self.PrefixFlowables.append(Paragraph(text = "Office Phone: " + self.DictionaryData['bldg.phone'], style = self.styles['PrefixBase']))
+		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
+		self.PrefixFlowables.append(HRFlowable())
+		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
 		data = []
 		
 		for Position in self.GetPositionData():
@@ -263,22 +259,27 @@ class PDFTools:
 			TextTable.setStyle(TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
 										   ('BOX', (0,0), (-1,-1), .25, colors.black),
 										   ]))
-		self.CurrentWardDirectory.append(TextTable)
-		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = .25 * inch))
+		self.PrefixFlowables.append(TextTable)
+		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .25 * inch))
 		Disclaimer = """This ward directory is to be used only for Church purposes
 						 and should not be copied without permission of the bishop
 						 or stake president.
 						 """
-		self.CurrentWardDirectory.append(Paragraph(text = "<b>" + Disclaimer + "</b>", style = self.styles['PrefixBase']))
-		self.CurrentWardDirectory.append(PageBreak())
+		self.PrefixFlowables.append(Paragraph(text = "<b>" + Disclaimer + "</b>", style = self.styles['PrefixBase']))
+		self.PrefixFlowables.append(PageBreak())
+		if self.DEBUG:
+			for aFlowable in self.PrefixFlowables:
+				if not aFlowable.__class__ is PageBreak and not aFlowable.__class__ is HRFlowable and not aFlowable.__class__ is Table and not aFlowable.__class__ is Image:
+					aFlowable._showBoundary = 1
 
 	def AddDirectorySuffixData(self):
-		self.CurrentWardDirectory.append(Image(self.ImagesFolder + os.sep + '-003.jpg', width=self.FrameWidth, height=self.FrameHeight))
-		self.CurrentWardDirectory.append(Image(self.ImagesFolder + os.sep + '-002.jpg', width=self.FrameWidth, height=self.FrameHeight))
-		self.CurrentWardDirectory.append(Image(self.ImagesFolder + os.sep + '-001.jpg', width=self.FrameWidth, height=self.FrameHeight))
-		self.CurrentWardDirectory.append(Image(self.ImagesFolder + os.sep + '-000.jpg', width=self.FrameWidth, height=self.FrameHeight))
+		self.SuffixFlowables = []
+		self.SuffixFlowables.append(Image(self.ImagesFolder + os.sep + '-003.jpg', width=self.FrameWidth, height=self.FrameHeight))
+		self.SuffixFlowables.append(Image(self.ImagesFolder + os.sep + '-002.jpg', width=self.FrameWidth, height=self.FrameHeight))
+		self.SuffixFlowables.append(Image(self.ImagesFolder + os.sep + '-001.jpg', width=self.FrameWidth, height=self.FrameHeight))
+		self.SuffixFlowables.append(Image(self.ImagesFolder + os.sep + '-000.jpg', width=self.FrameWidth, height=self.FrameHeight))
 		if self.DEBUG:
-			for aFlowable in self.CurrentWardDirectory:
+			for aFlowable in self.SuffixFlowables:
 				if not aFlowable.__class__ is PageBreak and not aFlowable.__class__ is HRFlowable and not aFlowable.__class__ is Table and not aFlowable.__class__ is Image:
 					aFlowable._showBoundary = 1
 
@@ -288,78 +289,101 @@ class PDFTools:
 	def AddFamily(self, Household):
 		self.CurrentWardDirectory.append(self.TableizeFamily(Household))
 
-	def GenerateWardPagination(self):
+	def FlowableGenerator(self):
 		##Make a backup of the current document
-		FlowableBackup = self.CurrentWardDirectory[:]
+		Test_PrefixFlowables = self.PrefixFlowables[:]
+		Test_MemberFlowables = self.CurrentWardDirectory[:]
+		Test_SuffixFlowables = self.SuffixFlowables[:]
+		#The following section has a True or False to tell me if I add page header/footer data
+		DirSections = [[Test_PrefixFlowables, False],
+					   [Test_MemberFlowables, True],
+					   [Test_SuffixFlowables, False]]
+		self.FlowablesConsumed = 0
+		for FlowableList, Header_Footer in DirSections:
+			for SingleFlowable in FlowableList:
+				yield Header_Footer
+				yield SingleFlowable
+				self.FlowablesConsumed += 1
 
+
+	def GenerateWardPagination(self):
 		pdf_TEST = Canvas("DIRECTORY_TEST.pdf", pagesize = landscape(letter))
-		
+
 		##THE NEXT LOOP IS TO GET THE COUNTS OF HOW MANY PAGES I'LL END UP WITH AND HOW MANY FLOWABLES WILL FALL ONTO EACH PAGE
-		CurrentPage = -1
-		FamiliesOnPages = []
-		TotalFlowables = len(self.CurrentWardDirectory)
+		FlowablesOnPages = []
+
+		#PREPARE FOR FIRST TIME THROUGH
+		self.TotalFlowables = len(self.CurrentWardDirectory) + len(self.PrefixFlowables) + len(self.SuffixFlowables)
 		if self.DEBUG:
-			print "Start Length",len(self.CurrentWardDirectory)
-		while len(self.CurrentWardDirectory):
-			LeftFrame = Frame(self.FarLeft, self.Bottom, self.FrameWidth, self.FrameHeight, leftPadding=0, bottomPadding=0, rightPadding=0, topPadding=0, showBoundary = self.DEBUG)
-			RightFrame = Frame(self.NotSoFarLeft, self.Bottom, self.FrameWidth, self.FrameHeight, leftPadding=0, bottomPadding=0, rightPadding=0, topPadding=0, showBoundary = self.DEBUG)
-			CurrentPage += 1
-			#print len(self.CurrentWardDirectory)
-			Start = len(self.CurrentWardDirectory)
-			if CurrentPage >= 2 and len(self.CurrentWardDirectory) > 4:
-				LeftFrame.addFromList([self.ChurchFlowable], pdf_TEST)
-				LeftFrame.addFromList([Paragraph('Page ' + str(CurrentPage), self.styles['DaveHeaderLeft'])], pdf_TEST)
-			LeftFrame.addFromList(self.CurrentWardDirectory, pdf_TEST)
-			FamiliesOnPages.append([CurrentPage, TotalFlowables - Start, Start - len(self.CurrentWardDirectory), len(self.CurrentWardDirectory)])
-
-			if len(self.CurrentWardDirectory) == 0:
-				continue
-
-			CurrentPage += 1
-			Start = len(self.CurrentWardDirectory)
-			if CurrentPage >= 2 and len(self.CurrentWardDirectory) > 4:
-				RightFrame.addFromList([self.ChurchFlowable], pdf_TEST)
-				RightFrame.addFromList([Paragraph('Page ' + str(CurrentPage), self.styles['DaveHeaderRight'])], pdf_TEST)
-			RightFrame.addFromList(self.CurrentWardDirectory, pdf_TEST)
-			FamiliesOnPages.append([CurrentPage, TotalFlowables - Start, Start - len(self.CurrentWardDirectory), len(self.CurrentWardDirectory)])
+			for element in self.PrefixFlowables:
+				print element.__class__
+			print "Start Length", self.TotalFlowables
+		GeneratorHandle = self.FlowableGenerator()
+		Header_Footer = GeneratorHandle.next()
+		SingleFlowable = GeneratorHandle.next()
+		while self.TotalFlowables - self.FlowablesConsumed > 0:
+			#PREPARE FOR A FRAME
+			StartingFlowablesConsumed = self.FlowablesConsumed
+			#BUILD THE FRAME
+			MyFrame = Frame(self.FarLeft, self.Bottom, self.FrameWidth, self.FrameHeight, leftPadding=0, bottomPadding=0, rightPadding=0, topPadding=0, showBoundary = self.DEBUG)
+			if Header_Footer:
+				MyFrame.add(self.ChurchFlowable, pdf_TEST)
+				MyFrame.add(Paragraph('Page ' + str(pdf_TEST.getPageNumber() - 1), self.styles['DaveHeaderLeft']), pdf_TEST)
+			try:
+				PageFull = False
+				while not PageFull:
+					if not MyFrame.add(SingleFlowable, pdf_TEST):
+						PageFull = True
+					else:
+						Header_Footer = GeneratorHandle.next()
+						SingleFlowable = GeneratorHandle.next()
+			except:
+				print "Ran out of Flowables"
+			if self.DEBUG:
+				print "Flowables Consumed TOTAL:", self.FlowablesConsumed
+			NumberIConsumed = self.FlowablesConsumed - StartingFlowablesConsumed
+			NumberRemaining = self.TotalFlowables - self.FlowablesConsumed
+			FlowablesOnPages.append([pdf_TEST.getPageNumber() - 1, StartingFlowablesConsumed, NumberIConsumed, NumberRemaining])
+			#END BUILDING THE TEST FRAME
 			pdf_TEST.showPage()
+		pdf_TEST.save()
 
-		UsedFaces = CurrentPage + 1
-		print str(UsedFaces) + " faces are present"
+		UsedFaces = len(FlowablesOnPages)
+		if self.DEBUG:
+			print str(UsedFaces) + " faces are present"
 		Fillers = (4 - UsedFaces % 4) % 4
-		print str(Fillers) + " blank faces will be added to make full pages"
+		if self.DEBUG:
+			print str(Fillers) + " blank faces will be added to make full pages"
 		for Count in range(Fillers):
-			FamiliesOnPages.insert(-4, [-1, 0, 1, 0])
+			FlowablesOnPages.insert(-4, [-1, 0, 1, 0])
 		PageCount = (UsedFaces + Fillers) / 4
-		print str(PageCount) + " slices of paper per directory are needed"
+		if self.DEBUG:
+			print str(PageCount) + " slices of paper per directory are needed"
 
 		if self.DEBUG:
 			print "Before Flowable Filler Addition"
-			for Item in FamiliesOnPages:
+			for Item in FlowablesOnPages:
 				print Item
 
 		##Insert filler flowables
 		for Count in range(Fillers):
-			FlowableBackup.insert(-4, Image(self.ImagesFolder + os.sep + 'blank.jpg', width=self.FrameWidth, height=self.FrameHeight))
+			self.SuffixFlowables.insert(0, Image(self.ImagesFolder + os.sep + 'blank.jpg', width=self.FrameWidth, height=self.FrameHeight))
 
 		##Renumber FamiliesOnPages
 		NewPageCounts = []
-		Remaining = FamiliesOnPages[0][2] + FamiliesOnPages[0][3] + Fillers
+		Remaining = FlowablesOnPages[0][2] + FlowablesOnPages[0][3] + Fillers
 		Used = 0
 		PageCounter = 0
-		for item in FamiliesOnPages:
+		for item in FlowablesOnPages:
 			Remaining -= item[2]
 			NewPageCounts.append([PageCounter, Used, item[2], Remaining])
 			Used += item[2]
 			PageCounter += 1
-		self.FamiliesOnPages = NewPageCounts
-
-		##Recover From Flowable Backup
-		self.CurrentWardDirectory = FlowableBackup[:]
+		self.FlowablesOnPages = NewPageCounts
 
 		if self.DEBUG:
 			print "After Flowable Filler Addition"
-			for Item in self.FamiliesOnPages:
+			for Item in self.FlowablesOnPages:
 				print Item
 
 	def GeneratePDFDocs(self):
@@ -367,15 +391,16 @@ class PDFTools:
 		FrontPageLayout = []
 		BackPageLayout = []
 		NormalPageLayout = []
-		Sides = (self.FamiliesOnPages[-1][0]+1) / 2
+		Sides = (self.FlowablesOnPages[-1][0]+1) / 2
 		for pageside in range(Sides):
 			NormalPageLayout.append([pageside*2, pageside*2 + 1])
 			if pageside < Sides / 2:
 				FrontPageLayout.append([(Sides * 2 - 1) - 2 * pageside, pageside * 2])
 				BackPageLayout.append([pageside * 2 + 1, Sides * 2 - 2 - 2 * pageside])
-		print FrontPageLayout
-		print BackPageLayout
-		print NormalPageLayout
+		if self.DEBUG:
+			print FrontPageLayout
+			print BackPageLayout
+			print NormalPageLayout
 
 		pdf = Canvas(self.filename, pagesize = landscape(letter))
 		pdf.setAuthor('David Ernstrom')
@@ -410,45 +435,56 @@ class PDFTools:
 				MyLeftFrame = page[0]
 				MyRightFrame = page[1]
 
-				LeftFrameStartFlowable = self.FamiliesOnPages[MyLeftFrame][1]
-				LeftFrameFlowablesConsumed = self.FamiliesOnPages[MyLeftFrame][2]
+				LeftFrameStartFlowable = self.FlowablesOnPages[MyLeftFrame][1]
+				LeftFrameFlowablesConsumed = self.FlowablesOnPages[MyLeftFrame][2]
+				if LeftFrameStartFlowable < len(self.PrefixFlowables):
+					LeftHandle = self.PrefixFlowables
+					Left_Header_Footer = False
+				elif LeftFrameStartFlowable < len(self.CurrentWardDirectory) + len(self.PrefixFlowables):
+					LeftHandle = self.CurrentWardDirectory
+					LeftFrameStartFlowable -= len(self.PrefixFlowables)
+					Left_Header_Footer = True
+				else:
+					LeftHandle = self.SuffixFlowables
+					LeftFrameStartFlowable -= len(self.PrefixFlowables) + len(self.CurrentWardDirectory)
+					Left_Header_Footer = False
 
-				RightFrameStartFlowable = self.FamiliesOnPages[MyRightFrame][1]
-				RightFrameFlowablesConsumed = self.FamiliesOnPages[MyRightFrame][2]
+				#DO THE LEFT PANEL PRINTING
+				if Left_Header_Footer:
+					LeftFrame.add(Paragraph('Page ' + str(MyLeftFrame), self.styles['DaveHeaderLeft']), PrintJob[1])
+				LeftFrame.addFromList(LeftHandle[LeftFrameStartFlowable:LeftFrameStartFlowable + LeftFrameFlowablesConsumed], PrintJob[1])
+				if Left_Header_Footer:
+					LeftFrame.add(self.ChurchFlowable, PrintJob[1])
 
-				if MyLeftFrame >= 2 and not LeftFrameFlowablesConsumed == 1:
-					LeftFrame.addFromList([Paragraph('Page ' + str(MyLeftFrame), self.styles['DaveHeaderLeft'])], PrintJob[1])
+				RightFrameStartFlowable = self.FlowablesOnPages[MyRightFrame][1]
+				RightFrameFlowablesConsumed = self.FlowablesOnPages[MyRightFrame][2]
+				if RightFrameStartFlowable < len(self.PrefixFlowables):
+					RightHandle = self.PrefixFlowables
+					Right_Header_Footer = False
+				elif RightFrameStartFlowable < len(self.CurrentWardDirectory) + len(self.PrefixFlowables):
+					RightHandle = self.CurrentWardDirectory
+					RightFrameStartFlowable -= len(self.PrefixFlowables)
+					Right_Header_Footer = True
+				else:
+					RightHandle = self.SuffixFlowables
+					RightFrameStartFlowable -= len(self.PrefixFlowables) + len(self.CurrentWardDirectory)
+					Right_Header_Footer = False
 
-				LeftFrame.addFromList(self.CurrentWardDirectory[LeftFrameStartFlowable:LeftFrameStartFlowable + LeftFrameFlowablesConsumed], PrintJob[1])
-
-				if not LeftFrameFlowablesConsumed == 1:
-					LeftFrame.addFromList([self.ChurchFlowable], PrintJob[1])
-
-
+				#DO THE RIGHT PANEL PRINTING
 				if MyRightFrame >= 2 and not RightFrameFlowablesConsumed == 1:
 					RightFrame.addFromList([Paragraph('Page ' + str(MyRightFrame), self.styles['DaveHeaderRight'])], PrintJob[1])
-
-				RightFrame.addFromList(self.CurrentWardDirectory[RightFrameStartFlowable:RightFrameStartFlowable + RightFrameFlowablesConsumed], PrintJob[1])
-
+				RightFrame.addFromList(RightHandle[RightFrameStartFlowable:RightFrameStartFlowable + RightFrameFlowablesConsumed], PrintJob[1])
 				if not RightFrameFlowablesConsumed == 1:
 					RightFrame.addFromList([self.ChurchFlowable], PrintJob[1])
 
 				PrintJob[1].showPage()
 			print "PDF Completed"
+			try:
+				PrintJob[1].save()
+			except IOError:
+				os.mkdir(win32api.GetEnvironmentVariable('APPDATA') + os.sep + APPDATAFOLDER)
+				PrintJob[1].save()
 
-		try:
-			if self.Full:
-				pdf.save()
-			if self.Booklet:
-				pdf_FRONT.save()
-				pdf_BACK.save()
-		except IOError:
-			os.mkdir(win32api.GetEnvironmentVariable('APPDATA') + os.sep + APPDATAFOLDER)
-			if self.Full:
-				pdf.save()
-			if self.Booklet:
-				pdf_FRONT.save()
-				pdf_BACK.save()
 		#os.system('\"' + self.filename + '\"')
 
 	def TableizeFamily(self, Household):
