@@ -215,7 +215,8 @@ class PDFTools:
 
 		#Page 2 Data
 		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = .125 * inch))
-		self.CurrentWardDirectory.append(Paragraph(text = "<u>2007 Meeting Schedule</u>", style = self.styles['Subtitle']))
+		CurrentYearString = datetime.date.today().strftime("%Y")
+		self.CurrentWardDirectory.append(Paragraph(text = "<u>" + CurrentYearString + "Meeting Schedule</u>", style = self.styles['Subtitle']))
 		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = .125 * inch))
 		data = [[[Paragraph(text = self.DictionaryData['block.sacstart'], style = self.styles['PrefixBaseRight'])],
 				 [Paragraph(text = "Sacrament Meeting", style = self.styles['PrefixBaseLeft'])]],
