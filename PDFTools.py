@@ -437,8 +437,10 @@ class PDFTools:
 
 	def TableizeFamily(self, Household):
 		Family = []
-		#print Household[0],'Family'
-		#print "Number of Members", str(len(Household[1][0]) + len(Household[1][1]))
+		if self.DEBUG:
+			print Household[0],'Family'
+		if self.DEBUG:
+			print "Number of Members", str(len(Household[1][0]) + len(Household[1][1]))
 		for Parent in Household[1][0]:
 			Family.append([Parent,'P'])
 		for Child in Household[1][1]:
@@ -458,18 +460,27 @@ class PDFTools:
 		data[0][3] = Paragraph(Household[2][0], self.styles['DaveHeading'])
 		data[0][4] = Paragraph(Household[2][1], self.styles['DaveBoldSmall'])
 		try:
-			FamilyPicture = Image(self.ImagesFolder + os.sep + Household[3])
-			#print self.ImagesFolder + os.sep + Household[3]
-			FamilyPicture.drawHeight = 1.125 * inch
+			FamilyPicture = Image(self.ImagesFolder + os.sep + Household[3],
+								  width = 1.5 * inch,
+								  height = 1.125 * inch,
+								  kind = 'proportional')
+			if self.DEBUG:
+				print self.ImagesFolder + os.sep + Household[3]
+			#FamilyPicture.drawHeight = 1.125 * inch
 		except:
-			FamilyPicture = Image(self.ImagesFolder + os.sep + 'Missing.jpg')
-			#print self.ImagesFolder + os.sep + 'Missing.jpg'
-			FamilyPicture.drawHeight = (1.5 * inch /180) * 100.0
+			FamilyPicture = Image(self.ImagesFolder + os.sep + 'Missing.jpg',
+								  width = 1.5 * inch,
+								  height = 1.125 * inch,
+								  kind = 'proportional')
+			if self.DEBUG:
+				print self.ImagesFolder + os.sep + 'Missing.jpg'
+			#FamilyPicture.drawHeight = (1.5 * inch /180) * 100.0
 		FamilyPicture.drawWidth = 1.5 * inch
 
 		#Add the family Members
 		CurrentRow = 0
-		#print "Family:",Family
+		if self.DEBUG:
+			print "Family:",Family
 		for Member in Family:
 			CurrentRow += 1
 			if Member[1] == 'P':
