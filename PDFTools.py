@@ -3,7 +3,8 @@ import os
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
-from reportlab.platypus import Paragraph, Table, TableStyle, Image, Frame, Spacer, Preformatted
+from reportlab.platypus import Paragraph, Table, TableStyle, Image, Frame, Spacer, Preformatted, PageBreak
+from reportlab.platypus.flowables import HRFlowable
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import cm, mm, inch, pica
 from reportlab.lib.pagesizes import letter, landscape
@@ -16,63 +17,62 @@ class PDFTools:
 				 ImagesFolder,
 				 OutputFolder,
 				 Full,
-				 Booklet
+				 Booklet,
+				 DictionaryData
 				 ):
 		self.DEBUG = DEBUG
 		self.ImagesFolder = str(ImagesFolder)
 		self.OutputFolder = str(OutputFolder)
 		self.Full = Full
 		self.Booklet = Booklet
+		self.DictionaryData = DictionaryData
 
 		self.filename = self.OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf'
 		self.front = self.OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf'
 		self.back = self.OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf'
-		
-		styles = getSampleStyleSheet()
-		styles.add(ParagraphStyle(name='DaveFooter',
-								  parent=styles['Heading3'],
-								  fontSize = 8,
-								  alignment=TA_CENTER,
-								  ))
-		styles.add(ParagraphStyle(name='DaveHeaderLeft',
-								  parent=styles['Heading3'],
-								  fontSize = 8,
-								  alignment=TA_LEFT,
-								  ))
-		styles.add(ParagraphStyle(name='DaveHeaderRight',
-								  parent=styles['DaveHeaderLeft'],
-								  alignment=TA_RIGHT,
-								  ))
-		styles.add(ParagraphStyle(name='DaveHeading',
-								  parent=styles['Heading3'],
-								  fontName = 'Times-Roman',
-								  spaceAfter=0,
-								  spaceBefore=0,
-								  fontSize = 8,
-								  ))
-		styles.add(ParagraphStyle(name='DaveBold',
-								  parent=styles['DaveHeading'],
-								  fontName = 'Times-Bold',
-								  fontSize = 10,
-								  ))
-		styles.add(ParagraphStyle(name='DaveBoldSmall',
-								  parent=styles['DaveBold'],
-								  fontSize = 8,
-								  ))
-		self.CurrentWardDirectory = []
 
-		self.TheTableStyle = TableStyle([
-				('LEFTPADDING', (0,0), (-1,-1), 3),
-				('RIGHTPADDING', (0,0), (-1,-1), 3),
-				('BOTTOMPADDING', (0,0), (-1,-1), 0),
-				('TOPPADDING', (1,0), (-1,-1), 0),
-			])
-		#########NOTICE THAT SPAN IS WRITTEN BASS ACKWARDS WITH COL,ROW
-		self.TheTableStyle.add('SPAN', (0,0), (2,0))
-		if DEBUG:
-			self.TheTableStyle.add('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)
-			self.TheTableStyle.add('BOX', (0,0), (-1,-1), .25, colors.black)
 		self.styles = getSampleStyleSheet()
+		#This is what sets Helvetica as the base font for the PrefixPages
+		self.styles.add(ParagraphStyle(name = 'PrefixBase',
+									   fontName = 'Helvetica',
+									   fontSize = 14,
+									   leading = 1.2 * 14,
+									   alignment = TA_CENTER,
+									   ))
+		#Here I create a style for the header pages
+		self.styles.add(ParagraphStyle(name = 'DocumentTitle',
+									   parent = self.styles['PrefixBase'],
+									   fontSize = 30,
+									   leading = 1.2 * 30,
+									   ))
+		self.styles.add(ParagraphStyle(name = 'Subtitle',
+									   parent = self.styles['PrefixBase'],
+									   fontSize = 18,
+									   leading = 1.2 * 18,
+									   ))
+		self.styles.add(ParagraphStyle(name = 'PrefixBaseRight',
+									   parent = self.styles['PrefixBase'],
+									   alignment = TA_RIGHT,
+									   ))
+		self.styles.add(ParagraphStyle(name = 'PrefixBaseLeft',
+									   parent = self.styles['PrefixBase'],
+									   alignment = TA_LEFT,
+									   ))
+		self.styles.add(ParagraphStyle(name = 'PrefixRegText',
+									   #parent = self.styles['PrefixBase'],
+									   fontsize = 8,
+									   leading = 1.2 * 8,
+									   ))
+		self.styles.add(ParagraphStyle(name = 'PrefixRegTextL',
+									   parent = self.styles['PrefixRegText'],
+									   alignment = TA_LEFT,
+									   ))
+		self.styles.add(ParagraphStyle(name = 'PrefixRegTextR',
+									   parent = self.styles['PrefixRegText'],
+									   alignment = TA_RIGHT,
+									   ))
+
+
 		self.styles.add(ParagraphStyle(name='DaveFooter',
 								  parent=self.styles['Heading3'],
 								  fontSize = 8,
@@ -103,6 +103,20 @@ class PDFTools:
 								  parent=self.styles['DaveBold'],
 								  fontSize = 8,
 								  ))
+
+		self.CurrentWardDirectory = []
+
+		self.TheTableStyle = TableStyle([
+				('LEFTPADDING', (0,0), (-1,-1), 3),
+				('RIGHTPADDING', (0,0), (-1,-1), 3),
+				('BOTTOMPADDING', (0,0), (-1,-1), 0),
+				('TOPPADDING', (1,0), (-1,-1), 0),
+			])
+		#########NOTICE THAT SPAN IS WRITTEN BASS ACKWARDS WITH COL,ROW
+		self.TheTableStyle.add('SPAN', (0,0), (2,0))
+		if DEBUG:
+			self.TheTableStyle.add('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)
+			self.TheTableStyle.add('BOX', (0,0), (-1,-1), .25, colors.black)
 		self.CombinedStyle = TableStyle([('VALIGN', (0,0), (-1,-1), 'TOP'),
 									('LINEBELOW', (0,0), (-1,-1), 1.0, colors.black),
 									('LINEABOVE', (0,0), (-1,-1), 1.0, colors.black),
@@ -123,30 +137,142 @@ class PDFTools:
 		self.NotSoFarLeft = landscape(letter)[0]/2 + Margin
 		self.FrameWidth = landscape(letter)[0]/2 - 2 * Margin
 		self.FrameHeight = landscape(letter)[1] - 2 * Margin
-		self.ChurchFlowable = Paragraph('For Church Use Only', styles['DaveFooter'])
+		self.ChurchFlowable = Paragraph('For Church Use Only', self.styles['DaveFooter'])
 
-	def AddDirectoryWrapperImages(self):
-		#Let's make some stock flowables for 'FOR CHURCH USE ONLY' and 'PAGE NUMBER'
-		self.DIRECTORY_IMAGES = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\WardPictures\\'
-		self.CurrentWardDirectory.insert(0, Image(self.ImagesFolder + os.sep + '001.jpg', width=self.FrameWidth, height=self.FrameHeight))
-		self.CurrentWardDirectory.insert(0, Image(self.ImagesFolder + os.sep + '000.jpg', width=self.FrameWidth, height=self.FrameHeight))
+	def GetPositionData(self):
+		#Return a list of dictionaries of the positions ordered correctly
+		RoleList = ['bish', 'first', 'second', 'exec', 'clerk', 'fin', 'mem', "NULL",
+					'hp', 'eq', 'rs', 'ym', 'yw', 'primary', "NULL",
+					'wml', 'act', 'news', 'dir']
+		RoleDict = {'bish' :	'Bishop',
+					'first' :	'1st Counselor',
+					'second' :	'2nd Counselor',
+					'exec' :	'Executive Secretary',
+					'clerk' :	'Ward Clerk',
+					'fin' :		'Financial Clerk',
+					'mem' :		'Membership Clerk',
+					'hp' :		'High Priest Group Leader',
+					'eq' :		'Elders Quorum President',
+					'rs' :		'Relief Society President',
+					'ym' :		"Young Men's President",
+					'yw' :		"Young Women's President",
+					'primary' :	'Primary President',
+					'wml' :		'Ward Mission Leader',
+					'act' :		'Activities Committee Chair',
+					'news' :	'Ward Newsletter',
+					'dir' :		'Ward Directory',
+					"NULL" :	''}
+		LeadershipList = []
+		for Role in RoleList:
+			try:
+				if self.DictionaryData['leadership.' + Role + 'disp'] == '1':
+					LeadershipList.append({"Role" :		RoleDict[Role],
+										   "Name" :		self.DictionaryData['leadership.' + Role + 'name'],
+										   "Phone" :	self.DictionaryData['leadership.' + Role + 'phone']})
+				else:
+					LeadershipList.append({"Role" :		" ",
+										   "Name" :		" ",
+										   "Phone" :	" "})
+					LeadershipList.append({"Role" :		" ",
+										   "Name" :		" ",
+										   "Phone" :	" "})
+			except KeyError:
+				LeadershipList.append({"Role" :		" ",
+									   "Name" :		" ",
+									   "Phone" :	" "})
+				LeadershipList.append({"Role" :		" ",
+									   "Name" :		" ",
+									   "Phone" :	" "})
+		return LeadershipList
+
+	def AddDirectoryPrefixData(self):
+		print "Here's the dictionary I received"
+		print self.DictionaryData
+		#TODO: Need to validate that I have at least a blank in all of the following fields:
+		"""
+		Send it to a validation function to do the following:
+		unit.unitname
+		unit.stakename
+		bldg.addy1
+		bldg.addy2
+		block.sacstart
+		block.ssstart
+		block.pr_rs_start
+		bldg.phone
+		"""
+		#Page 1 Data
+		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = 1.5 * inch))
+		self.CurrentWardDirectory.append(Paragraph(text = self.DictionaryData['unit.unitname'], style = self.styles['DocumentTitle']))
+		self.CurrentWardDirectory.append(Paragraph(text = "Member Directory", style = self.styles['Subtitle']))
+		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = 2.0 * inch))
+		self.CurrentWardDirectory.append(Paragraph(text = self.DictionaryData['unit.stakename'], style = self.styles['PrefixBase']))
+		self.CurrentWardDirectory.append(Paragraph(text = self.DictionaryData['bldg.addy1'], style = self.styles['PrefixBase']))
+		self.CurrentWardDirectory.append(Paragraph(text = self.DictionaryData['bldg.addy2'], style = self.styles['PrefixBase']))
+		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = 2.0 * inch))
+		self.CurrentWardDirectory.append(Paragraph(text = "Published: TODAY", style = self.styles['PrefixBase']))
+		self.CurrentWardDirectory.append(PageBreak())
+
+		#Page 2 Data
+		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = .125 * inch))
+		self.CurrentWardDirectory.append(Paragraph(text = "<u>2007 Meeting Schedule</u>", style = self.styles['Subtitle']))
+		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = .125 * inch))
+		data = [[[Paragraph(text = self.DictionaryData['block.sacstart'], style = self.styles['PrefixBaseRight'])],
+				 [Paragraph(text = "Sacrament Meeting", style = self.styles['PrefixBaseLeft'])]],
+				[[Paragraph(text = self.DictionaryData['block.ssstart'], style = self.styles['PrefixBaseRight'])],
+				 [Paragraph(text = "Sunday School", style = self.styles['PrefixBaseLeft'])]],
+				[[Paragraph(text = self.DictionaryData['block.pr_rs_start'], style = self.styles['PrefixBaseRight'])],
+				 [Paragraph(text = "Priesthood/Relief Society", style = self.styles['PrefixBaseLeft'])]]
+				]
+		TextTable = Table(data, [1.5 * inch, 3.0 * inch])
+		if self.DEBUG:
+			TextTable.setStyle(TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+										   ('BOX', (0,0), (-1,-1), .25, colors.black),
+										   ]))
+		self.CurrentWardDirectory.append(TextTable)
+		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = .125 * inch))
+		self.CurrentWardDirectory.append(Paragraph(text = "Office Phone: " + self.DictionaryData['bldg.phone'], style = self.styles['PrefixBase']))
+		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = .125 * inch))
+		self.CurrentWardDirectory.append(HRFlowable())
+		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = .125 * inch))
+		data = []
+		
+		for Position in self.GetPositionData():
+			data.append([[Paragraph(text = Position['Role'], style = self.styles['PrefixRegTextR'])],
+						 [Paragraph(text = Position['Name'], style = self.styles['PrefixRegTextL'])],
+						 [Paragraph(text = Position['Phone'], style = self.styles['PrefixRegTextL'])]])
+		TextTable = Table(data, [1.8 * inch, 2.0 * inch, 1.2 * inch])
+		if self.DEBUG:
+			TextTable.setStyle(TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+										   ('BOX', (0,0), (-1,-1), .25, colors.black),
+										   ]))
+		self.CurrentWardDirectory.append(TextTable)
+		self.CurrentWardDirectory.append(Spacer(width = self.FrameWidth, height = .25 * inch))
+		Disclaimer = """This ward directory is to be used only for Church purposes
+						 and should not be copied without permission of the bishop
+						 or stake president.
+						 """
+		self.CurrentWardDirectory.append(Paragraph(text = "<b>" + Disclaimer + "</b>", style = self.styles['PrefixBase']))
+		self.CurrentWardDirectory.append(PageBreak())
+
+	def AddDirectorySuffixData(self):
 		self.CurrentWardDirectory.append(Image(self.ImagesFolder + os.sep + '-003.jpg', width=self.FrameWidth, height=self.FrameHeight))
 		self.CurrentWardDirectory.append(Image(self.ImagesFolder + os.sep + '-002.jpg', width=self.FrameWidth, height=self.FrameHeight))
 		self.CurrentWardDirectory.append(Image(self.ImagesFolder + os.sep + '-001.jpg', width=self.FrameWidth, height=self.FrameHeight))
 		self.CurrentWardDirectory.append(Image(self.ImagesFolder + os.sep + '-000.jpg', width=self.FrameWidth, height=self.FrameHeight))
+		if self.DEBUG:
+			for aFlowable in self.CurrentWardDirectory:
+				if not aFlowable.__class__ is PageBreak and not aFlowable.__class__ is HRFlowable and not aFlowable.__class__ is Table and not aFlowable.__class__ is Image:
+					aFlowable._showBoundary = 1
 
 	def AddFooter(self, FooterText):
 		self.CurrentWardDirectory.append(Paragraph(FooterText, self.styles['DaveFooter']))
 
 	def AddFamily(self, Household):
-		MasterTable = self.TableizeFamily(Household)
-		self.CurrentWardDirectory.append(MasterTable)
+		self.CurrentWardDirectory.append(self.TableizeFamily(Household))
 
 	def GenerateWardPagination(self):
 		##Make a backup of the current document
-		FlowableBackup = []
-		for myFlowable in self.CurrentWardDirectory:
-			FlowableBackup.append(myFlowable)
+		FlowableBackup = self.CurrentWardDirectory[:]
 
 		pdf_TEST = Canvas("DIRECTORY_TEST.pdf", pagesize = landscape(letter))
 		
@@ -159,7 +285,7 @@ class PDFTools:
 			LeftFrame = Frame(self.FarLeft, self.Bottom, self.FrameWidth, self.FrameHeight, leftPadding=0, bottomPadding=0, rightPadding=0, topPadding=0, showBoundary = self.DEBUG)
 			RightFrame = Frame(self.NotSoFarLeft, self.Bottom, self.FrameWidth, self.FrameHeight, leftPadding=0, bottomPadding=0, rightPadding=0, topPadding=0, showBoundary = self.DEBUG)
 			CurrentPage += 1
-			print len(self.CurrentWardDirectory)
+			#print len(self.CurrentWardDirectory)
 			Start = len(self.CurrentWardDirectory)
 			if CurrentPage >= 2 and len(self.CurrentWardDirectory) > 4:
 				LeftFrame.addFromList([self.ChurchFlowable], pdf_TEST)
@@ -188,9 +314,9 @@ class PDFTools:
 		PageCount = (UsedFaces + Fillers) / 4
 		print str(PageCount) + " slices of paper per directory are needed"
 
-		print "Before Flowable Filler Addition"
-		for Item in FamiliesOnPages:
-			print Item
+		#print "Before Flowable Filler Addition"
+		#for Item in FamiliesOnPages:
+		#	print Item
 
 		##Insert filler flowables
 		for Count in range(Fillers):
@@ -209,13 +335,11 @@ class PDFTools:
 		self.FamiliesOnPages = NewPageCounts
 
 		##Recover From Flowable Backup
-		self.CurrentWardDirectory = []
-		for myFlowable in FlowableBackup:
-			self.CurrentWardDirectory.append(myFlowable)
+		self.CurrentWardDirectory = FlowableBackup[:]
 
-		print "After Flowable Filler Addition"
-		for Item in self.FamiliesOnPages:
-			print Item
+		#print "After Flowable Filler Addition"
+		#for Item in self.FamiliesOnPages:
+		#	print Item
 
 	def GeneratePDFDocs(self):
 		##Print to PDF using the correct formats now and the correct page ordering
@@ -274,7 +398,7 @@ class PDFTools:
 				RightFrameStartFlowable = self.FamiliesOnPages[MyRightFrame][1]
 				RightFrameFlowablesConsumed = self.FamiliesOnPages[MyRightFrame][2]
 
-				if not LeftFrameFlowablesConsumed == 1:
+				if MyLeftFrame >= 2 and not LeftFrameFlowablesConsumed == 1:
 					LeftFrame.addFromList([Paragraph('Page ' + str(MyLeftFrame), self.styles['DaveHeaderLeft'])], PrintJob[1])
 
 				LeftFrame.addFromList(self.CurrentWardDirectory[LeftFrameStartFlowable:LeftFrameStartFlowable + LeftFrameFlowablesConsumed], PrintJob[1])
@@ -283,7 +407,7 @@ class PDFTools:
 					LeftFrame.addFromList([self.ChurchFlowable], PrintJob[1])
 
 
-				if not RightFrameFlowablesConsumed == 1:
+				if MyRightFrame >= 2 and not RightFrameFlowablesConsumed == 1:
 					RightFrame.addFromList([Paragraph('Page ' + str(MyRightFrame), self.styles['DaveHeaderRight'])], PrintJob[1])
 
 				RightFrame.addFromList(self.CurrentWardDirectory[RightFrameStartFlowable:RightFrameStartFlowable + RightFrameFlowablesConsumed], PrintJob[1])
@@ -292,11 +416,11 @@ class PDFTools:
 					RightFrame.addFromList([self.ChurchFlowable], PrintJob[1])
 
 				#page[0] is the left side
-				CurrentDateString = datetime.date.today().strftime("%d %B %Y")
-				if page[0] == 0:
-					PrintJob[1].drawString(self.FarLeft + self.FrameWidth/2, 75, CurrentDateString)
-				if page[1] == 0:
-					PrintJob[1].drawString(self.NotSoFarLeft + self.FrameWidth/2, 75, CurrentDateString)
+				#CurrentDateString = datetime.date.today().strftime("%d %B %Y")
+				#if page[0] == 0:
+				#	PrintJob[1].drawString(self.FarLeft + self.FrameWidth/2, 75, CurrentDateString)
+				#if page[1] == 0:
+				#	PrintJob[1].drawString(self.NotSoFarLeft + self.FrameWidth/2, 75, CurrentDateString)
 				PrintJob[1].showPage()
 			print "PDF Completed"
 
@@ -339,11 +463,11 @@ class PDFTools:
 		data[0][4] = Paragraph(Household[2][1], self.styles['DaveBoldSmall'])
 		try:
 			FamilyPicture = Image(self.ImagesFolder + os.sep + Household[3])
-			print self.ImagesFolder + os.sep + Household[3]
+			#print self.ImagesFolder + os.sep + Household[3]
 			FamilyPicture.drawHeight = 1.125 * inch
 		except:
 			FamilyPicture = Image(self.ImagesFolder + os.sep + 'Missing.jpg')
-			print self.ImagesFolder + os.sep + 'Missing.jpg'
+			#print self.ImagesFolder + os.sep + 'Missing.jpg'
 			FamilyPicture.drawHeight = (1.5 * inch /180) * 100.0
 		FamilyPicture.drawWidth = 1.5 * inch
 

@@ -33,6 +33,7 @@ class Application:
 		self.ConfigDefaults = ConfigDefaults
 
 		self.DEBUG = DEBUG
+		#self.DEBUG = 1
 
 		self.GetMembershipList()
 
@@ -46,14 +47,17 @@ class Application:
 			self.SetLists()
 
 	def InitiatePDF(self, ImageDirectory, OutputFolder, Full, Booklet):
+		DictionaryData = self.ConfigHandle.GetConfigData()
 		PDFToolHandle = PDFTools.PDFTools(self.DEBUG,
 										  ImageDirectory,
 										  OutputFolder,
 										  Full,
-										  Booklet
+										  Booklet,
+										  DictionaryData
 										  )
 
 		#Here I start adding flowables
+		PDFToolHandle.AddDirectoryPrefixData()
 		NumberOfMembers = 0
 		NumberOfHouseholds = 0
 		self.GetMembershipList()
@@ -61,11 +65,11 @@ class Application:
 			NumberOfHouseholds += 1
 			NumberOfMembers += len(Household[1][0]) + len(Household[1][1])
 			PDFToolHandle.AddFamily(Household)
-			print str(NumberOfHouseholds), Household[0]
-			print '------------------------------------------'
+			#print str(NumberOfHouseholds), Household[0]
+			#print '------------------------------------------'
 		PDFToolHandle.AddFooter(str(NumberOfHouseholds) + ' Total Families')
 		PDFToolHandle.AddFooter(str(NumberOfMembers) + ' Total Individuals')
-		PDFToolHandle.AddDirectoryWrapperImages()
+		PDFToolHandle.AddDirectorySuffixData()
 		PDFToolHandle.GenerateWardPagination()
 		PDFToolHandle.GeneratePDFDocs()
 
