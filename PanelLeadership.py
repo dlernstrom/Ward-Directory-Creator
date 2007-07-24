@@ -13,7 +13,7 @@ class LeadershipRow(wx.BoxSizer):
 		self.NameType = NameType
 
 		self.DescriptionText = wx.StaticText(parent, -1, Description)
-		self.DescriptionText.SetFont(parent.StandardFont)
+		self.DescriptionText.SetFont(parent.TextBoxFont)
 		self.Add(self.DescriptionText, 1, wx.ALIGN_CENTER_VERTICAL)
 
 		self.Contact_Dropdown = wx.ComboBox(parent, -1, size = (265, -1), style = wx.CB_READONLY)
@@ -42,6 +42,7 @@ class LeadershipPanel(ColoredPanel):
 		self.Bishop = LeadershipRow(self, "Bishop", ShortDesc = 'leadership.bish')
 		self.First = LeadershipRow(self, "1st Counselor", ShortDesc = 'leadership.first')
 		self.Second = LeadershipRow(self, "2nd Counselor", ShortDesc = 'leadership.second')
+		self.Exec = LeadershipRow(self, "Executive Secretary", ShortDesc = 'leadership.exec')
 		self.WardClerk = LeadershipRow(self, "Ward Clerk", ShortDesc = 'leadership.clerk')
 		self.Financial = LeadershipRow(self, "Financial Clerk", ShortDesc = 'leadership.fin')
 		self.Membership = LeadershipRow(self, "Membership Clerk", ShortDesc = 'leadership.mem')
@@ -56,7 +57,7 @@ class LeadershipPanel(ColoredPanel):
 		self.Newsletter = LeadershipRow(self, "Ward Newsletter", ShortDesc = 'leadership.news', NameType = 'Parent')
 		self.Directory = LeadershipRow(self, "Ward Directory", ShortDesc = 'leadership.dir', NameType = 'Parent')
 
-		self.PageRows = [self.Bishop, self.First, self.Second, self.WardClerk, self.Financial,
+		self.PageRows = [self.Bishop, self.First, self.Second, self.Exec, self.WardClerk, self.Financial,
 						 self.Membership, self.EQ, self.HP, self.RS, self.YM, self.YW,
 						 self.Primary, self.WM, self.Act, self.Newsletter, self.Directory]
 
@@ -68,10 +69,10 @@ class LeadershipPanel(ColoredPanel):
 		## Sizer encapsulation section
 		inside_border_level1 = wx.BoxSizer(wx.VERTICAL)
 		for Row in self.PageRows:
-			inside_border_level1.Add(Row, 0, wx.BOTTOM | wx.ALIGN_RIGHT, 2)
+			inside_border_level1.Add(Row, 0, wx.ALIGN_RIGHT)
 
 		border_level0 = wx.BoxSizer()
-		border_level0.Add(inside_border_level1, 1, wx.EXPAND | wx.ALL | wx.ALIGN_CENTER_VERTICAL, 25)
+		border_level0.Add(inside_border_level1, 1, wx.EXPAND | wx.ALL | wx.ALIGN_CENTER_VERTICAL, 15)
 		self.SetSizer(border_level0)
 		border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])
 

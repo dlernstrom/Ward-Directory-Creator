@@ -28,8 +28,8 @@ class ColoredPanel(wx.Window):
 		self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
 		#print "ColoredPanel:",self.GetSize()
 		self.TitleFont = wx.Font(22, wx.DEFAULT, wx.NORMAL, wx.FONTWEIGHT_BOLD, False, "Georgia")
-		self.StandardFont = wx.Font(14, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "Georgia")
-		self.TextBoxFont = wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "Georgia")
+		self.StandardFont = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "Georgia")
+		self.TextBoxFont = wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "Georgia")
 
 
 
