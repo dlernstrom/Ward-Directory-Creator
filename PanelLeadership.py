@@ -180,6 +180,7 @@ class LeadershipPanel(ColoredPanel):
 					if self.parent.GetConfigValue(Row.ShortDesc + 'name'):
 						#Name not in list
 						print self.parent.GetConfigValue(Row.ShortDesc + 'name') + " Not in list"
+						self.parent.SetConfigValue(Row.ShortDesc + 'disp', '0')
 					Row.TXT_Phone.Enable(False)
 					Row.CB_Override.Enable(False)
 					Row.CB_Override.SetValue(False)
