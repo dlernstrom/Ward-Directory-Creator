@@ -481,6 +481,7 @@ class PDFTools:
 			ThingsToPrint.append([FrontPageLayout, pdf_FRONT])
 			ThingsToPrint.append([BackPageLayout, pdf_BACK])
 
+		FooterRoom = self.ChurchFlowable.wrap(self.FrameWidth, self.FrameHeight)[1] + self.ChurchFlowable.getSpaceBefore()
 		for PrintJob in ThingsToPrint:
 			for page in PrintJob[0]:
 				LeftFrame = Frame(self.FarLeft, self.Bottom, self.FrameWidth, self.FrameHeight, leftPadding=0, bottomPadding=0, rightPadding=0, topPadding=0, showBoundary = self.DEBUG)
@@ -505,10 +506,14 @@ class PDFTools:
 
 				#DO THE LEFT PANEL PRINTING
 				if Left_Header_Footer:
-					LeftFrame.add(Paragraph('Page ' + str(MyLeftFrame), self.styles['DaveHeaderLeft']), PrintJob[1])
-				LeftFrame.addFromList(LeftHandle[LeftFrameStartFlowable:LeftFrameStartFlowable + LeftFrameFlowablesConsumed], PrintJob[1])
-				if Left_Header_Footer:
+					content = [Paragraph('Page ' + str(MyLeftFrame), self.styles['DaveHeaderLeft'])] + LeftHandle[LeftFrameStartFlowable:LeftFrameStartFlowable + LeftFrameFlowablesConsumed] + [Spacer(width = self.FrameWidth, height = 9 * inch)]
+					LeftFrame.add(KeepInFrame(maxWidth = self.FrameWidth,
+											  maxHeight = self.FrameHeight - FooterRoom,
+											  content = content,
+											  mode = 'truncate'), PrintJob[1])
 					LeftFrame.add(self.ChurchFlowable, PrintJob[1])
+				else:
+					LeftFrame.addFromList(LeftHandle[LeftFrameStartFlowable:LeftFrameStartFlowable + LeftFrameFlowablesConsumed], PrintJob[1])
 
 				RightFrameStartFlowable = self.FlowablesOnPages[MyRightFrame][1]
 				RightFrameFlowablesConsumed = self.FlowablesOnPages[MyRightFrame][2]
@@ -526,10 +531,15 @@ class PDFTools:
 
 				#DO THE RIGHT PANEL PRINTING
 				if Right_Header_Footer:
-					RightFrame.addFromList([Paragraph('Page ' + str(MyRightFrame), self.styles['DaveHeaderRight'])], PrintJob[1])
-				RightFrame.addFromList(RightHandle[RightFrameStartFlowable:RightFrameStartFlowable + RightFrameFlowablesConsumed], PrintJob[1])
-				if not RightFrameFlowablesConsumed == 1:
-					RightFrame.addFromList([self.ChurchFlowable], PrintJob[1])
+					#RightFrame.addFromList(, PrintJob[1])
+					content = [Paragraph('Page ' + str(MyRightFrame), self.styles['DaveHeaderRight'])] + RightHandle[RightFrameStartFlowable:RightFrameStartFlowable + RightFrameFlowablesConsumed] + [Spacer(width = self.FrameWidth, height = 9 * inch)]
+					RightFrame.add(KeepInFrame(maxWidth = self.FrameWidth,
+											   maxHeight = self.FrameHeight - FooterRoom,# 7.355 < x < 7.362
+											   content = content,
+											   mode = 'truncate'), PrintJob[1])
+					RightFrame.add(self.ChurchFlowable, PrintJob[1])
+				else:
+					RightFrame.addFromList(RightHandle[RightFrameStartFlowable:RightFrameStartFlowable + RightFrameFlowablesConsumed], PrintJob[1])
 
 				PrintJob[1].showPage()
 			print "PDF Completed"
