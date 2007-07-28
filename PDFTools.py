@@ -119,31 +119,6 @@ class PDFTools:
 
 		self.CurrentWardDirectory = []
 
-		self.TheTableStyle = TableStyle([
-				('LEFTPADDING', (0,0), (-1,-1), 3),
-				('RIGHTPADDING', (0,0), (-1,-1), 3),
-				('BOTTOMPADDING', (0,0), (-1,-1), 0),
-				('TOPPADDING', (1,0), (-1,-1), 0),
-			])
-		#########NOTICE THAT SPAN IS WRITTEN BASS ACKWARDS WITH COL,ROW
-		self.TheTableStyle.add('SPAN', (0,0), (2,0))
-		if DEBUG:
-			self.TheTableStyle.add('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)
-			self.TheTableStyle.add('BOX', (0,0), (-1,-1), .25, colors.black)
-		self.CombinedStyle = TableStyle([('VALIGN', (0,0), (-1,-1), 'TOP'),
-									('LINEBELOW', (0,0), (-1,-1), 1.0, colors.black),
-									('LINEABOVE', (0,0), (-1,-1), 1.0, colors.black),
-									('LEFTPADDING', (0,0), (-1,-1), 0),
-									('RIGHTPADDING', (0,0), (-1,-1), 0),
-									('BOTTOMPADDING', (0,0), (-1,-1), 0),
-									('TOPPADDING', (0,0), (-1,-1), 0),
-									('LEADING', (0,0), (-1,-1), 0),
-									('ALIGN', (0,0), (-1,-1), 'LEFT'),
-									('FONTSIZE', (0,0), (-1,-1), 0),
-				])
-		if DEBUG:
-			self.CombinedStyle.add('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)
-			self.CombinedStyle.add('BOX', (0,0), (-1,-1), 0.25, colors.black)
 		Margin = .25 * inch
 		self.Bottom = Margin
 		self.FarLeft = Margin
@@ -549,8 +524,6 @@ class PDFTools:
 				os.mkdir(win32api.GetEnvironmentVariable('APPDATA') + os.sep + APPDATAFOLDER)
 				PrintJob[1].save()
 
-		#os.system('\"' + self.filename + '\"')
-
 	def TableizeFamily(self, Household):
 		Family = []
 		if self.DEBUG:
@@ -588,7 +561,36 @@ class PDFTools:
 								  kind = 'proportional')
 			if self.DEBUG:
 				print self.ImagesFolder + os.sep + 'Missing.jpg'
-		FamilyPicture.drawWidth = 1.5 * inch
+
+		#########NOTICE THAT SPAN IS WRITTEN BASS ACKWARDS WITH COL,ROW
+		self.TheTableStyle = TableStyle([('LEFTPADDING', (0,0), (-1,-1), 3),
+										 ('RIGHTPADDING', (0,0), (-1,-1), 3),
+										 ('BOTTOMPADDING', (0,0), (-1,-1), 0),
+										 ('TOPPADDING', (1,0), (-1,-1), 0),
+										 ('SPAN', (0,0), (2,0))
+										 ])
+		if self.DEBUG:
+			self.TheTableStyle.add('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)
+			self.TheTableStyle.add('BOX', (0,0), (-1,-1), .25, colors.black)
+		self.ImageStyle = TableStyle([('ALIGN', (0,0), (-1, -1), 'CENTER'),
+									  ('LEFTPADDING', (0,0), (-1,-1), 0),
+									  ('RIGHTPADDING', (0,0), (-1,-1), 0),
+									  ('LEADING', (0,0), (-1,-1), 0)])
+		self.CombinedStyle = TableStyle([('VALIGN', (0,0), (-1,-1), 'TOP'),
+										 ('LINEBELOW', (0,0), (-1,-1), 1.0, colors.black),
+										 ('LINEABOVE', (0,0), (-1,-1), 1.0, colors.black),
+										 ('LEFTPADDING', (0,0), (-1,-1), 0),
+										 ('RIGHTPADDING', (0,0), (-1,-1), 0),
+										 ('BOTTOMPADDING', (0,0), (-1,-1), 0),
+										 ('TOPPADDING', (0,0), (-1,-1), 0),
+										 ('LEADING', (0,0), (-1,-1), 0),
+										 ('ALIGN', (0,0), (-1, -1), 'CENTER'),
+										 ('FONTSIZE', (0,0), (-1,-1), 0),
+										 ])
+		if self.DEBUG:
+			self.CombinedStyle.add('INNERGRID', (0,0), (-1,-1), 0.25, colors.black)
+			self.CombinedStyle.add('BOX', (0,0), (-1,-1), 0.25, colors.black)
+
 
 		#Add the family Members
 		CurrentRow = 0
@@ -607,8 +609,8 @@ class PDFTools:
 			data[CurrentRow][Column] = Preformatted(Member[0], self.styles['DaveHeading'])
 		TextTable = Table(data, [.125 * inch, .125 * inch, 0.9 * inch, 1.45 * inch, .8 * inch])
 		TextTable.setStyle(self.TheTableStyle)
-		TextTable.hAlign = 'LEFT'
-		ImageTable = Table([[FamilyPicture]], [1.5 * inch])
+		ImageTable = Table([[FamilyPicture]])
+		ImageTable.setStyle(self.ImageStyle)
 		CombinedTableData = [[TextTable, ImageTable]]
 		MasterTable = Table(CombinedTableData, ['*', 1.6 * inch])
 		MasterTable.setStyle(self.CombinedStyle)
