@@ -4,7 +4,7 @@ from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 from reportlab.platypus import Paragraph, Table, TableStyle, Image, Frame, Spacer, Preformatted, PageBreak
-from reportlab.platypus.flowables import HRFlowable
+from reportlab.platypus.flowables import HRFlowable, KeepInFrame
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import cm, mm, inch, pica
 from reportlab.lib.pagesizes import letter, landscape
@@ -20,7 +20,8 @@ class PDFTools:
 				 Full,
 				 Booklet,
 				 DictionaryData,
-				 BlockData
+				 BlockData,
+				 QuoteData
 				 ):
 		self.DEBUG = DEBUG
 		self.ImagesFolder = str(ImagesFolder)
@@ -29,6 +30,7 @@ class PDFTools:
 		self.Booklet = Booklet
 		self.DictionaryData = DictionaryData
 		self.BlockData = BlockData
+		self.QuoteData = QuoteData
 
 		self.filename = self.OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf'
 		self.front = self.OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf'
@@ -37,9 +39,9 @@ class PDFTools:
 		self.styles = getSampleStyleSheet()
 		#This is what sets Helvetica as the base font for the PrefixPages
 		self.styles.add(ParagraphStyle(name = 'PrefixBase',
-									   fontName = 'Helvetica',
+									   fontName = 'Times-Roman',#Helvetica',
 									   fontSize = 14,
-									   leading = 1.2 * 14,
+									   leading = 1.3 * 14,
 									   alignment = TA_CENTER,
 									   ))
 		#Here I create a style for the header pages
@@ -47,6 +49,11 @@ class PDFTools:
 									   parent = self.styles['PrefixBase'],
 									   fontSize = 30,
 									   leading = 1.2 * 30,
+									   ))
+		self.styles.add(ParagraphStyle(name = 'QuoteTitle',
+									   parent = self.styles['PrefixBase'],
+									   fontSize = 26,
+									   leading = 1.2 * 26,
 									   ))
 		self.styles.add(ParagraphStyle(name = 'Subtitle',
 									   parent = self.styles['PrefixBase'],
@@ -61,17 +68,18 @@ class PDFTools:
 									   parent = self.styles['PrefixBase'],
 									   alignment = TA_LEFT,
 									   ))
-		self.styles.add(ParagraphStyle(name = 'PrefixRegText',
+		self.styles.add(ParagraphStyle(name = 'RegText',
 									   #parent = self.styles['PrefixBase'],
 									   fontsize = 8,
-									   leading = 1.2 * 8,
+									   alignment = TA_CENTER,
+									   leading = 1.3 * 8,
 									   ))
-		self.styles.add(ParagraphStyle(name = 'PrefixRegTextL',
-									   parent = self.styles['PrefixRegText'],
+		self.styles.add(ParagraphStyle(name = 'RegTextL',
+									   parent = self.styles['RegText'],
 									   alignment = TA_LEFT,
 									   ))
-		self.styles.add(ParagraphStyle(name = 'PrefixRegTextR',
-									   parent = self.styles['PrefixRegText'],
+		self.styles.add(ParagraphStyle(name = 'RegTextR',
+									   parent = self.styles['RegText'],
 									   alignment = TA_RIGHT,
 									   ))
 
@@ -198,7 +206,7 @@ class PDFTools:
 			myDisplayBlock.append([[Paragraph(text = Mtg[0], style = self.styles['PrefixBaseRight'])],
 								   [Paragraph(text = Mtg[1], style = self.styles['PrefixBaseLeft'])]])
 		if self.DEBUG:
-			print "and return a data = [[,],[,],[,]] to be used here"
+			print "and return a data = [[,],[,],[,]] to be used in the PDFTools Sections"
 		return myDisplayBlock
 
 	def AddDirectoryPrefixData(self):
@@ -220,7 +228,7 @@ class PDFTools:
 		#Page 1 Data
 		self.PrefixFlowables = []
 		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = 1.5 * inch))
-		self.PrefixFlowables.append(Paragraph(text = self.DictionaryData['unit.unitname'], style = self.styles['DocumentTitle']))
+		self.PrefixFlowables.append(Paragraph(text = "<b>" + self.DictionaryData['unit.unitname'] + "</b>", style = self.styles['DocumentTitle']))
 		self.PrefixFlowables.append(Paragraph(text = "Member Directory", style = self.styles['Subtitle']))
 		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = 2.0 * inch))
 		self.PrefixFlowables.append(Paragraph(text = self.DictionaryData['unit.stakename'], style = self.styles['PrefixBase']))
@@ -230,7 +238,6 @@ class PDFTools:
 		CurrentDateString = datetime.date.today().strftime("%d %B %Y")
 		self.PrefixFlowables.append(Paragraph(text = "Published: " + CurrentDateString, style = self.styles['PrefixBase']))
 		self.PrefixFlowables.append(PageBreak())
-		print "Length of prefix flowables", len(self.PrefixFlowables)
 
 		#Page 2 Data
 		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
@@ -246,26 +253,29 @@ class PDFTools:
 		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
 		self.PrefixFlowables.append(Paragraph(text = "Office Phone: " + self.DictionaryData['bldg.phone'], style = self.styles['PrefixBase']))
 		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
-		self.PrefixFlowables.append(HRFlowable())
+		self.PrefixFlowables.append(HRFlowable(width = "90%", thickness = 1, lineCap= 'square', color = colors.black))
 		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
 		data = []
 		
 		for Position in self.GetPositionData():
-			data.append([[Paragraph(text = Position['Role'], style = self.styles['PrefixRegTextR'])],
-						 [Paragraph(text = Position['Name'], style = self.styles['PrefixRegTextL'])],
-						 [Paragraph(text = Position['Phone'], style = self.styles['PrefixRegTextL'])]])
+			data.append([[Paragraph(text = Position['Role'], style = self.styles['RegTextR'])],
+						 [Paragraph(text = Position['Name'], style = self.styles['RegTextL'])],
+						 [Paragraph(text = Position['Phone'], style = self.styles['RegTextL'])]])
 		TextTable = Table(data, [1.8 * inch, 2.0 * inch, 1.2 * inch])
 		if self.DEBUG:
 			TextTable.setStyle(TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
 										   ('BOX', (0,0), (-1,-1), .25, colors.black),
 										   ]))
-		self.PrefixFlowables.append(TextTable)
-		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .25 * inch))
+		self.PrefixFlowables.append(KeepInFrame(maxWidth = self.FrameWidth,
+												maxHeight = 5.0 * inch,
+												content = [TextTable,
+														   Spacer(width = self.FrameWidth, height = 7.0 * inch)],
+												mode = 'truncate'))
 		Disclaimer = """This ward directory is to be used only for Church purposes
 						 and should not be copied without permission of the bishop
 						 or stake president.
 						 """
-		self.PrefixFlowables.append(Paragraph(text = "<b>" + Disclaimer + "</b>", style = self.styles['PrefixBase']))
+		self.PrefixFlowables.append(Paragraph(text = "<b>" + Disclaimer + "</b>", style = self.styles['RegText']))
 		self.PrefixFlowables.append(PageBreak())
 		if self.DEBUG:
 			for aFlowable in self.PrefixFlowables:
@@ -277,7 +287,36 @@ class PDFTools:
 		self.SuffixFlowables.append(Image(self.ImagesFolder + os.sep + '-003.jpg', width=self.FrameWidth, height=self.FrameHeight))
 		self.SuffixFlowables.append(Image(self.ImagesFolder + os.sep + '-002.jpg', width=self.FrameWidth, height=self.FrameHeight))
 		self.SuffixFlowables.append(Image(self.ImagesFolder + os.sep + '-001.jpg', width=self.FrameWidth, height=self.FrameHeight))
-		self.SuffixFlowables.append(Image(self.ImagesFolder + os.sep + '-000.jpg', width=self.FrameWidth, height=self.FrameHeight))
+
+		#Here, we'll add our comment and disclaimer data to the end of the document
+		self.SuffixFlowables.append(Spacer(width = self.FrameWidth, height = 2.0 * inch))
+
+		textdata = "As children of the Lord\nwe should strive every day to rise to a higher level of personal righteousness in all of our actions."
+		QuoteText_List = []
+		for Line in self.QuoteData[0].split('\n'):
+			if not len(QuoteText_List) and len(self.QuoteData[0].split('\n')) > 1:
+				QuoteStyle = self.styles['QuoteTitle']
+			else:
+				QuoteStyle = self.styles['PrefixBase']
+			QuoteText_List.append(Paragraph(text = Line, style = QuoteStyle))
+		QuoteText_List.extend([Spacer(width = self.FrameWidth, height = .125 * inch),
+							   Paragraph(text = "<i>- " + self.QuoteData[1] + "</i>", style = self.styles['RegTextR']),
+							   Spacer(width = self.FrameWidth, height = 7.0 * inch)])
+		self.SuffixFlowables.append(KeepInFrame(maxWidth = self.FrameWidth,
+												maxHeight = 5.0 * inch,
+												content = QuoteText_List,
+												mode = 'truncate'))
+
+		self.SuffixFlowables.append(Paragraph(text = "Membership data taken from church records available via the",
+											  style = self.styles['RegText']))
+		self.SuffixFlowables.append(Paragraph(text = self.DictionaryData['unit.unitname'] + " website at www.lds.org/units.",
+											  style = self.styles['RegText']))
+		self.SuffixFlowables.append(Paragraph(text = "Images and Directory design and layout provided by David and Tina Ernstrom.",
+											  style = self.styles['RegText']))
+		self.SuffixFlowables.append(Paragraph(text = "All information for Church use only.",
+											  style = self.styles['RegText']))
+		self.SuffixFlowables.append(PageBreak())
+
 		if self.DEBUG:
 			for aFlowable in self.SuffixFlowables:
 				if not aFlowable.__class__ is PageBreak and not aFlowable.__class__ is HRFlowable and not aFlowable.__class__ is Table and not aFlowable.__class__ is Image:
@@ -305,6 +344,18 @@ class PDFTools:
 				yield SingleFlowable
 				self.FlowablesConsumed += 1
 
+	def PrepareFiller(self):
+		LineSpace_List = []
+		for Counter in range(30):
+			LineSpace_List.append(Spacer(width = self.FrameWidth, height = .25 * inch))
+			LineSpace_List.append(HRFlowable(width = "90%", thickness = 1, lineCap= 'square', color = colors.black))
+		ReturnList = [Paragraph(text = "NOTES", style = self.styles['Subtitle']),
+				KeepInFrame(maxWidth = self.FrameWidth,
+							maxHeight = 7.5 * inch,
+							content = LineSpace_List,
+							mode = 'truncate'),
+				PageBreak()]
+		return ReturnList
 
 	def GenerateWardPagination(self):
 		pdf_TEST = Canvas("DIRECTORY_TEST.pdf", pagesize = landscape(letter))
@@ -355,7 +406,7 @@ class PDFTools:
 		if self.DEBUG:
 			print str(Fillers) + " blank faces will be added to make full pages"
 		for Count in range(Fillers):
-			FlowablesOnPages.insert(-4, [-1, 0, 1, 0])
+			FlowablesOnPages.insert(-4, [-1, 0, len(self.PrepareFiller()), 0])
 		PageCount = (UsedFaces + Fillers) / 4
 		if self.DEBUG:
 			print str(PageCount) + " slices of paper per directory are needed"
@@ -367,7 +418,7 @@ class PDFTools:
 
 		##Insert filler flowables
 		for Count in range(Fillers):
-			self.SuffixFlowables.insert(0, Image(self.ImagesFolder + os.sep + 'blank.jpg', width=self.FrameWidth, height=self.FrameHeight))
+			self.SuffixFlowables = self.PrepareFiller() + self.SuffixFlowables
 
 		##Renumber FamiliesOnPages
 		NewPageCounts = []
@@ -471,7 +522,7 @@ class PDFTools:
 					Right_Header_Footer = False
 
 				#DO THE RIGHT PANEL PRINTING
-				if MyRightFrame >= 2 and not RightFrameFlowablesConsumed == 1:
+				if Right_Header_Footer:
 					RightFrame.addFromList([Paragraph('Page ' + str(MyRightFrame), self.styles['DaveHeaderRight'])], PrintJob[1])
 				RightFrame.addFromList(RightHandle[RightFrameStartFlowable:RightFrameStartFlowable + RightFrameFlowablesConsumed], PrintJob[1])
 				if not RightFrameFlowablesConsumed == 1:

@@ -71,6 +71,13 @@ class Application:
 			print BlockData
 		return BlockData
 
+	def GetQuoteData(self):
+		QuoteData = ['','']
+		if self.GetConfigValue('quote.usequote') == '1':
+			QuoteData = [self.GetConfigValue('quote.quotecontent'),
+						 self.GetConfigValue('quote.quoteauthor')]
+		return QuoteData
+
 	def InitiatePDF(self, ImageDirectory, OutputFolder, Full, Booklet):
 		PDFToolHandle = PDFTools.PDFTools(self.DEBUG,
 										  ImageDirectory,
@@ -78,7 +85,8 @@ class Application:
 										  Full,
 										  Booklet,
 										  DictionaryData = self.ConfigHandle.GetConfigData(),
-										  BlockData = self.StructureBlockData()
+										  BlockData = self.StructureBlockData(),
+										  QuoteData = self.GetQuoteData()
 										  )
 
 		#Here I start adding flowables
@@ -193,8 +201,8 @@ class Application:
 		Handle.close()
 
 	def GetSuperfluousImageList(self, LiveFolder):
-		IgnoreList = ['000.jpg', '-000.jpg', '-001.jpg', '-002.jpg', 'blank.jpg',
-					  '-003.jpg', '001.jpg', 'Thumbs.db', 'Missing.jpg']
+		IgnoreList = ['-001.jpg', '-002.jpg', 'blank.jpg',
+					  '-003.jpg', 'Thumbs.db', 'Missing.jpg']
 		NeededList = self.GetNeededImageList()
 		ExtraImages = []
 		for root, dirs, files in os.walk(LiveFolder):
