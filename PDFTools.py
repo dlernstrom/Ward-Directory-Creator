@@ -397,7 +397,8 @@ class PDFTools:
 			FlowablesOnPages.append([pdf_TEST.getPageNumber() - 1, StartingFlowablesConsumed, NumberIConsumed, NumberRemaining])
 			#END BUILDING THE TEST FRAME
 			pdf_TEST.showPage()
-		pdf_TEST.save()
+		if self.DEBUG:
+			pdf_TEST.save()
 
 		UsedFaces = len(FlowablesOnPages)
 		if self.DEBUG:
