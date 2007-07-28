@@ -21,7 +21,8 @@ class PDFTools:
 				 Booklet,
 				 DictionaryData,
 				 BlockData,
-				 QuoteData
+				 QuoteData,
+				 FullVersionString
 				 ):
 		self.DEBUG = DEBUG
 		self.ImagesFolder = str(ImagesFolder)
@@ -31,6 +32,7 @@ class PDFTools:
 		self.DictionaryData = DictionaryData
 		self.BlockData = BlockData
 		self.QuoteData = QuoteData
+		self.FullVersionString = FullVersionString
 
 		self.filename = self.OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf'
 		self.front = self.OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf'
@@ -72,7 +74,7 @@ class PDFTools:
 									   #parent = self.styles['PrefixBase'],
 									   fontsize = 8,
 									   alignment = TA_CENTER,
-									   leading = 1.3 * 8,
+									   leading = 1.5 * 8,
 									   ))
 		self.styles.add(ParagraphStyle(name = 'RegTextL',
 									   parent = self.styles['RegText'],
@@ -311,7 +313,7 @@ class PDFTools:
 											  style = self.styles['RegText']))
 		self.SuffixFlowables.append(Paragraph(text = self.DictionaryData['unit.unitname'] + " website at www.lds.org/units.",
 											  style = self.styles['RegText']))
-		self.SuffixFlowables.append(Paragraph(text = "Images and Directory design and layout provided by David and Tina Ernstrom.",
+		self.SuffixFlowables.append(Paragraph(text = "Prepared using Ward Directory Creator " + self.FullVersionString,
 											  style = self.styles['RegText']))
 		self.SuffixFlowables.append(Paragraph(text = "All information for Church use only.",
 											  style = self.styles['RegText']))

@@ -86,7 +86,8 @@ class Application:
 										  Booklet,
 										  DictionaryData = self.ConfigHandle.GetConfigData(),
 										  BlockData = self.StructureBlockData(),
-										  QuoteData = self.GetQuoteData()
+										  QuoteData = self.GetQuoteData(),
+										  FullVersionString = self.GetFullVersion()
 										  )
 
 		#Here I start adding flowables
