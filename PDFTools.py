@@ -11,6 +11,7 @@ from reportlab.lib.pagesizes import letter, landscape
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
 import time
 import datetime
+from RotatedTable import RotatedTable90, RotatedTable270
 
 class PDFTools:
 	def __init__(self,
@@ -25,6 +26,7 @@ class PDFTools:
 				 FullVersionString
 				 ):
 		self.DEBUG = DEBUG
+		#self.DEBUG = 1
 		self.ImagesFolder = str(ImagesFolder)
 		self.OutputFolder = str(OutputFolder)
 		self.Full = Full
@@ -186,6 +188,213 @@ class PDFTools:
 			print "and return a data = [[,],[,],[,]] to be used in the PDFTools Sections"
 		return myDisplayBlock
 
+	def _MakeBoxes(self, StartRow, StartCol, BoxCount):
+		ReturnList = []
+		for Counter in range(BoxCount):
+			ReturnList.append(('BOX', (StartCol + 2 * Counter, StartRow), (StartCol + 2 * Counter, StartRow), .25, colors.black))
+		return ReturnList
+
+	def _GetChangeForm(self):
+		ColumnWidths = []
+		myTableData = []
+		myTableData2 = []
+		#Currently set up for 20 rows
+		RowHeights = []
+		BoxHeight = .25 * inch
+		SpacerHeight = .05 * inch
+		TextHeight = .25 * inch
+		RowHeights.append(TextHeight)		# First Name, Date
+		RowHeights.append(BoxHeight)		# Boxes
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(TextHeight)		# Last Name, Phone Number
+		RowHeights.append(BoxHeight)		# Boxes
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(TextHeight)		# Please describe the problem for us...
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes Row 1
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes Row 2
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes Row 3
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes Row 4
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes Row 5
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes Row 6
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes Row 7
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes Row 8
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes Row 9
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes Row 10
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes Row 11
+		BoxWidth = .2 * inch
+		SpacerWidth = .05 * inch
+		ColumnSetCount = 27
+		ColumnSet = [SpacerWidth, BoxWidth]
+		ColumnWidths = ColumnSet * ColumnSetCount + [SpacerWidth]
+		BlankRow = [''] * len(ColumnWidths)
+		myTableData = []
+		for Counter in range(len(RowHeights)):
+			myTableData.append(BlankRow[:])
+		myTableData[0][1]   = 'First Name'
+		myTableData[0][35]  = "Today's Date (mm/dd/yyyy)"
+		myTableData[1][38]  = '/'
+		myTableData[1][42]  = '/'
+		myTableData[1][43]  = "2"
+		myTableData[1][45]  = "0"
+		myTableData[3][1]   = "Last Name"
+		myTableData[3][35]  = "Phone Number"
+		myTableData[4][34]  = '('
+		myTableData[4][40]  = ')'
+		myTableData[4][46]  = '-'
+		myTableData[8][1]   = 'Please describe the problem(s) as detailed as possible'
+
+		TableStyleData = []
+		TableStyleData += self._MakeBoxes( 1,  1, 16)
+		TableStyleData += self._MakeBoxes( 4,  1, 16)
+		TableStyleData += self._MakeBoxes( 1, 35,  8)
+		TableStyleData += self._MakeBoxes( 4, 35, 10)
+		if self.DEBUG:
+			TableStyleData += [('BOX', (0,0), (-1,-1), .25, colors.black)]
+		TableStyleData += [('ALIGN', (0,1), (-1,1), 'CENTER')]
+		TableStyleData += [('ALIGN', (0,4), (-1,4), 'CENTER')]
+		TableStyleData += [('LINEBELOW', (0,10), (-1,10), .25, colors.black),
+						   ('LINEBELOW', (0,12), (-1,12), .25, colors.black),
+						   ('LINEBELOW', (0,14), (-1,14), .25, colors.black),
+						   ('LINEBELOW', (0,16), (-1,16), .25, colors.black),
+						   ('LINEBELOW', (0,18), (-1,18), .25, colors.black),
+						   ('LINEBELOW', (0,20), (-1,20), .25, colors.black),
+						   ('LINEBELOW', (0,22), (-1,22), .25, colors.black),
+						   ('LINEBELOW', (0,24), (-1,24), .25, colors.black),
+						   ('LINEBELOW', (0,26), (-1,26), .25, colors.black),
+						   ('LINEBELOW', (0,28), (-1,28), .25, colors.black)]
+
+		myTableStyle = TableStyle(TableStyleData)
+		return myTableData, RowHeights, ColumnWidths, myTableStyle
+
+	def _GetRequestForm(self):
+		ColumnWidths = []
+		myTableData = []
+		myTableData2 = []
+		#Currently set up for 20 rows
+		RowHeights = []
+		BoxHeight = .25 * inch
+		SpacerHeight = .05 * inch
+		TextHeight = .25 * inch
+		RowHeights.append(TextHeight)		# Last Name
+		RowHeights.append(BoxHeight)		# Boxes
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(TextHeight)		# Parents First and middle names
+		RowHeights.append(BoxHeight)		# Boxes
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(TextHeight)		# Children's First and Middle Names
+		RowHeights.append(BoxHeight)		# Boxes Child 1
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes Child 2
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes Child 3
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes Child 4
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(BoxHeight)		# Boxes Child 5
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(TextHeight)		# Phone Numbers
+		RowHeights.append(BoxHeight)		# Boxes
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(TextHeight)		# Address
+		RowHeights.append(BoxHeight)		# Boxes
+		RowHeights.append(SpacerHeight)		# Gap
+		RowHeights.append(TextHeight)		# Email Address
+		RowHeights.append(BoxHeight)		# Boxes
+		BoxWidth = .2 * inch
+		SpacerWidth = .05 * inch
+		ColumnSetCount = 27
+		ColumnSet = [SpacerWidth, BoxWidth]
+		ColumnWidths = ColumnSet * ColumnSetCount + [SpacerWidth]
+		BlankRow = [''] * len(ColumnWidths)
+		RowCount = 27
+		myTableData = []
+		for Counter in range(RowCount):
+			myTableData.append(BlankRow[:])
+		myTableData[0][1]   = 'Last Name'
+		myTableData[0][39]  = "Today's Date (mm/dd/yyyy)"
+		myTableData[1][42]  = '/'
+		myTableData[1][46]  = '/'
+		myTableData[1][47]  = "2"
+		myTableData[1][49]  = "0"
+		myTableData[3][1]   = "Parent's First & Middle Names"
+		myTableData[3][39]  = "Birth Date (mm/dd/yyyy)"
+		myTableData[4][42]  = '/'
+		myTableData[4][46]  = '/'
+		myTableData[4][47]  = "1"
+		myTableData[4][49]  = "9"
+		myTableData[6][42]  = '/'
+		myTableData[6][46]  = '/'
+		myTableData[6][47]  = "1"
+		myTableData[6][49]  = "9"
+		myTableData[8][1]   = "Children's First & Middle Names"
+		myTableData[8][39]  = "Birth Date (mm/dd/yyyy)"
+		myTableData[9][42]  = '/'
+		myTableData[9][46]  = '/'
+		myTableData[11][42] = '/'
+		myTableData[11][46] = '/'
+		myTableData[13][42] = '/'
+		myTableData[13][46] = '/'
+		myTableData[15][42] = '/'
+		myTableData[15][46] = '/'
+		myTableData[17][42] = '/'
+		myTableData[17][46] = '/'
+		myTableData[19][1]  = 'Primary Phone Number'
+		myTableData[20][0]  = '('
+		myTableData[20][6]  = ')'
+		myTableData[20][12] = '-'
+		myTableData[20][22] = '('
+		myTableData[20][28] = ')'
+		myTableData[20][34] = '-'
+		myTableData[19][23] = 'Secondary Phone Number'
+		myTableData[22][1]  = 'Street Address'
+		myTableData[22][45] = 'Apartment'
+		myTableData[25][1]  = 'Email Address'
+
+		TableStyleData = []
+		TableStyleData += self._MakeBoxes( 1,  1, 18)
+		TableStyleData += self._MakeBoxes( 4,  1, 18)
+		TableStyleData += self._MakeBoxes( 6,  1, 18)
+		TableStyleData += self._MakeBoxes( 9,  1, 18)
+		TableStyleData += self._MakeBoxes(11,  1, 18)
+		TableStyleData += self._MakeBoxes(13,  1, 18)
+		TableStyleData += self._MakeBoxes(15,  1, 18)
+		TableStyleData += self._MakeBoxes(17,  1, 18)
+		TableStyleData += self._MakeBoxes( 1, 39,  8)
+		TableStyleData += self._MakeBoxes( 4, 39,  8)
+		TableStyleData += self._MakeBoxes( 6, 39,  8)
+		TableStyleData += self._MakeBoxes( 9, 39,  8)
+		TableStyleData += self._MakeBoxes(11, 39,  8)
+		TableStyleData += self._MakeBoxes(13, 39,  8)
+		TableStyleData += self._MakeBoxes(15, 39,  8)
+		TableStyleData += self._MakeBoxes(17, 39,  8)
+		TableStyleData += self._MakeBoxes(20,  1, 10)
+		TableStyleData += self._MakeBoxes(20, 23, 10)
+		TableStyleData += self._MakeBoxes(23,  1, 21)
+		TableStyleData += self._MakeBoxes(23, 45,  5)
+		TableStyleData += self._MakeBoxes(26,  1, 27)
+		if self.DEBUG:
+			TableStyleData += [('BOX', (0,0), (-1,-1), .25, colors.black)]
+		TableStyleData += [('ALIGN', (42,0), (-1,18), 'CENTER')]
+		TableStyleData += [('ALIGN', (0,20), (-1,20), 'CENTER')]
+
+		myTableStyle = TableStyle(TableStyleData)
+		return myTableData, RowHeights, ColumnWidths, myTableStyle
+
 	def AddDirectoryPrefixData(self):
 		if self.DEBUG:
 			print "Here's the dictionary I received"
@@ -202,8 +411,8 @@ class PDFTools:
 		block.pr_rs_start
 		bldg.phone
 		"""
-		#Page 1 Data
 		self.PrefixFlowables = []
+		#Page 1 Data
 		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = 1.5 * inch))
 		self.PrefixFlowables.append(Paragraph(text = "<b>" + self.DictionaryData['unit.unitname'] + "</b>", style = self.styles['DocumentTitle']))
 		self.PrefixFlowables.append(Paragraph(text = "Member Directory", style = self.styles['Subtitle']))
@@ -256,13 +465,57 @@ class PDFTools:
 		self.PrefixFlowables.append(PageBreak())
 		if self.DEBUG:
 			for aFlowable in self.PrefixFlowables:
-				if not aFlowable.__class__ is PageBreak and not aFlowable.__class__ is HRFlowable and not aFlowable.__class__ is Table and not aFlowable.__class__ is Image:
+				if aFlowable.__class__ is Paragraph or aFlowable.__class__ is Spacer:
 					aFlowable._showBoundary = 1
+
+	def _RecordRequestPage(self, rotation = '90'):
+		self.SuffixFlowables.append(Paragraph(text = "Record Request Form", style = self.styles['Subtitle']))
+		RecordRequestTextA = """<i>To have your records requested into our ward, please fill out this form,
+		remove it from the directory, and turn it in to a member of the Bishopric or the Membership Clerk.</i>"""
+		RecordRequestTextB = """<i>We will contact you with any questions.</i>"""
+		RecordRequestTextC = """<i>Please be sure to have your picture taken so that your family
+		shows up in the next publication of this directory.</i>"""
+		self.SuffixFlowables.append(Paragraph(text = RecordRequestTextA, style = self.styles['RegText']))
+		self.SuffixFlowables.append(Paragraph(text = RecordRequestTextB, style = self.styles['RegText']))
+		myTableData, RowHeights, ColumnWidths, myTableStyle = self._GetRequestForm()
+		if rotation == '90':
+			myRotatedTable = RotatedTable90(myTableData, colWidths = ColumnWidths, rowHeights = RowHeights, hAlign = 'RIGHT')
+		else:
+			myRotatedTable = RotatedTable270(myTableData, colWidths = ColumnWidths, rowHeights = RowHeights, hAlign = 'LEFT')
+		myRotatedTable.setStyle(myTableStyle)
+		self.SuffixFlowables.append(myRotatedTable)
+		self.SuffixFlowables.append(Paragraph(text = RecordRequestTextC, style = self.styles['RegText']))
+
+	def _ChangeRequestPage(self, rotation = '90'):
+		self.SuffixFlowables.append(Paragraph(text = "Change Request Form", style = self.styles['Subtitle']))
+		RecordRequestTextA = """<i>If you notice any incorrect or missing information in this directory, please fill
+		out the form below and return it to a member of the Bishopric or the Membership Clerk.</i>"""
+		RecordRequestTextB = """<i>We will contact you with any questions.</i>"""
+		RecordRequestTextC = """<i>Please note that only one phone number can be displayed in the directory
+		per family.  Email addresses can only be changed by you through the ward website.</i>"""
+		self.SuffixFlowables.append(Paragraph(text = RecordRequestTextA, style = self.styles['RegText']))
+		self.SuffixFlowables.append(Paragraph(text = RecordRequestTextB, style = self.styles['RegText']))
+		myTableData, RowHeights, ColumnWidths, myTableStyle = self._GetChangeForm()
+		if rotation == '90':
+			myRotatedTable = RotatedTable90(myTableData, colWidths = ColumnWidths, rowHeights = RowHeights, hAlign = 'RIGHT')
+		else:
+			myRotatedTable = RotatedTable270(myTableData, colWidths = ColumnWidths, rowHeights = RowHeights, hAlign = 'LEFT')
+		myRotatedTable.setStyle(myTableStyle)
+		self.SuffixFlowables.append(myRotatedTable)
+		self.SuffixFlowables.append(Paragraph(text = RecordRequestTextC, style = self.styles['RegText']))
+
 
 	def AddDirectorySuffixData(self):
 		self.SuffixFlowables = []
-		self.SuffixFlowables.append(Image(self.ImagesFolder + os.sep + '-003.jpg', width=self.FrameWidth, height=self.FrameHeight))
-		self.SuffixFlowables.append(Image(self.ImagesFolder + os.sep + '-002.jpg', width=self.FrameWidth, height=self.FrameHeight))
+
+		#Back side of get my records in!!!
+		# GET MY RECORDS IN!!!
+		self._RecordRequestPage(rotation = '90')
+
+		# GET MY RECORDS IN!!!
+		self._ChangeRequestPage(rotation = '270')
+
+		#How to access the ward website
 		self.SuffixFlowables.append(Image(self.ImagesFolder + os.sep + '-001.jpg', width=self.FrameWidth, height=self.FrameHeight))
 
 		#Here, we'll add our comment and disclaimer data to the end of the document
@@ -296,7 +549,7 @@ class PDFTools:
 
 		if self.DEBUG:
 			for aFlowable in self.SuffixFlowables:
-				if not aFlowable.__class__ is PageBreak and not aFlowable.__class__ is HRFlowable and not aFlowable.__class__ is Table and not aFlowable.__class__ is Image:
+				if aFlowable.__class__ is Paragraph or aFlowable.__class__ is Spacer:
 					aFlowable._showBoundary = 1
 
 	def AddFooter(self, FooterText):
@@ -339,7 +592,7 @@ class PDFTools:
 
 		##THE NEXT LOOP IS TO GET THE COUNTS OF HOW MANY PAGES I'LL END UP WITH AND HOW MANY FLOWABLES WILL FALL ONTO EACH PAGE
 		FlowablesOnPages = []
-
+		self.CurrentWardDirectory.append(PageBreak())
 		#PREPARE FOR FIRST TIME THROUGH
 		self.TotalFlowables = len(self.CurrentWardDirectory) + len(self.PrefixFlowables) + len(self.SuffixFlowables)
 		if self.DEBUG:
@@ -367,6 +620,10 @@ class PDFTools:
 						SingleFlowable = GeneratorHandle.next()
 			except:
 				print "Ran out of Flowables"
+				print "Total Flowables:", self.TotalFlowables
+				print "Total Consumed:", self.FlowablesConsumed
+				if self.FlowablesConsumed < self.TotalFlowables:
+					raise "PROBLEM!"
 			if self.DEBUG:
 				print "Flowables Consumed TOTAL:", self.FlowablesConsumed
 			NumberIConsumed = self.FlowablesConsumed - StartingFlowablesConsumed
