@@ -89,11 +89,31 @@ class GeneratePanel(ColoredPanel):
 		self.Bind(wx.EVT_CHECKBOX, self.OnCheckExtractMoveOuts, self.CB_ExtractMoveOuts)
 		self.Bind(wx.EVT_CHECKBOX, self.OnCheckGenFull, self.CB_GenPDF_Full)
 		self.Bind(wx.EVT_CHECKBOX, self.OnCheckGenBooklet, self.CB_GenPDF_Booklet)
+		self.Bind(wx.EVT_TEXT, self.OnSMTPChanged, self.TXT_SMTPAddy)
+		self.Bind(wx.EVT_TEXT, self.OnUserChanged, self.TXT_User)
+		self.Bind(wx.EVT_TEXT, self.OnPassChanged, self.TXT_Pass)
 
 		self.SetSizer(border_level0)
 		border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])
 
+		#Here's the logic to set up the prevalues from config file
+		if self.parent.GetConfigValue('email.smtp'):
+			self.TXT_SMTPAddy.SetValue(self.parent.GetConfigValue('email.smtp'))
+		if self.parent.GetConfigValue('email.username'):
+			self.TXT_User.SetValue(self.parent.GetConfigValue('email.username'))
+		if self.parent.GetConfigValue('email.pass'):
+			self.TXT_Pass.SetValue(self.parent.GetConfigValue('email.pass'))
+
 		self.Title = "Generate"
+
+	def OnSMTPChanged(self, evt):
+		self.parent.SetConfigValue('email.smtp', evt.GetString())
+
+	def OnUserChanged(self, evt):
+		self.parent.SetConfigValue('email.username', evt.GetString())
+
+	def OnPassChanged(self, evt):
+		self.parent.SetConfigValue('email.pass', evt.GetString())
 
 	def OnCheckMissingReport(self, evt):
 		if evt.Checked():
@@ -135,6 +155,7 @@ class GeneratePanel(ColoredPanel):
 		#Here, I need to check each of the (7) things to do and do them
 		if self.parent.GetConfigValue('task.sendemail') == '1':
 			print "Sending Emails"
+			self.AppHandle.SendEmails()
 		if self.parent.GetConfigValue('task.genmissfile') == '1':
 			print "Generating Missing File"
 		if self.parent.GetConfigValue('task.extract_moveouts') == '1':

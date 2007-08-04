@@ -1,6 +1,9 @@
 import PDFTools
 import CSVMembershipParser
-from Email import mail
+import smtplib
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
+
 import os
 import Configuration
 import string
@@ -139,12 +142,17 @@ class Application:
 				MissingImages.append(Family[4])
 		return MissingImages
 
-	def GetMissingMsg(self, ImagesDirectory):
+	def GetMissingMsg(self, ImagesDirectory = None):
+		if ImagesDirectory == None:
+			ImagesDirectory = self.GetConfigValue('file.imagesdirectory')
 		MissingList = self.GetMissingList(ImagesDirectory)
 		message = "The following " + str(len(MissingList)) + " people are missing pictures\n\n"
 		for Name in MissingList:
 			message += Name + '\n'
 		return message
+
+	def GetMissingMsgEmails(self):
+		return self.GetConfigValue('email.recipients').split(',')
 
 	def GetMemberEmails(self):
 		EmailList = []
@@ -192,9 +200,24 @@ class Application:
 					return Family[2][1]
 
 	def SendEmails(self):
-		if self.SEND_EMAILS:
-			for ToAddy in self.MISSING_PEOPLE_EMAILS:
-				mail(self.SMTP_SERVER, 'David@Ernstrom.net', ToAddy, 'Missing Picture', self.GetMissingMsg())
+		if not self.GetConfigValue('email.smtp') == None:
+			SMTP_SERVER = self.GetConfigValue('email.smtp')
+			SMTP_User = self.GetConfigValue('email.username')
+			SMTP_Pass = self.GetConfigValue('email.pass')
+			session = smtplib.SMTP(SMTP_SERVER)
+			if not SMTP_User == None and not SMTP_Pass == None:
+				session.login(user = SMTP_User, password = SMTP_Pass)
+			msg = MIMEMultipart()
+			msg['From'] = 'Ward Directory Creator <david@ernstrom.net>'
+			msg['Subject'] = 'Missing Persons Email'
+			msg.attach(MIMEText(self.GetMissingMsg()))
+			for ToAddy in self.GetMissingMsgEmails():
+				print ToAddy
+				msg['To'] = ToAddy
+				smtpresult = session.sendmail(from_addr = 'Ward Directory Creator <david@ernstrom.net>',
+											  to_addrs = ToAddy,
+											  msg = msg.as_string())
+			session.close()
 
 	def MakeMissingFile(self):
 		Handle = open(CSV_LOCATION + "Needed.txt", 'w')
