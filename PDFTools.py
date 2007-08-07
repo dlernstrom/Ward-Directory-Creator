@@ -12,6 +12,7 @@ from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
 import time
 import datetime
 from RotatedTable import RotatedTable90, RotatedTable270
+from TextOnImage import TextOnImage
 
 class PDFTools:
 	def __init__(self,
@@ -108,16 +109,27 @@ class PDFTools:
 								  spaceAfter=0,
 								  spaceBefore=0,
 								  fontSize = 8,
+								  leading = 1.5 * 8
 								  ))
 		self.styles.add(ParagraphStyle(name='DaveBold',
 								  parent=self.styles['DaveHeading'],
 								  fontName = 'Times-Bold',
 								  fontSize = 10,
+								  leading = 1.5 * 10
 								  ))
 		self.styles.add(ParagraphStyle(name='DaveBoldSmall',
 								  parent=self.styles['DaveBold'],
 								  fontSize = 8,
+								  leading = 1.5 * 8
 								  ))
+		self.styles.add(ParagraphStyle(name = 'TextOnImage',
+									   parent = self.styles['DaveBoldSmall'],
+									   fontSize = 7,
+									   leading = 1.2 * 7,
+									   leftIndent = .06 * inch,
+									   rightIndent = .2 * inch,
+									   alignment = TA_CENTER
+									   ))
 
 		self.CurrentWardDirectory = []
 
@@ -775,11 +787,14 @@ class PDFTools:
 
 				PrintJob[1].showPage()
 			print "PDF Completed"
-			try:
-				PrintJob[1].save()
-			except IOError:
-				os.mkdir(win32api.GetEnvironmentVariable('APPDATA') + os.sep + APPDATAFOLDER)
-				PrintJob[1].save()
+			PrintJob[1].save()
+
+	def GetMissingName(self):
+		ContactName = self.DictionaryData['missing.missingname']
+		CommaIndex = ContactName.index(',')
+		ContactName = ContactName[CommaIndex + 2:] + ' ' + ContactName[:CommaIndex]
+		return ContactName
+
 
 	def TableizeFamily(self, Household):
 		Family = []
@@ -812,10 +827,12 @@ class PDFTools:
 			if self.DEBUG:
 				print self.ImagesFolder + os.sep + Household[3]
 		except:
-			FamilyPicture = Image(self.ImagesFolder + os.sep + 'Missing.jpg',
+			FamilyPictureBase = Image(self.ImagesFolder + os.sep + 'Missing.jpg',
 								  width = 1.5 * inch,
 								  height = 1.125 * inch,
 								  kind = 'proportional')
+			MissingImageText = Paragraph(text = "Please contact " + self.GetMissingName() + " to have your photograph added", style = self.styles['TextOnImage'])
+			FamilyPicture = TextOnImage(P = MissingImageText, I = FamilyPictureBase, xpad = 0, ypad = .05 * inch, side = 'center')
 			if self.DEBUG:
 				print self.ImagesFolder + os.sep + 'Missing.jpg'
 
