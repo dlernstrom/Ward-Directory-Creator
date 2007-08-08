@@ -135,6 +135,19 @@ class Application:
 	def GetNeededImageList(self):
 		return map(lambda Member: Member[3], self.MembershipList)
 
+	def GetFamilyOfDuplicateAddressList(self):
+		Address = []
+		ReportMsg = ''
+		for Family in self.MembershipList:
+			if Family[2][0] in Address:
+				ReportMsg += 'Address Already found at index' + str(Address.index(Family[2][0])) + '\n'
+				ReportMsg += 'Address: ' + Family[2][0] + '\n'
+				ReportMsg += 'Family #1: ' + self.MembershipList[Address.index(Family[2][0])][4] + '\n'
+				ReportMsg += 'Family #2: ' + Family[4] + '\n\n'
+			Address.append(Family[2][0])
+		Report = "\nFamilies with duplicate addresses\n" + ReportMsg
+		return Report
+
 	def GetMissingList(self, ImagesDirectory):
 		MissingImages = []
 		for Family in self.MembershipList:
@@ -142,13 +155,13 @@ class Application:
 				MissingImages.append(Family[4])
 		return MissingImages
 
-	def GetMissingMsg(self, ImagesDirectory = None):
-		if ImagesDirectory == None:
-			ImagesDirectory = self.GetConfigValue('file.imagesdirectory')
+	def GetReportMsg(self):
+		ImagesDirectory = self.GetConfigValue('file.imagesdirectory')
 		MissingList = self.GetMissingList(ImagesDirectory)
 		message = "The following " + str(len(MissingList)) + " people are missing pictures\n\n"
 		for Name in MissingList:
 			message += Name + '\n'
+		message += self.GetFamilyOfDuplicateAddressList()
 		return message
 
 	def GetMissingMsgEmails(self):
@@ -210,7 +223,7 @@ class Application:
 			msg = MIMEMultipart()
 			msg['From'] = 'Ward Directory Creator <david@ernstrom.net>'
 			msg['Subject'] = 'Missing Persons Email'
-			msg.attach(MIMEText(self.GetMissingMsg()))
+			msg.attach(MIMEText(self.GetReportMsg()))
 			for ToAddy in self.GetMissingMsgEmails():
 				print ToAddy
 				msg['To'] = ToAddy
@@ -225,8 +238,8 @@ class Application:
 		Handle.close()
 
 	def GetSuperfluousImageList(self, LiveFolder):
-		IgnoreList = ['-001.jpg', '-002.jpg', 'blank.jpg',
-					  '-003.jpg', 'Thumbs.db', 'Missing.jpg']
+		IgnoreList = ['wardWeb1.jpg', 'wardWeb2.jpg',
+					  'wardWeb3.jpg', 'Thumbs.db', 'Missing.jpg']
 		NeededList = self.GetNeededImageList()
 		ExtraImages = []
 		for root, dirs, files in os.walk(LiveFolder):
