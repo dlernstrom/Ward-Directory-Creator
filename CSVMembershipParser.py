@@ -22,7 +22,7 @@ class CSVMembershipParser:
 		return self.CurrentFamily[0].split(',')[0]
 
 	def GetParentCount(self):
-		if self.CurrentFamily[0].split(',')[1].find(' and ') == -1:
+		if self.CurrentFamily[0].find(' and ') == -1:
 			return 1
 		else:
 			return 2
