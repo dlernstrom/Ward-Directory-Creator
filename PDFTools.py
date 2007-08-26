@@ -37,9 +37,14 @@ class PDFTools:
 		self.QuoteData = QuoteData
 		self.FullVersionString = FullVersionString
 
-		self.filename = self.OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf'
-		self.front = self.OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf'
-		self.back = self.OutputFolder + os.sep + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf'
+		if self.OutputFolder == None or self.OutputFolder == 'None':
+			self.OutputFolder = ''
+		else:
+			self.OutputFolder = self.OutputFolder + os.sep
+		self.filename = self.OutputFolder + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf'
+		self.front = self.OutputFolder + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf'
+		self.back = self.OutputFolder + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf'
+		print self.filename
 
 		self.styles = getSampleStyleSheet()
 		#This is what sets Helvetica as the base font for the PrefixPages
@@ -430,8 +435,14 @@ class PDFTools:
 		self.PrefixFlowables.append(Paragraph(text = "Member Directory", style = self.styles['Subtitle']))
 		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = 2.0 * inch))
 		self.PrefixFlowables.append(Paragraph(text = self.DictionaryData['unit.stakename'], style = self.styles['PrefixBase']))
-		self.PrefixFlowables.append(Paragraph(text = self.DictionaryData['bldg.addy1'], style = self.styles['PrefixBase']))
-		self.PrefixFlowables.append(Paragraph(text = self.DictionaryData['bldg.addy2'], style = self.styles['PrefixBase']))
+		if 'bldg.addy1' in self.DictionaryData.keys():
+			self.PrefixFlowables.append(Paragraph(text = self.DictionaryData['bldg.addy1'], style = self.styles['PrefixBase']))
+		else:
+			self.PrefixFlowables.append(Paragraph(text = '', style = self.styles['PrefixBase']))
+		if 'bldg.addy2' in self.DictionaryData.keys():
+			self.PrefixFlowables.append(Paragraph(text = self.DictionaryData['bldg.addy2'], style = self.styles['PrefixBase']))
+		else:
+			self.PrefixFlowables.append(Paragraph(text = '', style = self.styles['PrefixBase']))
 		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = 2.0 * inch))
 		CurrentDateString = datetime.date.today().strftime("%d %B %Y")
 		self.PrefixFlowables.append(Paragraph(text = "Published: " + CurrentDateString, style = self.styles['PrefixBase']))
@@ -449,7 +460,10 @@ class PDFTools:
 										   ]))
 		self.PrefixFlowables.append(TextTable)
 		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
-		self.PrefixFlowables.append(Paragraph(text = "Office Phone: " + self.DictionaryData['bldg.phone'], style = self.styles['PrefixBase']))
+		if 'bldg.phone' in self.DictionaryData.keys():
+			self.PrefixFlowables.append(Paragraph(text = "Office Phone: " + self.DictionaryData['bldg.phone'], style = self.styles['PrefixBase']))
+		else:
+			self.PrefixFlowables.append(Paragraph(text = '', style = self.styles['PrefixBase']))
 		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
 		self.PrefixFlowables.append(HRFlowable(width = "90%", thickness = 1, lineCap= 'square', color = colors.black))
 		self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
@@ -553,17 +567,17 @@ class PDFTools:
 		for Instruction in Instructions:
 			ContentParagraphs.append(Paragraph(text = Instruction, style = self.styles['RegTextL']))
 		self.SuffixFlowables.append(Paragraph(text = "Accessing the Ward Website", style = self.styles['QuoteTitle']))
-		Web1 = Image(self.ImagesFolder + os.sep + 'wardWeb1.jpg',
+		Web1 = Image('wardWeb1.jpg',
 									  width = self.FrameWidth,
 									  height = 1.0 * inch,
 									  kind = 'proportional')
 		Web1.hAlign = 'LEFT'
-		Web2 = Image(self.ImagesFolder + os.sep + 'wardWeb2.jpg',
+		Web2 = Image('wardWeb2.jpg',
 									  width = self.FrameWidth,
 									  height = 1.5 * inch,
 									  kind = 'proportional')
 		Web2.hAlign = 'LEFT'
-		Web3 = Image(self.ImagesFolder + os.sep + 'wardWeb3.jpg',
+		Web3 = Image('wardWeb3.jpg',
 									  width = 2.0 * inch,
 									  height = 2.0 * inch,
 									  kind = 'proportional')

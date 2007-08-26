@@ -18,14 +18,17 @@ ConfigDefaults = {
 	"unit.unit_type":			"Ward",
 	"unit.stakename":			"Your Stake Name Here",
 	"quote.usequote":			"1",
-	"quote.quotecontent":		"As children of the Lord\nwe should strive every day to rise to a higher level of personal rightousness in all of our actions.",
+	"quote.quotecontent":		"As children of the Lord\nwe should strive every day to rise to a higher level of personal righteousness in all of our actions.",
 	"quote.quoteauthor":		"President James E. Faust",
 	"block.displaysac":			"1",
 	"block.sacstart":			"09:00 AM",
 	"block.displayss":			"1",
 	"block.ssstart":			"10:20 AM",
 	"block.display_pr_rs":		"1",
-	"block.pr_rs_start":		"11:10 AM"
+	"block.pr_rs_start":		"11:10 AM",
+	"bldg.phone":				"(XXX) XXX-XXXX",
+	"bldg.addy1":				"Address Line 1",
+	"bldg.addy2":				"City, State ZIP CODE"
 	}
 
 class Application:
@@ -136,15 +139,19 @@ class Application:
 		return map(lambda Member: Member[3], self.MembershipList)
 
 	def GetFamilyOfDuplicateAddressList(self):
-		Address = []
+		AddressesSeen = []
+		AddressesAlreadyDuped = []
 		ReportMsg = ''
 		for Family in self.MembershipList:
-			if Family[2][0] in Address:
-				ReportMsg += 'Address Already found at index' + str(Address.index(Family[2][0])) + '\n'
+			if not Family[2][0] in AddressesAlreadyDuped and Family[2][0] in AddressesSeen:
+				ReportMsg += 'Address Already found\n'
 				ReportMsg += 'Address: ' + Family[2][0] + '\n'
-				ReportMsg += 'Family #1: ' + self.MembershipList[Address.index(Family[2][0])][4] + '\n'
-				ReportMsg += 'Family #2: ' + Family[4] + '\n\n'
-			Address.append(Family[2][0])
+				for Name in self.MembershipList:
+					if Name[2][0] == Family[2][0]:
+						ReportMsg += 'Family: ' + Name[4] + '\n'
+				ReportMsg += '\n'
+				AddressesAlreadyDuped.append(Family[2][0])
+			AddressesSeen.append(Family[2][0])
 		Report = "\nFamilies with duplicate addresses\n" + ReportMsg
 		return Report
 
@@ -238,6 +245,8 @@ class Application:
 		Handle.close()
 
 	def GetSuperfluousImageList(self, LiveFolder):
+		if LiveFolder == None:
+			return []
 		IgnoreList = ['wardWeb1.jpg', 'wardWeb2.jpg',
 					  'wardWeb3.jpg', 'Thumbs.db', 'Missing.jpg']
 		NeededList = self.GetNeededImageList()
