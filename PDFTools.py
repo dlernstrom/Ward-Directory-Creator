@@ -44,7 +44,6 @@ class PDFTools:
 		self.filename = self.OutputFolder + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf'
 		self.front = self.OutputFolder + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf'
 		self.back = self.OutputFolder + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf'
-		print self.filename
 
 		self.styles = getSampleStyleSheet()
 		#This is what sets Helvetica as the base font for the PrefixPages
@@ -144,7 +143,7 @@ class PDFTools:
 		self.NotSoFarLeft = landscape(letter)[0]/2 + Margin
 		self.FrameWidth = landscape(letter)[0]/2 - 2 * Margin
 		self.FrameHeight = landscape(letter)[1] - 2 * Margin
-		self.ChurchFlowable = Paragraph('For Church Use Only', self.styles['DaveFooter'])
+		self.ChurchFlowable = Paragraph(self.DictionaryData['unit.unitname'] + ' -- For Church Use Only', self.styles['DaveFooter'])
 
 	def GetPositionData(self):
 		#Return a list of dictionaries of the positions ordered correctly
