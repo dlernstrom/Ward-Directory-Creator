@@ -8,6 +8,8 @@ import os
 import Configuration
 import string
 import time
+import auth
+import TimeTool
 
 __version__ = "$Rev$".split()[1]
 VersionString = '1.0'
@@ -43,6 +45,28 @@ class Application:
 		#self.DEBUG = 1
 
 		self.GetMembershipList()
+		self.AuthHandle = auth.Auth()
+		self.Authorized = None
+		print "Authorization:", self.isAuthorized()
+
+	def GetCurrentMMDDYY(self):
+		#print TimeTool.TimeTool()
+		return TimeTool.TimeTool()
+
+	def GetExpiration(self):
+		if str(self.GetConfigValue('unit.serial')) == 'None':
+			return False
+		Expiration = self.AuthHandle.GetExpirationMMDDYY(Code = str(self.GetConfigValue('unit.serial')))
+		Expiration = Expiration[0:2] + '/' + Expiration[2:4] + '/' + Expiration[4:6]
+		return Expiration
+
+	def isAuthorized(self):
+		if str(self.GetConfigValue('unit.serial')) == 'None':
+			return False
+		self.Authorized = self.AuthHandle.IsValid(WardName = str(self.GetConfigValue('unit.unitname')),
+												  Code = str(self.GetConfigValue('unit.serial')),
+												  CurrentMMDDYY = self.GetCurrentMMDDYY())
+		return self.Authorized
 
 	def GetConfigValue(self, DictionaryField):
 		return self.ConfigHandle.GetValueByKey(DictionaryField)
@@ -85,6 +109,8 @@ class Application:
 		return QuoteData
 
 	def InitiatePDF(self, ImageDirectory, OutputFolder, Full, Booklet):
+		if not self.isAuthorized():
+			return False
 		PDFToolHandle = PDFTools.PDFTools(self.DEBUG,
 										  ImageDirectory,
 										  OutputFolder,

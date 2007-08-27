@@ -46,43 +46,77 @@ class GeneratePanel(ColoredPanel):
 		## Here's the generate directory box
 		StaticBox = wx.StaticBox(self, -1, "Generate Directory")
 		StaticBox.SetFont(self.StandardFont)
-		StaticBoxSizer = wx.StaticBoxSizer(StaticBox, wx.VERTICAL)
+		GenerateSizer = wx.StaticBoxSizer(StaticBox, wx.VERTICAL)
 
 		self.CB_MissingReport = wx.CheckBox(self, -1, "View Missing Pictures Report")
 		self.CB_MissingReport.SetFont(self.StandardFont)
-		StaticBoxSizer.Add(self.CB_MissingReport, 0, wx.TOP | wx.LEFT, 10)
+		GenerateSizer.Add(self.CB_MissingReport, 0, wx.TOP | wx.LEFT, 10)
 
 		self.CB_SendEmail = wx.CheckBox(self, -1, "Send Missing Pictures Email")
 		self.CB_SendEmail.SetFont(self.StandardFont)
-		StaticBoxSizer.Add(self.CB_SendEmail, 0, wx.TOP | wx.LEFT, 10)
+		GenerateSizer.Add(self.CB_SendEmail, 0, wx.TOP | wx.LEFT, 10)
 
 		self.CB_MissingFile = wx.CheckBox(self, -1, "Generate Missing Pictures File")
 		self.CB_MissingFile.SetFont(self.StandardFont)
-		StaticBoxSizer.Add(self.CB_MissingFile, 0, wx.TOP | wx.LEFT, 10)
+		GenerateSizer.Add(self.CB_MissingFile, 0, wx.TOP | wx.LEFT, 10)
 
 		self.CB_ExtractMoveOuts = wx.CheckBox(self, -1, 'Archive "Moved-Out" Images')
 		self.CB_ExtractMoveOuts.SetFont(self.StandardFont)
-		StaticBoxSizer.Add(self.CB_ExtractMoveOuts, 0, wx.TOP | wx.LEFT, 10)
+		GenerateSizer.Add(self.CB_ExtractMoveOuts, 0, wx.TOP | wx.LEFT, 10)
 
 		self.CB_GenPDF_Full = wx.CheckBox(self, -1, "Generate Full Spread PDF")
 		self.CB_GenPDF_Full.SetFont(self.StandardFont)
-		StaticBoxSizer.Add(self.CB_GenPDF_Full, 0, wx.TOP | wx.LEFT, 10)
+		GenerateSizer.Add(self.CB_GenPDF_Full, 0, wx.TOP | wx.LEFT, 10)
 
 		self.CB_GenPDF_Booklet = wx.CheckBox(self, -1, "Generate Booklet PDF")
 		self.CB_GenPDF_Booklet.SetFont(self.StandardFont)
-		StaticBoxSizer.Add(self.CB_GenPDF_Booklet, 0, wx.TOP | wx.LEFT, 10)
+		GenerateSizer.Add(self.CB_GenPDF_Booklet, 0, wx.TOP | wx.LEFT, 10)
 
 		self.BTN_Go = wx.Button(self, -1, "Go!")
 		self.BTN_Go.SetFont(self.StandardFont)
-		StaticBoxSizer.Add(self.BTN_Go, 0, wx.TOP | wx.ALIGN_CENTER_HORIZONTAL, 10)
+		GenerateSizer.Add(self.BTN_Go, 0, wx.TOP | wx.ALIGN_CENTER_HORIZONTAL, 10)
+
+		##############################################
+		## Here's the License section
+		LicenseBox = wx.StaticBox(self, -1, "Serial Number Configuration")
+		LicenseBox.SetFont(self.StandardFont)
+		SerialNumberSizer = wx.StaticBoxSizer(LicenseBox, wx.VERTICAL)
+
+		#self.good_bmp = images.getGoodBitmap()
+		#self.bad_bmp = images.getBadBitmap()
+		#if self.AppHandle.isAuthorized():
+		#	self.my_bmp = self.good_bmp
+		#else:
+		#	self.my_bmp = self.bad_bmp
+		#self.StatusBMP = wx.StaticBitmap(self, -1, self.my_bmp, (self.my_bmp.GetWidth(), self.my_bmp.GetHeight()))
+		#SerialNumberSizer.Add(self.StatusBMP, 0, wx.ALL, 10)
+		#if self.AppHandle.isAuthorized():
+		#	self.SetImageValidity(True)
+		#else:
+		#	self.SetImageValidity(False)
+
+		self.TXT_Code = wx.TextCtrl(self, -1, size=(250,25))
+		self.TXT_Code.SetFont(self.TextBoxFont)
+		if not self.parent.GetConfigValue('unit.serial') == None:
+			self.TXT_Code.SetValue(self.parent.GetConfigValue('unit.serial'))
+		SerialNumberSizer.Add(self.TXT_Code, 0, wx.ALL, 10)
+
+		self.BTN_ReloadSerial = wx.Button(self, -1, "Validate")
+		self.BTN_ReloadSerial.SetFont(self.StandardFont)
+		SerialNumberSizer.Add(self.BTN_ReloadSerial, 0, wx.ALL, 10)
 
 		##############################################
 		## Here's the outer sizer container stuff
-		border_level0 = wx.BoxSizer()
-		border_level0.Add(StaticBoxSizer, 1, wx.EXPAND | wx.ALL, 25)
+		border_level1_left = wx.BoxSizer(wx.VERTICAL)
+		border_level1_left.Add(SerialNumberSizer, 1, wx.EXPAND | wx.ALL, 25)
+		border_level1_left.Add(GenerateSizer, 1, wx.EXPAND | wx.ALL, 25)
+
+		border_level0 = wx.BoxSizer(wx.HORIZONTAL)
+		border_level0.Add(border_level1_left, 1, wx.EXPAND | wx.ALL, 25)
 		border_level0.Add(EmailBoxSizer, 1, wx.EXPAND | wx.ALL, 25)
 
 		self.Bind(wx.EVT_BUTTON, self.OnGoButton, self.BTN_Go)
+		self.Bind(wx.EVT_BUTTON, self.OnValidateSerial, self.BTN_ReloadSerial)
 		self.Bind(wx.EVT_CHECKBOX, self.OnCheckMissingReport, self.CB_MissingReport)
 		self.Bind(wx.EVT_CHECKBOX, self.OnCheckSendEmail, self.CB_SendEmail)
 		self.Bind(wx.EVT_CHECKBOX, self.OnCheckMissingFile, self.CB_MissingFile)
@@ -92,6 +126,7 @@ class GeneratePanel(ColoredPanel):
 		self.Bind(wx.EVT_TEXT, self.OnSMTPChanged, self.TXT_SMTPAddy)
 		self.Bind(wx.EVT_TEXT, self.OnUserChanged, self.TXT_User)
 		self.Bind(wx.EVT_TEXT, self.OnPassChanged, self.TXT_Pass)
+		self.Bind(wx.EVT_TEXT, self.OnSerialChanged, self.TXT_Code)
 
 		self.SetSizer(border_level0)
 		border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])
@@ -105,6 +140,35 @@ class GeneratePanel(ColoredPanel):
 			self.TXT_Pass.SetValue(self.parent.GetConfigValue('email.pass'))
 
 		self.Title = "Generate"
+
+	def SetImageValidity(self, Valid = True):
+		print "Setting state to", Valid
+		return
+
+	def OnSerialChanged(self, evt):
+		self.parent.SetConfigValue('unit.serial', self.TXT_Code.GetValue())
+		print len(self.TXT_Code.GetValue())
+		if len(self.TXT_Code.GetValue()) == 24 and self.AppHandle.isAuthorized():
+			self.SetImageValidity(True)
+			dlg = wx.MessageDialog(self, 'A valid code was entered.\nThis code will be good until ' + self.AppHandle.GetExpiration() + '.',
+								   'Valid Code Entered',
+								   wx.OK | wx.ICON_INFORMATION
+								   )
+			dlg.ShowModal()
+			dlg.Destroy()
+			del(dlg)
+		else:
+			dlg = wx.MessageDialog(self, 'You must provide a valid serial number to continue to use this feature.\nObtain a valid serial number via http://directory.ernstrom.net.',
+								   'Invalid Serial Number/Expired Serial Number',
+								   wx.OK | wx.ICON_INFORMATION
+								   )
+			dlg.ShowModal()
+			dlg.Destroy()
+			del(dlg)
+
+
+	def OnValidateSerial(self, evt):
+		self.OnSerialChanged(evt)
 
 	def OnSMTPChanged(self, evt):
 		self.parent.SetConfigValue('email.smtp', evt.GetString())
@@ -174,11 +238,20 @@ class GeneratePanel(ColoredPanel):
 		if self.parent.GetConfigValue('task.genbooklet') == '1':
 			print "Generating Booklet PDF"
 			Booklet = 1
-		if Full or Booklet:
+		if (Full or Booklet) and self.AppHandle.isAuthorized():
 			ImageDirectory = self.parent.GetConfigValue('file.imagesdirectory')
 			OutputFolder = self.parent.GetConfigValue('file.pdf_outdirectory')
 			DictionaryData = None
 			self.AppHandle.InitiatePDF(ImageDirectory, OutputFolder, Full, Booklet)
+		if (Full or Booklet) and not self.AppHandle.isAuthorized():
+			dlg = wx.MessageDialog(self, 'You must provide a valid serial number to continue to use this feature.\nObtain a valid serial number via http://directory.ernstrom.net.',
+								   'Invalid Serial Number/Expired Serial Number',
+								   wx.OK | wx.ICON_INFORMATION
+								   )
+			dlg.ShowModal()
+			dlg.Destroy()
+			del(dlg)
+
 		#Generate Missing Image Report
 		if self.parent.GetConfigValue('task.missreport') == '1':
 			print "Generating missing report"
