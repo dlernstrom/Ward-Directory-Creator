@@ -891,14 +891,14 @@ class PDFTools:
 			if self.DEBUG:
 				print self.ImagesFolder + os.sep + Household[3]
 		except:
-			FamilyPictureBase = Image(self.ImagesFolder + os.sep + 'Missing.jpg',
+			FamilyPictureBase = Image('Missing.jpg',
 								  width = 1.5 * inch,
 								  height = 1.125 * inch,
 								  kind = 'proportional')
 			MissingImageText = Paragraph(text = "Please contact " + self.GetMissingName() + " to have your photograph added", style = self.styles['TextOnImage'])
 			FamilyPicture = TextOnImage(P = MissingImageText, I = FamilyPictureBase, xpad = 0, ypad = .05 * inch, side = 'center')
 			if self.DEBUG:
-				print self.ImagesFolder + os.sep + 'Missing.jpg'
+				print 'Missing.jpg'
 
 		#########NOTICE THAT SPAN IS WRITTEN BASS ACKWARDS WITH COL,ROW
 		self.TheTableStyle = TableStyle([('LEFTPADDING', (0,0), (-1,-1), 3),
