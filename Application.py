@@ -13,7 +13,12 @@ import TimeTool
 
 __version__ = "$Rev$".split()[1]
 VersionString = '1.0'
-State = 'dev'
+State = 'beta'
+
+#######################################################
+## Release History
+## 8/26/07 1.0beta124 Initial Beta Release
+
 ConfigFilename = "WardDirectoryCreator.cfg"
 ConfigDefaults = {
 	"unit.unitname":			"Your Ward Name Here",
