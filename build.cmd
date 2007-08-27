@@ -1,2 +1,2 @@
-python setup.py py2exe > c:\out.txt
+python setup.py py2exe -p email > c:\out.txt
 pause

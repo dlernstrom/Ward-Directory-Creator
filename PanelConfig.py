@@ -99,7 +99,7 @@ class ConfigPanel(ColoredPanel):
 		#######################################################################
 		## Sizer encapsulation section
 		bottom_left_level3 = wx.BoxSizer(wx.VERTICAL)
-		bottom_left_level3.Add(logo, 0, wx.EXPAND | wx.BOTTOM, 25)
+		bottom_left_level3.Add(logo, 0, wx.BOTTOM, 25)
 		bottom_left_level3.Add(self.MissingBoxSizer, 1, wx.EXPAND)
 
 		bottom_right_level3 = wx.BoxSizer()

@@ -23,9 +23,9 @@ class ColoredPanel(wx.Window):
 		#dc = wx.ClientDC(self)
 		#dc.SetFont(self.font)
 
-		self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+		#self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
 	#	self.Bind(wx.EVT_PAINT, self.OnPaint)
-		self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
+		#self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
 		#print "ColoredPanel:",self.GetSize()
 		self.TitleFont = wx.Font(22, wx.DEFAULT, wx.NORMAL, wx.FONTWEIGHT_BOLD, False, "Georgia")
 		self.StandardFont = wx.Font(12, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "Georgia")
@@ -36,18 +36,18 @@ class ColoredPanel(wx.Window):
 
 
 	# tile the background bitmap loaded in __init__()
-	def DrawBackground(self, dc):
-		dc.DrawBitmap(self.bg_bmp, 0, 0)
+	#def DrawBackground(self, dc):
+	#	dc.DrawBitmap(self.bg_bmp, 0, 0)
 
 	# Redraw the background over a 'damaged' area.
-	def OnEraseBackground(self, evt):
-		dc = evt.GetDC()
+	#def OnEraseBackground(self, evt):
+	#	dc = evt.GetDC()
 
-		if not dc:
-			dc = wx.ClientDC(self)
-			rect = self.GetUpdateRegion().GetBox()
-			dc.SetClippingRect(rect)
-		self.DrawBackground(dc)
+	#	if not dc:
+	#		dc = wx.ClientDC(self)
+	#		rect = self.GetUpdateRegion().GetBox()
+	#		dc.SetClippingRect(rect)
+	#	self.DrawBackground(dc)
 
 	#def OnPaint(self, evt):
 	#	#dc = wx.PaintDC(self)

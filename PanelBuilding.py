@@ -166,7 +166,7 @@ class BuildingPanel(ColoredPanel):
 		top_level2.AddStretchSpacer()
 
 		bottom_level2 = wx.BoxSizer(wx.HORIZONTAL)
-		bottom_level2.Add(logo, 2, wx.EXPAND)
+		bottom_level2.Add(logo, 0, wx.ALL, 10)
 		bottom_level2.Add(BuildingBoxSizer, 3, wx.EXPAND | wx.ALL, 25)
 
 		inside_border_level1 = wx.BoxSizer(wx.VERTICAL)

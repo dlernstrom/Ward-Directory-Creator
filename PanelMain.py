@@ -119,7 +119,7 @@ class MainPanel(ColoredPanel):
 		## Sizer encapsulation section
 		left_level3 = wx.BoxSizer(wx.VERTICAL)
 		left_level3.Add(self.WardBoxSizer, 6, wx.EXPAND | wx.TOP | wx.BOTTOM | wx.LEFT, 25)
-		left_level3.Add(logo, 3, wx.EXPAND | wx.TOP | wx.BOTTOM | wx.LEFT, 25)
+		left_level3.Add(logo, 0, wx.TOP | wx.BOTTOM | wx.LEFT, 25)
 
 		right_level3 = wx.BoxSizer(wx.VERTICAL)
 		right_level3.Add(self.QuoteBoxSizer, 5, wx.EXPAND | wx.ALL, 25)
@@ -171,7 +171,7 @@ class MainPanel(ColoredPanel):
 		info.WebSite = ("http://directory.ernstrom.net", "Ward Directory Creator")
 		info.Developers = [ "David Ernstrom",
 							"Tina Ernstrom"]
-		licenseText = "By using this application, you agree not to reverse engineer, modify, pirate, or otherwise use the application in ways not intended by the author(s)."
+		licenseText = "By using this application, you agree not to reverse engineer, modify, pirate, disassemble, or otherwise use the application in ways not intended by the author(s)."
 		info.License = wordwrap(licenseText, 500, wx.ClientDC(self))
 		# Then we call wx.AboutBox giving it that info object
 		wx.AboutBox(info)
