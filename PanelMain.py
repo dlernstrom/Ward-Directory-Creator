@@ -158,15 +158,15 @@ class MainPanel(ColoredPanel):
 		info.Name = "Ward Directory Creator"
 		info.Version = self.parent.AppHandle.GetFullVersion()
 		info.Copyright = "(C) 2007 David Ernstrom"
-		info.Description = wordwrap(
-			"A \"hello world\" program is a software program that prints out "
-			"\"Hello world!\" on a display device. It is used in many introductory "
-			"tutorials for teaching a programming language."
-			
-			"\n\nSuch a program is typically one of the simplest programs possible "
-			"in a computer language. A \"hello world\" program can be a useful "
-			"sanity test to make sure that a language's compiler, development "
-			"environment, and run-time environment are correctly installed.",
+		info.Description = wordwrap("The Ward Directory Creator application was "
+			"designed to simplify the process of creating folded directories for Wards "
+			"and Branches of the Church of Jesus Christ of Latter Day Saints. This application "
+			"is neither created, nor endorsed by the church.\n\n"
+			"The Ward Directory Creator uses the comma seperated values (csv) file, "
+			"available on your ward's website, for its membership data. This eliminates the "
+			"need to maintain two seperate databases of your ward members, providing a "
+			"more accurate directory listing. For best results, download a new copy of the "
+			"csv file each time you generate a directory.",
 			350, wx.ClientDC(self))
 		info.WebSite = ("http://directory.ernstrom.net", "Ward Directory Creator")
 		info.Developers = [ "David Ernstrom",

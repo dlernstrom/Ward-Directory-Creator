@@ -17,7 +17,7 @@ State = 'beta'
 
 #######################################################
 ## Release History
-## 8/26/07 1.0beta127 Initial Beta Release
+## 8/26/07 1.0beta128 Initial Beta Release
 
 ConfigFilename = "WardDirectoryCreator.cfg"
 ConfigDefaults = {
