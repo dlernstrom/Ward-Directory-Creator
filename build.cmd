@@ -7,4 +7,5 @@ copy *.wxs dist\*.wxs
 copy Manual.pdf dist\Manual.pdf
 ..\Wix\candle.exe dist\WDC_Installer_Wix.wxs
 ..\Wix\light.exe -out WDC-1_0beta129.msi WDC_Installer_Wix.wixobj ..\Wix\wixui.wixlib -loc ..\Wix\WixUI_en-us.wxl
+del *.wixobj
 pause
