@@ -193,7 +193,7 @@ class Auth:
 if __name__ == '__main__':
 	print "Starting"
 	AuthHandle = Auth()
-	AuthHandle.Encode(WardName = 'Greenfield Ward', ExpMonth = 9, ExpDay = 1, ExpYear = 7)
+	AuthHandle.Encode(WardName = 'Greenfield Ward', ExpMonth = 10, ExpDay = 1, ExpYear = 7)
 	print AuthHandle.GetCode()
 	NewAuthHandle = Auth()
 	AuthHandle.IsValid(WardName = 'Greenfield Ward', Code = AuthHandle.GetCode(), CurrentMMDDYY = '082407')

@@ -72,6 +72,10 @@ class GeneratePanel(ColoredPanel):
 		self.CB_GenPDF_Booklet.SetFont(self.StandardFont)
 		GenerateSizer.Add(self.CB_GenPDF_Booklet, 0, wx.TOP | wx.LEFT, 10)
 
+		self.CB_GenPDF_Single2Double = wx.CheckBox(self, -1, "Generate Single2Double PDF")
+		self.CB_GenPDF_Single2Double.SetFont(self.StandardFont)
+		GenerateSizer.Add(self.CB_GenPDF_Single2Double, 0, wx.TOP | wx.LEFT, 10)
+
 		self.BTN_Go = wx.Button(self, -1, "Go!")
 		self.BTN_Go.SetFont(self.StandardFont)
 		GenerateSizer.Add(self.BTN_Go, 0, wx.TOP | wx.ALIGN_CENTER_HORIZONTAL, 10)
@@ -123,6 +127,7 @@ class GeneratePanel(ColoredPanel):
 		self.Bind(wx.EVT_CHECKBOX, self.OnCheckExtractMoveOuts, self.CB_ExtractMoveOuts)
 		self.Bind(wx.EVT_CHECKBOX, self.OnCheckGenFull, self.CB_GenPDF_Full)
 		self.Bind(wx.EVT_CHECKBOX, self.OnCheckGenBooklet, self.CB_GenPDF_Booklet)
+		self.Bind(wx.EVT_CHECKBOX, self.OnCheckGenSing2Doub, self.CB_GenPDF_Single2Double)
 		self.Bind(wx.EVT_TEXT, self.OnSMTPChanged, self.TXT_SMTPAddy)
 		self.Bind(wx.EVT_TEXT, self.OnUserChanged, self.TXT_User)
 		self.Bind(wx.EVT_TEXT, self.OnPassChanged, self.TXT_Pass)
@@ -215,6 +220,12 @@ class GeneratePanel(ColoredPanel):
 		else:
 			self.parent.SetConfigValue('task.genbooklet', '0')
 
+	def OnCheckGenSing2Doub(self, evt):
+		if evt.Checked():
+			self.parent.SetConfigValue('task.gensingle2double', '1')
+		else:
+			self.parent.SetConfigValue('task.gensingle2double', '0')
+
 	def OnGoButton(self, evt):
 		#Here, I need to check each of the (7) things to do and do them
 		if self.parent.GetConfigValue('task.sendemail') == '1':
@@ -234,15 +245,20 @@ class GeneratePanel(ColoredPanel):
 			print "Generating Full PDF"
 			Full = 1
 
+		Single2Double = 0
+		if self.parent.GetConfigValue('task.gensingle2double') == '1':
+			print "Generating Single2Double PDF"
+			Single2Double = 1
+
 		Booklet = 0
 		if self.parent.GetConfigValue('task.genbooklet') == '1':
 			print "Generating Booklet PDF"
 			Booklet = 1
-		if (Full or Booklet) and self.AppHandle.isAuthorized():
+		if (Full or Booklet or Single2Double) and self.AppHandle.isAuthorized():
 			ImageDirectory = self.parent.GetConfigValue('file.imagesdirectory')
 			OutputFolder = self.parent.GetConfigValue('file.pdf_outdirectory')
 			DictionaryData = None
-			self.AppHandle.InitiatePDF(ImageDirectory, OutputFolder, Full, Booklet)
+			self.AppHandle.InitiatePDF(ImageDirectory, OutputFolder, Full, Booklet, Single2Double)
 		if (Full or Booklet) and not self.AppHandle.isAuthorized():
 			dlg = wx.MessageDialog(self, 'You must provide a valid serial number to continue to use this feature.\nObtain a valid serial number via http://directory.ernstrom.net.',
 								   'Invalid Serial Number/Expired Serial Number',
@@ -273,4 +289,6 @@ class GeneratePanel(ColoredPanel):
 			self.CB_GenPDF_Full.SetValue(True)
 		if self.parent.GetConfigValue('task.genbooklet') == '1':
 			self.CB_GenPDF_Booklet.SetValue(True)
+		if self.parent.GetConfigValue('task.gensingle2double') == '1':
+			self.CB_GenPDF_Single2Double.SetValue(True)
 

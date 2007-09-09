@@ -21,6 +21,7 @@ class PDFTools:
 				 OutputFolder,
 				 Full,
 				 Booklet,
+				 Single2Double,
 				 DictionaryData,
 				 BlockData,
 				 QuoteData,
@@ -32,6 +33,7 @@ class PDFTools:
 		self.OutputFolder = str(OutputFolder)
 		self.Full = Full
 		self.Booklet = Booklet
+		self.Single2Double = Single2Double
 		self.DictionaryData = DictionaryData
 		self.BlockData = BlockData
 		self.QuoteData = QuoteData
@@ -44,6 +46,7 @@ class PDFTools:
 		self.filename = self.OutputFolder + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '.pdf'
 		self.front = self.OutputFolder + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_FRONT.pdf'
 		self.back = self.OutputFolder + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_BACK.pdf'
+		self.bookletprinted = self.OutputFolder + 'PhotoDirectory_' + time.strftime("%Y_%m_%d_%H_%M") + '_Single2Double.pdf'
 
 		self.styles = getSampleStyleSheet()
 		#This is what sets Helvetica as the base font for the PrefixPages
@@ -753,16 +756,20 @@ class PDFTools:
 		FrontPageLayout = []
 		BackPageLayout = []
 		NormalPageLayout = []
+		SpecialPageLayout = []
 		Sides = (self.FlowablesOnPages[-1][0]+1) / 2
 		for pageside in range(Sides):
 			NormalPageLayout.append([pageside*2, pageside*2 + 1])
 			if pageside < Sides / 2:
 				FrontPageLayout.append([(Sides * 2 - 1) - 2 * pageside, pageside * 2])
 				BackPageLayout.append([pageside * 2 + 1, Sides * 2 - 2 - 2 * pageside])
+				SpecialPageLayout.append([(Sides * 2 - 1) - 2 * pageside, pageside * 2])
+				SpecialPageLayout.append([pageside * 2 + 1, Sides * 2 - 2 - 2 * pageside])
 		if self.DEBUG:
 			print FrontPageLayout
 			print BackPageLayout
 			print NormalPageLayout
+			print SpecialPageLayout
 
 		pdf = Canvas(self.filename, pagesize = landscape(letter))
 		pdf.setAuthor('David Ernstrom')
@@ -782,12 +789,20 @@ class PDFTools:
 		pdf_BACK.setSubject('Subject Line')
 		pdf_BACK.setFont('Helvetica', 18)
 
+		pdf_SPECIALPRINTER = Canvas(self.bookletprinted, pagesize = landscape(letter))
+		pdf_SPECIALPRINTER.setAuthor('David Ernstrom')
+		pdf_SPECIALPRINTER.setTitle('Ward Directory')
+		pdf_SPECIALPRINTER.setSubject('Subject Line')
+		pdf_SPECIALPRINTER.setFont('Helvetica', 18)
+
 		ThingsToPrint = []
 		if self.Full:
 			ThingsToPrint.append([NormalPageLayout, pdf])
 		if self.Booklet:
 			ThingsToPrint.append([FrontPageLayout, pdf_FRONT])
 			ThingsToPrint.append([BackPageLayout, pdf_BACK])
+		if self.Single2Double:
+			ThingsToPrint.append([SpecialPageLayout, pdf_SPECIALPRINTER])
 
 		FooterRoom = self.ChurchFlowable.wrap(self.FrameWidth, self.FrameHeight)[1] + self.ChurchFlowable.getSpaceBefore()
 		for PrintJob in ThingsToPrint:

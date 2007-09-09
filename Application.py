@@ -17,7 +17,8 @@ State = 'beta'
 
 #######################################################
 ## Release History
-## 8/26/07 1.0beta128 Initial Beta Release
+## 08/26/07 1.0beta128 Initial Beta Release
+## 09/08/07 1.0beta129 Expanded Full Directory Version for Double Sided Printing, New Installer Builder
 
 ConfigFilename = "WardDirectoryCreator.cfg"
 ConfigDefaults = {
@@ -113,7 +114,7 @@ class Application:
 						 self.GetConfigValue('quote.quoteauthor')]
 		return QuoteData
 
-	def InitiatePDF(self, ImageDirectory, OutputFolder, Full, Booklet):
+	def InitiatePDF(self, ImageDirectory, OutputFolder, Full, Booklet, Single2Double):
 		if not self.isAuthorized():
 			return False
 		PDFToolHandle = PDFTools.PDFTools(self.DEBUG,
@@ -121,6 +122,7 @@ class Application:
 										  OutputFolder,
 										  Full,
 										  Booklet,
+										  Single2Double,
 										  DictionaryData = self.ConfigHandle.GetConfigData(),
 										  BlockData = self.StructureBlockData(),
 										  QuoteData = self.GetQuoteData(),
