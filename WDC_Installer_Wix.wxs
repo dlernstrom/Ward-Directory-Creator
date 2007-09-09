@@ -1,29 +1,26 @@
 <?xml version='1.0' encoding='windows-1252'?>
+<?define Version  = "1.0.131" ?>
+<?define ProductID = E7FE592F-3FA6-4013-BAF6-F14DB62890A1 ?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'>
-	<Product Name='Ward Directory Creator 1.0' Id='92263409-3451-4FE7-AF0D-038C2B38C20C'
+	<Product Name='Ward Directory Creator 1.0' Id='$(var.ProductID)'
 		UpgradeCode='6C83DFFA-E589-4C9E-84DA-F258022B23B0'
-		Language='1031' Codepage='1252' Version='1.0.128' Manufacturer='David L Ernstrom'>
+		Language='1031' Codepage='1252' Version='$(var.Version)' Manufacturer='David L Ernstrom'>
 
 		<Package Id='????????-????-????-????-????????????' Keywords='Installer'
 			Description="Ward Directory Creator 1.0 Installer"
 			Comments='Ward Directory Creator was created and distributed by David L Ernstrom.  http://directory.ernstrom.net'
 			Manufacturer='David L Ernstrom'
 			InstallerVersion='100' Languages='1031' Compressed='yes' SummaryCodepage='1252' />
-
 		<!-- Upgrade ID is shared among all 1.0 releases.  6C83DFFA-E589-4C9E-84DA-F258022B23B0 -->
-		<!-- The 'PatchFound' Maximum version should include the version being deployed -->
-		<!-- The 'NewerFound' Minimum version should almost include the version being deployed -->
 		<Upgrade Id='6C83DFFA-E589-4C9E-84DA-F258022B23B0'>
-			<UpgradeVersion OnlyDetect='yes' Property='PATCHFOUND'
-				IncludeMinimum='yes' Minimum='1.0.0' Maximum='1.0.128' IncludeMaximum='yes' />
-			<UpgradeVersion OnlyDetect='yes' Property='NEWERFOUND'
-				Minimum='1.0.128' IncludeMinimum='no' />
+			<UpgradeVersion OnlyDetect='no' Property='PATCHFOUND'
+				IncludeMinimum='yes' Minimum='1.0.0' Maximum='$(var.Version)' IncludeMaximum='no' />
+			<UpgradeVersion OnlyDetect='no' Property='NEWERFOUND'
+				Minimum='$(var.Version)' IncludeMinimum='no' />
 		</Upgrade>
 
-		<CustomAction Id='AlreadyUpdated' Error='[ProductName] is already installed.' />
 		<CustomAction Id='NoDowngrade' Error='A later version of [ProductName] is already installed.' />
 		<InstallExecuteSequence>
-			<Custom Action='AlreadyUpdated' After='FindRelatedProducts'>PATCHFOUND</Custom>
 			<Custom Action='NoDowngrade' After='FindRelatedProducts'>NEWERFOUND</Custom>
 			<RemoveExistingProducts After='InstallFinalize' />
 		</InstallExecuteSequence>
@@ -37,7 +34,7 @@
 
 					<Component Id='MainExecutable' Guid='420C6E8F-2DB6-44D6-8DE4-471DFD04C29B'>
 						<File Id='WDC_EXE' Name='WardDi10.exe' LongName='Ward Directory Creator.exe' DiskId='1'
-							Source='Ward Directory Creator.exe' Vital='yes'>
+							Source='Ward Directory Creator.exe' Vital='yes' DefaultVersion='$(var.Version)'>
 							<Shortcut Id="startmenuWDC10" Directory="ProgramMenuDir" Name="WDC10" 
 								LongName="Ward Directory Creator 1.0" WorkingDirectory='INSTALLDIR'
 								/>
@@ -47,40 +44,38 @@
 						</File>
 					</Component>
 
-					<Component Id='Dependencies' Guid='5165C860-4B67-4C70-BF8F-9B2E22FBFF91'>
-						<File Id='_controls_' Name='_control.pyd' LongName='_controls_.pyd' DiskId='1' Source='_controls_.pyd' Vital='yes' />
-						<File Id='_core_' Name='_core_.pyd' LongName='_core_.pyd' DiskId='1' Source='_core_.pyd' Vital='yes' />
-						<File Id='_gdi_' Name='_gdi_.pyd' LongName='_gdi_.pyd' DiskId='1' Source='_gdi_.pyd' Vital='yes' />
-						<File Id='_hashlib' Name='_hashlib.pyd' LongName='_hashlib.pyd' DiskId='1' Source='_hashlib.pyd' Vital='yes' />
-						<File Id='_misc_' Name='_misc_.pyd' LongName='_misc_.pyd' DiskId='1' Source='_misc_.pyd' Vital='yes' />
-						<File Id='_socket' Name='_socket.pyd' LongName='_socket.pyd' DiskId='1' Source='_socket.pyd' Vital='yes' />
-						<File Id='_ssl.pyd' Name='_ssl.pyd' LongName='_ssl.pyd' DiskId='1' Source='_ssl.pyd' Vital='yes' />
-						<File Id='_windows_' Name='_windows.pyd' LongName='_windows_.pyd' DiskId='1' Source='_windows_.pyd' Vital='yes' />
-						<File Id='bz2.pyd' Name='bz2.pyd' LongName='bz2.pyd' DiskId='1' Source='bz2.pyd' Vital='yes' />
-						<File Id='gdiplus' Name='gdiplus.dll' LongName='gdiplus.dll' DiskId='1' Source='gdiplus.dll' Vital='yes' />
-						<File Id='library' Name='library.zip' LongName='library.zip' DiskId='1' Source='library.zip' Vital='yes' />
-						<File Id='msvcp71' Name='msvcp71.dll' LongName='msvcp71.dll' DiskId='1' Source='msvcp71.dll' Vital='yes' />
-						<File Id='MSVCR71' Name='MSVCR71.dll' LongName='MSVCR71.dll' DiskId='1' Source='MSVCR71.dll' Vital='yes' />
-						<File Id='pyexpat' Name='pyexpat.pyd' LongName='pyexpat.pyd' DiskId='1' Source='pyexpat.pyd' Vital='yes' />
-						<File Id='python25' Name='python25.dll' LongName='python25.dll' DiskId='1' Source='python25.dll' Vital='yes' />
-						<File Id='unicodedata' Name='unicode.pyd' LongName='unicodedata.pyd' DiskId='1' Source='unicodedata.pyd' Vital='yes' />
-						<File Id='w9xpopen' Name='w9xpopen.exe' LongName='w9xpopen.exe' DiskId='1' Source='w9xpopen.exe' Vital='yes' />
-						<File Id='wxbase28uh_net_vc' Name='wxbase1.dll' LongName='wxbase28uh_net_vc.dll' DiskId='1' Source='wxbase28uh_net_vc.dll' Vital='yes' />
-						<File Id='wxbase28uh_vc' Name='wxbase2.dll' LongName='wxbase28uh_vc.dll' DiskId='1' Source='wxbase28uh_vc.dll' Vital='yes' />
-						<File Id='wxmsw28uh_adv_vc' Name='wxmsw2_1.dll' LongName='wxmsw28uh_adv_vc.dll' DiskId='1' Source='wxmsw28uh_adv_vc.dll' Vital='yes' />
-						<File Id='wxmsw28uh_core_vc' Name='wxmsw2_2.dll' LongName='wxmsw28uh_core_vc.dll' DiskId='1' Source='wxmsw28uh_core_vc.dll' Vital='yes' />
-						<File Id='wxmsw28uh_html_vc' Name='wxmsw2_3.dll' LongName='wxmsw28uh_html_vc.dll' DiskId='1' Source='wxmsw28uh_html_vc.dll' Vital='yes' />
+					<Component Id='Dependencies' Guid='5165C860-4B67-4C70-BF8F-9B2E22FBFF91' NeverOverwrite='no'>
+						<File Id='_controls_' Name='_control.pyd' LongName='_controls_.pyd' DiskId='1' Source='_controls_.pyd' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='_core_' Name='_core_.pyd' LongName='_core_.pyd' DiskId='1' Source='_core_.pyd' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='_gdi_' Name='_gdi_.pyd' LongName='_gdi_.pyd' DiskId='1' Source='_gdi_.pyd' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='_hashlib' Name='_hashlib.pyd' LongName='_hashlib.pyd' DiskId='1' Source='_hashlib.pyd' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='_misc_' Name='_misc_.pyd' LongName='_misc_.pyd' DiskId='1' Source='_misc_.pyd' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='_socket' Name='_socket.pyd' LongName='_socket.pyd' DiskId='1' Source='_socket.pyd' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='_ssl.pyd' Name='_ssl.pyd' LongName='_ssl.pyd' DiskId='1' Source='_ssl.pyd' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='_windows_' Name='_windows.pyd' LongName='_windows_.pyd' DiskId='1' Source='_windows_.pyd' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='bz2.pyd' Name='bz2.pyd' LongName='bz2.pyd' DiskId='1' Source='bz2.pyd' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='library' Name='library.zip' LongName='library.zip' DiskId='1' Source='library.zip' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='MSVCR71' Name='MSVCR71.dll' LongName='MSVCR71.dll' DiskId='1' Source='MSVCR71.dll' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='pyexpat' Name='pyexpat.pyd' LongName='pyexpat.pyd' DiskId='1' Source='pyexpat.pyd' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='python25' Name='python25.dll' LongName='python25.dll' DiskId='1' Source='python25.dll' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='unicodedata' Name='unicode.pyd' LongName='unicodedata.pyd' DiskId='1' Source='unicodedata.pyd' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='w9xpopen' Name='w9xpopen.exe' LongName='w9xpopen.exe' DiskId='1' Source='w9xpopen.exe' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='wxbase28uh_net_vc' Name='wxbase1.dll' LongName='wxbase28uh_net_vc.dll' DiskId='1' Source='wxbase28uh_net_vc.dll' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='wxbase28uh_vc' Name='wxbase2.dll' LongName='wxbase28uh_vc.dll' DiskId='1' Source='wxbase28uh_vc.dll' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='wxmsw28uh_adv_vc' Name='wxmsw2_1.dll' LongName='wxmsw28uh_adv_vc.dll' DiskId='1' Source='wxmsw28uh_adv_vc.dll' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='wxmsw28uh_core_vc' Name='wxmsw2_2.dll' LongName='wxmsw28uh_core_vc.dll' DiskId='1' Source='wxmsw28uh_core_vc.dll' Vital='yes' DefaultVersion='$(var.Version)' />
+						<File Id='wxmsw28uh_html_vc' Name='wxmsw2_3.dll' LongName='wxmsw28uh_html_vc.dll' DiskId='1' Source='wxmsw28uh_html_vc.dll' Vital='yes' DefaultVersion='$(var.Version)' />
 					</Component>
 
 					<Component Id='Images' Guid='03CC58E6-E511-4C38-B168-0DA58354EE1A'>
-						<File Id='Missing' Name='Missing.jpg' DiskId='1' Source='Missing.jpg' />
-						<File Id='wardWeb1' Name='wardWeb1.jpg' DiskId='1' Source='wardWeb1.jpg' />
-						<File Id='wardWeb2' Name='wardWeb2.jpg' DiskId='1' Source='wardWeb2.jpg' />
-						<File Id='wardWeb3' Name='wardWeb3.jpg' DiskId='1' Source='wardWeb3.jpg' />
+						<File Id='Missing' Name='Missing.jpg' DiskId='1' Source='Missing.jpg' DefaultVersion='$(var.Version)' />
+						<File Id='wardWeb1' Name='wardWeb1.jpg' DiskId='1' Source='wardWeb1.jpg' DefaultVersion='$(var.Version)' />
+						<File Id='wardWeb2' Name='wardWeb2.jpg' DiskId='1' Source='wardWeb2.jpg' DefaultVersion='$(var.Version)' />
+						<File Id='wardWeb3' Name='wardWeb3.jpg' DiskId='1' Source='wardWeb3.jpg' DefaultVersion='$(var.Version)' />
 					</Component>
 
 					<Component Id='Manual' Guid='61F4971E-74D7-43C7-8CC2-212A2F602033'>
-						<File Id='Manual' Name='Manual.pdf' DiskId='1' Source='Manual.pdf'>
+						<File Id='Manual' Name='Manual.pdf' DiskId='1' Source='Manual.pdf' DefaultVersion='$(var.Version)'>
 							<Shortcut Id="startmenuManual" Directory="ProgramMenuDir" Name="Manual" LongName="Instruction Manual" />
 						</File>
 					</Component>
@@ -103,7 +98,7 @@
 				<ComponentRef Id='Images' />
 			</Feature>
 
-			<Feature Id='Documentation' Title='Description' Description='The instruction manual.' Level='1000'>
+			<Feature Id='Documentation' Title='User Manual' Description='The instruction manual.' Level='1000'>
 				<ComponentRef Id='Manual' />
 			</Feature>
 		</Feature>

@@ -18,7 +18,7 @@ State = 'beta'
 #######################################################
 ## Release History
 ## 08/26/07 1.0beta128 Initial Beta Release
-## 09/08/07 1.0beta129 Expanded Full Directory Version for Double Sided Printing, New Installer Builder
+## 09/08/07 1.0beta131 Expanded Full Directory Version for Double Sided Printing, New Installer Builder
 
 ConfigFilename = "WardDirectoryCreator.cfg"
 ConfigDefaults = {
