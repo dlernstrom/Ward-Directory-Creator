@@ -19,6 +19,7 @@ State = 'beta'
 ## Release History
 ## 08/26/07 1.0beta128 Initial Beta Release
 ## 09/08/07 1.0beta131 Expanded Full Directory Version for Double Sided Printing, New Installer Builder
+## 09/10/07 1.0beta132 Lack of Missing Photo Contact no longer crashes application.
 
 ConfigFilename = "WardDirectoryCreator.cfg"
 ConfigDefaults = {

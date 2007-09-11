@@ -869,9 +869,12 @@ class PDFTools:
 			PrintJob[1].save()
 
 	def GetMissingName(self):
-		ContactName = self.DictionaryData['missing.missingname']
-		CommaIndex = ContactName.index(',')
-		ContactName = ContactName[CommaIndex + 2:] + ' ' + ContactName[:CommaIndex]
+		if 'missing.missingname' in self.DictionaryData.keys():
+			ContactName = self.DictionaryData['missing.missingname']
+			CommaIndex = ContactName.index(',')
+			ContactName = ContactName[CommaIndex + 2:] + ' ' + ContactName[:CommaIndex]
+		else:
+			ContactName = None
 		return ContactName
 
 
@@ -910,7 +913,11 @@ class PDFTools:
 								  width = 1.5 * inch,
 								  height = 1.125 * inch,
 								  kind = 'proportional')
-			MissingImageText = Paragraph(text = "Please contact " + self.GetMissingName() + " to have your photograph added", style = self.styles['TextOnImage'])
+			if self.GetMissingName():
+				MissingTest = "Please contact " + self.GetMissingName() + " to have your photograph added"
+			else:
+				MissingText = ''
+			MissingImageText = Paragraph(text = MissingText, style = self.styles['TextOnImage'])
 			FamilyPicture = TextOnImage(P = MissingImageText, I = FamilyPictureBase, xpad = 0, ypad = .05 * inch, side = 'center')
 			if self.DEBUG:
 				print 'Missing.jpg'

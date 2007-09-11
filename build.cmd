@@ -19,7 +19,7 @@ copy *.pdf dist\*.pdf
 copy *.rtf dist\*.rtf
 cd dist
 ..\..\Wix\candle.exe WDC_Installer_Wix.wxs
-..\..\Wix\light.exe -out ..\WDC-1_0beta131.msi WDC_Installer_Wix.wixobj ..\..\Wix\wixui.wixlib -loc ..\..\Wix\WixUI_en-us.wxl
+..\..\Wix\light.exe -out ..\WDC-1_0beta132.msi WDC_Installer_Wix.wixobj ..\..\Wix\wixui.wixlib -loc ..\..\Wix\WixUI_en-us.wxl
 cd ..
 rmdir /s /q build
 echo.
