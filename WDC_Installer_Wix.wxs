@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='windows-1252'?>
-<?define Version  = "1.0.132" ?>
-<?define ProductID = 5227E11C-3CAD-499E-8D8F-A3CF02F40193 ?>
+<?define Version  = "1.0.133" ?>
+<?define ProductID = F81E0205-9B77-42A7-9859-4900900E1EFC ?>
+<!-- import pythoncom; pythoncom.CreateGuid() -->
 <Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'>
 	<Product Name='Ward Directory Creator 1.0' Id='$(var.ProductID)'
 		UpgradeCode='6C83DFFA-E589-4C9E-84DA-F258022B23B0'

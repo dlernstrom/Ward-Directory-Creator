@@ -42,17 +42,31 @@
             <th width="14%" scope="col"><div align="center">Mac</div></th>
           </tr>
           <tr>
-            <td><div align="center">08/26/07</div></td>
-            <td><div align="center">1.0beta128</div></td>
-            <td>Initial Release </td>
-            <td><div align="center"><a href="http://directory.ernstrom.net/dist/pc/wdc-1_0beta128.zip">wdc-1_0beta128.zip</a></div></td>
+            <td><div align="center">09/14/07</div></td>
+            <td><div align="center">1.0beta133</div></td>
+            <td>Having a Missing Photo Contact no longer crashes application.</td>
+            <td><div align="center"><a href="http://directory.ernstrom.net/dist/pc/WDC-1_0beta133.msi">WDC-1_0beta133.msi</a></div></td>
+            <td><div align="center">N/A</div></td>
+          </tr>
+          <tr>
+            <td><div align="center">09/10/07</div></td>
+            <td><div align="center">1.0beta132</div></td>
+            <td>Lack of Missing Photo Contact no longer crashes application.</td>
+            <td><div align="center"><a href="http://directory.ernstrom.net/dist/pc/WDC-1_0beta132.msi">WDC-1_0beta132.msi</a></div></td>
             <td><div align="center">N/A</div></td>
           </tr>
           <tr>
             <td><div align="center">09/08/07</div></td>
             <td><div align="center">1.0beta131</div></td>
             <td>Added additional method of building directories using a two sided printing report.</td>
-            <td><div align="center"><a href="http://directory.ernstrom.net/dist/pc/WDC-1_0beta131.msi">WDC-1_0beta128.msi</a></div></td>
+            <td><div align="center"><a href="http://directory.ernstrom.net/dist/pc/WDC-1_0beta131.msi">WDC-1_0beta131.msi</a></div></td>
+            <td><div align="center">N/A</div></td>
+          </tr>
+          <tr>
+            <td><div align="center">08/26/07</div></td>
+            <td><div align="center">1.0beta128</div></td>
+            <td>Initial Release </td>
+            <td><div align="center"><a href="http://directory.ernstrom.net/dist/pc/wdc-1_0beta128.zip">wdc-1_0beta128.zip</a></div></td>
             <td><div align="center">N/A</div></td>
           </tr>
         </table>

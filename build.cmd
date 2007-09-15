@@ -1,7 +1,7 @@
 @echo off
 cls
 echo Did you update the app revision in the following places:
-echo 1) The wxs file (3 places),
+echo 1) The wxs file (2 places),
 echo 2) The final filename in this document, and
 echo 3) Application.py comments?
 echo.
@@ -19,7 +19,7 @@ copy *.pdf dist\*.pdf
 copy *.rtf dist\*.rtf
 cd dist
 ..\..\Wix\candle.exe WDC_Installer_Wix.wxs
-..\..\Wix\light.exe -out ..\WDC-1_0beta132.msi WDC_Installer_Wix.wixobj ..\..\Wix\wixui.wixlib -loc ..\..\Wix\WixUI_en-us.wxl
+..\..\Wix\light.exe -out ..\WDC-1_0beta133.msi WDC_Installer_Wix.wixobj ..\..\Wix\wixui.wixlib -loc ..\..\Wix\WixUI_en-us.wxl
 cd ..
 rmdir /s /q build
 echo.

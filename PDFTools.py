@@ -914,7 +914,7 @@ class PDFTools:
 								  height = 1.125 * inch,
 								  kind = 'proportional')
 			if self.GetMissingName():
-				MissingTest = "Please contact " + self.GetMissingName() + " to have your photograph added"
+				MissingText = "Please contact " + self.GetMissingName() + " to have your photograph added"
 			else:
 				MissingText = ''
 			MissingImageText = Paragraph(text = MissingText, style = self.styles['TextOnImage'])
