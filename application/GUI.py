@@ -1,7 +1,11 @@
-import wx
 import time
+
+import wx
+
 import Application
 import Notebook
+
+import __version__
 
 SEND_EMAILS = 0
 #SMTP_SERVER = 'smtp.forward.email.dupont.com'
@@ -30,11 +34,9 @@ class MyFrame(wx.Frame):
 
         self.AppHandle = Application.Application(self, DEBUG)
 
-        self.FullAppVersion = self.AppHandle.GetFullVersion()
-        self.MajorAppVersion = self.AppHandle.GetMajorVersion()
-        self.SetTitle("Ward Directory Creator " + self.MajorAppVersion)
+        self.SetTitle("Ward Directory Creator v." + __version__.__version__)
         self.StatusBar = wx.StatusBar(self, -1)
-        self.StatusBar.SetStatusText("Version " + self.FullAppVersion)
+        self.StatusBar.SetStatusText("Version " + __version__.__version__)
         self.myNotebook = Notebook.Notebook(self, -1, self.AppHandle)
 
         self.Fit()
