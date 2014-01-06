@@ -1,5 +1,3 @@
-#PanelGenerate.py
-
 import wx
 import wx.lib
 import wx.lib.dialogs
@@ -84,20 +82,9 @@ class GeneratePanel(ColoredPanel):
         self.BTN_Go.SetFont(self.StandardFont)
         GenerateSizer.Add(self.BTN_Go, 0, wx.TOP | wx.ALIGN_CENTER_HORIZONTAL, 10)
 
-        self.TXT_Code = wx.TextCtrl(self, -1, size=(250,25))
-        self.TXT_Code.SetFont(self.TextBoxFont)
-        if not self.parent.GetConfigValue('unit.serial') == None:
-            self.TXT_Code.SetValue(self.parent.GetConfigValue('unit.serial'))
-        SerialNumberSizer.Add(self.TXT_Code, 0, wx.ALL, 10)
-
-        self.BTN_ReloadSerial = wx.Button(self, -1, "Validate")
-        self.BTN_ReloadSerial.SetFont(self.StandardFont)
-        SerialNumberSizer.Add(self.BTN_ReloadSerial, 0, wx.ALL, 10)
-
         ##############################################
         ## Here's the outer sizer container stuff
         border_level1_left = wx.BoxSizer(wx.VERTICAL)
-        border_level1_left.Add(SerialNumberSizer, 1, wx.EXPAND | wx.ALL, 25)
         border_level1_left.Add(GenerateSizer, 1, wx.EXPAND | wx.ALL, 25)
 
         border_level0 = wx.BoxSizer(wx.HORIZONTAL)
@@ -105,7 +92,6 @@ class GeneratePanel(ColoredPanel):
         border_level0.Add(EmailBoxSizer, 1, wx.EXPAND | wx.ALL, 25)
 
         self.Bind(wx.EVT_BUTTON, self.OnGoButton, self.BTN_Go)
-        self.Bind(wx.EVT_BUTTON, self.OnValidateSerial, self.BTN_ReloadSerial)
         self.Bind(wx.EVT_CHECKBOX, self.OnCheckMissingReport, self.CB_MissingReport)
         self.Bind(wx.EVT_CHECKBOX, self.OnCheckMissingImages, self.CB_MissingImages)
         self.Bind(wx.EVT_CHECKBOX, self.OnCheckSendEmail, self.CB_SendEmail)
@@ -117,7 +103,6 @@ class GeneratePanel(ColoredPanel):
         self.Bind(wx.EVT_TEXT, self.OnSMTPChanged, self.TXT_SMTPAddy)
         self.Bind(wx.EVT_TEXT, self.OnUserChanged, self.TXT_User)
         self.Bind(wx.EVT_TEXT, self.OnPassChanged, self.TXT_Pass)
-        self.Bind(wx.EVT_TEXT, self.OnSerialChanged, self.TXT_Code)
 
         self.SetSizer(border_level0)
         border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])

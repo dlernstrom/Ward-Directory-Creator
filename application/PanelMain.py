@@ -4,6 +4,8 @@ from ColoredPanel import *
 import  wx.lib.filebrowsebutton as filebrowse
 from wx.lib.wordwrap import wordwrap
 
+import __version__
+
 class MainPanel(ColoredPanel):
     def __init__(self, parent):
         ColoredPanel.__init__(self, parent, wx.BLUE)
@@ -104,10 +106,7 @@ class MainPanel(ColoredPanel):
 
         #######################################################################
         ## Non wrapped items
-        StaticHeading = wx.StaticText(self,
-                                      -1,
-                                      "Ward Directory Creator " + parent.parent.MajorAppVersion,
-                                      style = wx.ALIGN_CENTRE)
+        StaticHeading = wx.StaticText(self, -1, "Ward Directory Creator", style = wx.ALIGN_CENTRE)
         StaticHeading.SetFont(self.TitleFont)
 
         logo = wx.StaticBitmap(self, -1, self.logo_bmp, (self.logo_bmp.GetWidth(), self.logo_bmp.GetHeight()))
