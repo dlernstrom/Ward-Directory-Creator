@@ -1,4 +1,8 @@
-from distutils.core import setup
-import py2exe
+import time
+import string
 
-setup(windows=['Ward Directory Creator.py'])
+if __name__ == '__main__':
+    versionFile = open('__version__.py', 'r+');
+    versionFile.write('# Last Time The Person Hit Build:\n')
+    versionFile.write('# ' + str(string.rjust(time.ctime(), 50)))
+    versionFile.close()
