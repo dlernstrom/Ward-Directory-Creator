@@ -1,16 +1,14 @@
-import PDFTools
-import CSVMembershipParser
+import os
 import smtplib
+import string
+import time
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
-import os
-import Configuration
-import string
-import time
-import TimeTool
+import PDFTools
+import CSVMembershipParser
 
-__version__ = "$Rev: 133 $".split()[1]
+import Configuration
 
 ConfigFilename = "WardDirectoryCreator.cfg"
 ConfigDefaults = {

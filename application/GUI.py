@@ -22,38 +22,37 @@ DEBUG = 0
 ## -Extract Moved Family Images
 
 class MyFrame(wx.Frame):
-	def __init__(
-			self, parent, ID, title, pos=wx.DefaultPosition,
-			size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE
-			):
-		wx.Frame.__init__(self, parent, ID, title, pos, size, style)
+    def __init__(
+        self, parent, ID, title, pos=wx.DefaultPosition,
+        size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE
+        ):
+        wx.Frame.__init__(self, parent, ID, title, pos, size, style)
 
-		self.AppHandle = Application.Application(self, DEBUG)
+        self.AppHandle = Application.Application(self, DEBUG)
 
-		self.FullAppVersion = self.AppHandle.GetFullVersion()
-		self.MajorAppVersion = self.AppHandle.GetMajorVersion()
-		self.SetTitle("Ward Directory Creator " + self.MajorAppVersion)
-		self.StatusBar = wx.StatusBar(self, -1)
-		self.StatusBar.SetStatusText("Version " + self.FullAppVersion)
-		self.myNotebook = Notebook.Notebook(self, -1, self.AppHandle)
+        self.FullAppVersion = self.AppHandle.GetFullVersion()
+        self.MajorAppVersion = self.AppHandle.GetMajorVersion()
+        self.SetTitle("Ward Directory Creator " + self.MajorAppVersion)
+        self.StatusBar = wx.StatusBar(self, -1)
+        self.StatusBar.SetStatusText("Version " + self.FullAppVersion)
+        self.myNotebook = Notebook.Notebook(self, -1, self.AppHandle)
 
-		self.Fit()
+        self.Fit()
 
-	def OnCloseWindow(self, event):
-		self.Destroy()
+    def OnCloseWindow(self, event):
+        self.Destroy()
 
-	def OnDoPrint(self, event):
-		self.AppHandle.InitiatePDF()
+    def OnDoPrint(self, event):
+        self.AppHandle.InitiatePDF()
 
 class MyApp(wx.App):
-	def OnInit(self):
-		win = MyFrame(None, -1, "Ward Directory Creator", size=wx.DefaultSize,
-				style = wx.MINIMIZE_BOX | wx.MAXIMIZE_BOX
-					  | wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
-		win.Show(True)
-		return True
+    def OnInit(self):
+        win = MyFrame(None, -1, "Ward Directory Creator", size=wx.DefaultSize,
+                      style = wx.MINIMIZE_BOX | wx.MAXIMIZE_BOX
+                      | wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
+        win.Show(True)
+        return True
 
 if __name__ == '__main__':
-	app = MyApp(False)
-	app.MainLoop()
-
+    app = MyApp(False)
+    app.MainLoop()
