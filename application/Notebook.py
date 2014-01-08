@@ -4,6 +4,7 @@ from PanelConfig import *
 from PanelBuilding import *
 from PanelLeadership import *
 from PanelGenerate import *
+from PanelDwellings import *
 from PanelHelp import *
 
 class Notebook(wx.Notebook):
@@ -29,6 +30,9 @@ class Notebook(wx.Notebook):
 
         self.myGeneratePanel = GeneratePanel(self)
         self.AddPage(self.myGeneratePanel, self.myGeneratePanel.Title)
+
+        self.myDwellingPanel = DwellingsPanel(self)
+        self.AddPage(self.myDwellingPanel, self.myDwellingPanel.Title)
 
         self.myHelpPanel = HelpPanel(self)
         self.AddPage(self.myHelpPanel, self.myHelpPanel.Title)
