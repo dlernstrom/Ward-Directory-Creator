@@ -1,7 +1,7 @@
 #PanelMain.py
 import wx
 from ColoredPanel import *
-import  wx.lib.filebrowsebutton as filebrowse
+import wx.lib.filebrowsebutton as filebrowse
 from wx.lib.wordwrap import wordwrap
 
 import __version__
