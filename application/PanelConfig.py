@@ -84,7 +84,7 @@ class ConfigPanel(ColoredPanel):
         self.BTN_AddEmail.SetFont(self.TextBoxFont)
         EmailBoxSizer.Add(self.BTN_AddEmail, 0, wx.TOP | wx.LEFT, 10)
 
-        self.EmailList = wx.ListBox(self, -1, size = (390, 151), style = wx.LB_SORT )
+        self.EmailList = wx.ListBox(self, -1, size = (390, 151))
         self.EmailList.SetFont(self.TextBoxFont)
         EmailBoxSizer.Add(self.EmailList, 1, wx.TOP | wx.LEFT, 10)
 
