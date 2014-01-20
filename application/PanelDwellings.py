@@ -1,11 +1,16 @@
-import wx
-from ColoredPanel import *
-import  wx.lib.filebrowsebutton as filebrowse
-from PIL import Image, ImageDraw, ImageFont
-
 import csv
 import math
+
+import wx
+import  wx.lib.filebrowsebutton as filebrowse
+
+from ColoredPanel import *
 from rtree import index
+from Calibration import Calibration
+from Coordinate import Coordinate
+from Dwellings import Dwelling, Dwellings
+from Pixel import Pixel
+from Maps import Map, Maps
 
 class DwellingsPanel(ColoredPanel):
     Title = "Dwellings"
@@ -15,92 +20,60 @@ class DwellingsPanel(ColoredPanel):
         ScheduleGrid = wx.GridBagSizer()
 
         self.SetSizer(ScheduleGrid)
-        self.font  = ImageFont.truetype("arial.ttf", 25, encoding="UTF-8")
-
-        #st = wx.StaticText(self, -1,
-        #		  "Help will go here",
-        #		  (10, 10))
-        #st.SetForegroundColour(wx.WHITE)
-        #st.SetBackgroundColour(wx.GREEN)
 
     def makingActive(self):
-        fname = 'C:\\Users\\dlernstrom\\Desktop\\DirectoryCherryCreek\\Cherry_Creek_Ward.csv'
-        reader = csv.reader(open(fname))
-        myAddressData = []
-        headerData = reader.next()
-        try:
-            while True:
-                rowData = reader.next()
-                if not rowData[0][0] == '-':
-                    continue
-                myAddressData.append(rowData)
-        except Exception:
-            pass
-        #print myAddressData
+        self.annotate_images()
+
+    def create_sortable_index(self):
+        homes = Dwellings()
         self.idx = index.Index()
         counter = 0
-        for entry in myAddressData:
-            left = float(entry[0])
-            bottom = float(entry[1])
-            right = float(entry[0])
-            top = float(entry[1])
+        for entry in homes.dwellingList:
+            left = float(entry.Longitude)
+            bottom = float(entry.Latitude)
+            right = float(entry.Longitude)
+            top = float(entry.Latitude)
             self.idx.insert(counter, (left, bottom, right, top), obj=entry)
             print entry
             counter += 1
-        self.annotate_image()
 
-    def annotate_image(self):
-        currentPosition = (-112, 45, -112, 45)
-
-        fname = 'C:\\Users\\dlernstrom\\Desktop\\DirectoryCherryCreek\\Map1.bmp'
-        image = Image.open(fname)
-        self.draw  = ImageDraw.Draw(image)
+    def annotate_images(self):
+        self.create_sortable_index()
+        """
+        ourMaps = Maps([Map(1, Coordinate(41.9706778, -111.7705975), Coordinate(41.9270032, -111.7705975), 'large', 'landscape'),
+                        Map(2, Coordinate(41.9359261, -111.7968776), Coordinate(41.9320475, -111.7968776), 'small', 'portrait'), # inset
+                        Map(3, Coordinate(41.9306082, -111.800327), Coordinate(41.9269528, -111.800327), 'small', 'portrait')]) # inset
+        """
+        ourMaps = Maps([Map(1, Coordinate(41.971, -111.79), Coordinate(41.9270032, -111.79), 'large', 'landscape')])
+        currentPosition = (-112, 45, -112, 45) # must be left, bottom, right, top
         done = False
         counter = 1
+        overrides = {13: (41.9557139, -111.7872486), # allen, craig
+                     15: (41.9523412, -111.788422), # dutro
+                     16: (41.9510287, -111.7850893), # compton
+                     17: (41.950471, -111.7819565), # ernstrom
+                     18: (41.9503411, -111.7882183), # eskelson
+                     19: (41.94972, -111.7850972), # griffiths
+                     }
         while done == False:
+            if counter in overrides.keys():
+                currentPosition = [overrides[counter][1], overrides[counter][0], overrides[counter][1], overrides[counter][0]] # must be left, bottom, right, top
             nearest = list(self.idx.nearest(coordinates = currentPosition,
                                             num_results=1,
                                             objects=True))
             if len(nearest) == 0:
                 done = True
                 continue
-            print nearest
-            nearest = nearest[0]
-            print nearest.id
-            print nearest.object
-            print nearest.bounds
-            self.idx.delete(nearest.id, [float(nearest.object[0]), float(nearest.object[1]), float(nearest.object[0]), float(nearest.object[1])])
-            currentPosition = [float(nearest.object[0]), float(nearest.object[1]), float(nearest.object[0]), float(nearest.object[1])]
-            self.write_number(str(counter), [float(nearest.object[0]), float(nearest.object[1])])
             print counter
+            print "Nearest", nearest
+            nearest = nearest[0]
+            d = nearest.object
+            #print "Nearest ID", nearest.id
+            print "Nearest Object", d
+            print "Nearest Bounds", nearest.bounds
+            currentPosition = [d.Longitude, d.Latitude, d.Longitude, d.Latitude] # must be left, bottom, right, top
+            self.idx.delete(nearest.id, currentPosition)
+            ourMaps.annotate_coordinate(counter, Coordinate(d.Latitude, d.Longitude))
+            print "*" * 30
             counter += 1
-        image.save('C:\\Users\\dlernstrom\\Desktop\\DirectoryCherryCreek\\Map1_modified.bmp',"BMP")
-
-    def translate_world_to_pixel(self, worldCoordinates):
-        known1 = [-111.7705975, 41.9706778, 150, 430]
-        known2 = [-111.7993547, 41.9329083, 2740, 1850]
-        worldXDistance = known2[0] - known1[0]
-        worldYDistance = known2[1] - known1[1]
-        pixelXDistance = known2[2] - known1[2]
-        pixelYDistance = known2[3] - known1[3]
-        targetXDistance = worldCoordinates[0] - known1[0]
-        targetYDistance = worldCoordinates[1] - known1[1]
-        targetXRatioWorld = targetXDistance / worldXDistance
-        targetYRatioWorld = targetYDistance / worldYDistance
-        pixelCoordinateX = targetXRatioWorld * pixelXDistance + known1[2]
-        pixelCoordinateY = targetYRatioWorld * pixelYDistance + known1[3]
-        pixelCoordinates = [pixelCoordinateX, pixelCoordinateY]
-        return pixelCoordinates
-
-    def write_number(self, number, position):
-        position = self.translate_world_to_pixel(position)
-        #width, height = self.font.getsize(number)
-        width, height = self.draw.textsize(number, font=self.font)
-        upperLeftX = position[0] - math.ceil(width / 2.0)
-        upperLeftY = position[1] - math.ceil(height / 2.0)
-        print width, height
-        box = [(upperLeftX - 2, upperLeftY), (upperLeftX + width + 1, upperLeftY + height + 5)]
-        box = [(upperLeftX, upperLeftY), (upperLeftX + width + 1, upperLeftY + height + 9)]
-        self.draw.rectangle(box, outline='#000000', fill='#FFFFFF')
-        self.draw.text( (upperLeftX, upperLeftY), number, fill='#000000', font=self.font)
 
