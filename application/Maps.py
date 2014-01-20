@@ -24,13 +24,16 @@ class Map:
         if abs(upperLeftCoordinate.longitude - upperRightCoordinate.longitude) > abs(upperLeftCoordinate.latitude - upperRightCoordinate.latitude):
             self.establish_north_rotation()
             ul = self.upperLeftCoordinate
+            lr = self.lowerRightCoordinate
         else:
             if upperLeftCoordinate.latitude > upperRightCoordinate.latitude:
                 self.establish_east_rotation()
                 ul = self.lowerLeftCoordinate
+                lr = self.upperRightCoordinate
             else:
                 self.establish_west_rotation()
                 ul = self.upperRightCoordinate
+                lr = self.lowerLeftCoordinate
         # I need to get the bounds of the image that is returned
         # best thing I can do is retrieve 2 images and start guessing
 
@@ -59,6 +62,7 @@ class Map:
             pilImage.save(imgPath + cachedName)
         else:
             pilImage = Image.open(imgPath + cachedName)
+        #TODO: let's trim the image now to the size we were after in the first place
         if self.rotate == 'East':
             pilImage = pilImage.rotate(90)
         elif self.rotate == 'West':
