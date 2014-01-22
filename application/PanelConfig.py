@@ -14,29 +14,31 @@ class ConfigPanel(ColoredPanel):
         FolderBox.SetFont(self.StandardFont)
         self.FolderBoxSizer = FolderBoxSizer = wx.StaticBoxSizer(FolderBox, wx.VERTICAL)
 
-        self.csvFile = filebrowse.FileBrowseButton(
-            self, -1, size=(700, 30),
-            labelText = "Membership File",
-            fileMask = "*.csv", changeCallback = self.NewCSVFileCallback
-        )
-        FolderBoxSizer.Add(self.csvFile, 0, wx.TOP | wx.LEFT, 10)
+        self.memberCsvFile = filebrowse.FileBrowseButton(self, -1, size=(700, 30),
+                                                         labelText = "Membership File",
+                                                         fileMask = "*.csv",
+                                                         changeCallback = self.new_member_csv_file_callback)
+        FolderBoxSizer.Add(self.memberCsvFile, 0, wx.TOP | wx.LEFT, 10)
 
-        self.ImagesDirectory = filebrowse.DirBrowseButton(
-            self, -1, size=(700, 30),
-            labelText = "Images Directory", changeCallback = self.NewImagesDirectory
-        )
+        self.nonMemberCsvFile = filebrowse.FileBrowseButton(self, -1, size=(700, 30),
+                                                            labelText = "Nonmember File",
+                                                            fileMask = "*.csv",
+                                                            changeCallback = self.new_nonmember_csv_file_callback)
+        FolderBoxSizer.Add(self.nonMemberCsvFile, 0, wx.TOP | wx.LEFT, 10)
+
+        self.ImagesDirectory = filebrowse.DirBrowseButton(self, -1, size=(700, 30),
+                                                          labelText = "Images Directory",
+                                                          changeCallback = self.NewImagesDirectory)
         FolderBoxSizer.Add(self.ImagesDirectory, 0, wx.TOP | wx.LEFT, 10)
 
-        self.PDF_Out_Directory = filebrowse.DirBrowseButton(
-            self, -1, size=(700, 30),
-            labelText = "PDF Output Directory", changeCallback = self.NewPDFDirectory
-        )
+        self.PDF_Out_Directory = filebrowse.DirBrowseButton(self, -1, size=(700, 30),
+                                                            labelText = "PDF Output Directory",
+                                                            changeCallback = self.NewPDFDirectory)
         FolderBoxSizer.Add(self.PDF_Out_Directory, 0, wx.TOP | wx.LEFT, 10)
 
-        self.Image_Archive_Directory = filebrowse.DirBrowseButton(
-            self, -1, size=(700, 30),
-            labelText = "Image Archive Directory", changeCallback = self.NewArchiveDirectory
-        )
+        self.Image_Archive_Directory = filebrowse.DirBrowseButton(self, -1, size=(700, 30),
+                                                                  labelText = "Image Archive Directory",
+                                                                  changeCallback = self.NewArchiveDirectory)
         FolderBoxSizer.Add(self.Image_Archive_Directory, 0, wx.TOP | wx.LEFT | wx.BOTTOM, 10)
 
         ############################################################################
@@ -130,8 +132,10 @@ class ConfigPanel(ColoredPanel):
         self.Title = "Configuration"
 
         #Here's the logic to set up the prevalues from config file
-        if self.parent.GetConfigValue('file.csvlocation'):
-            self.csvFile.SetValue(self.parent.GetConfigValue('file.csvlocation'))
+        if self.parent.GetConfigValue('file.member_csv_location'):
+            self.memberCsvFile.SetValue(self.parent.GetConfigValue('file.member_csv_location'))
+        if self.parent.GetConfigValue('file.nonmember_csv_location'):
+            self.nonMemberCsvFile.SetValue(self.parent.GetConfigValue('file.nonmember_csv_location'))
         if self.parent.GetConfigValue('file.imagesdirectory'):
             self.ImagesDirectory.SetValue(self.parent.GetConfigValue('file.imagesdirectory'))
         if self.parent.GetConfigValue('file.pdf_outdirectory'):
@@ -143,8 +147,16 @@ class ConfigPanel(ColoredPanel):
         else:
             self.CB_OverridePhone.SetValue(False)
 
-    def NewCSVFileCallback(self, evt):
-        self.parent.SetConfigValue('file.csvlocation', evt.GetString())
+    def new_member_csv_file_callback(self, evt):
+        self.parent.SetConfigValue('file.member_csv_location', evt.GetString())
+        #This will call an error if the handler is called prior to init being completed
+        try:
+            self.makingActive()
+        except AttributeError:
+            pass
+
+    def new_nonmember_csv_file_callback(self, evt):
+        self.parent.SetConfigValue('file.nonmember_csv_location', evt.GetString())
         #This will call an error if the handler is called prior to init being completed
         try:
             self.makingActive()

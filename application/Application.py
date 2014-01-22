@@ -10,6 +10,12 @@ import CSVMembershipParser
 
 import Configuration
 
+import __version__
+from rtree import index
+from Coordinate import Coordinate
+from Dwellings import Dwellings
+from Maps import Map, Maps
+
 ConfigFilename = "WardDirectoryCreator.cfg"
 ConfigDefaults = {
     "unit.unitname":			"Your Ward Name Here",
@@ -46,7 +52,10 @@ class Application:
 
     def SetConfigValue(self, DictionaryField, value):
         self.ConfigHandle.SetValueByKey(DictionaryField, value)
-        if DictionaryField == 'file.csvlocation':
+        if DictionaryField == 'file.member_csv_location':
+            self.GetMembershipList()
+            self.SetLists()
+        if DictionaryField == 'file.nonmember_csv_location':
             self.GetMembershipList()
             self.SetLists()
 
@@ -82,6 +91,7 @@ class Application:
         return QuoteData
 
     def InitiatePDF(self, ImageDirectory, OutputFolder, Full, Booklet, Single2Double):
+        self.annotate_images()
         PDFToolHandle = PDFTools.PDFTools(self.DEBUG,
                                           ImageDirectory,
                                           OutputFolder,
@@ -90,16 +100,16 @@ class Application:
                                           Single2Double,
                                           DictionaryData = self.ConfigHandle.GetConfigData(),
                                           BlockData = self.StructureBlockData(),
-                                          QuoteData = self.GetQuoteData(),
-                                          FullVersionString = self.GetFullVersion()
-                                          )
+                                          QuoteData = self.GetQuoteData())
 
         #Here I start adding flowables
         PDFToolHandle.AddDirectoryPrefixData()
         NumberOfMembers = 0
         NumberOfHouseholds = 0
         self.GetMembershipList()
+        self.MembershipList = sorted(self.MembershipList, key=lambda h: h.coupleName)
         for household in self.MembershipList:
+            household.set_map_index(self.homes.find_map_index_for_household(household))
             NumberOfHouseholds += 1
             NumberOfMembers += len(household.family)
             PDFToolHandle.AddFamily(household)
@@ -108,9 +118,69 @@ class Application:
                 print '------------------------------------------'
         PDFToolHandle.AddFooter(str(NumberOfHouseholds) + ' Families')
         PDFToolHandle.AddFooter(str(NumberOfMembers) + ' Individuals')
+        # TODO: Add map images to PDF
+
         PDFToolHandle.AddDirectorySuffixData()
         PDFToolHandle.GenerateWardPagination()
         PDFToolHandle.GeneratePDFDocs()
+
+    def create_sortable_index(self):
+        self.homes = Dwellings()
+        self.idx = index.Index()
+        counter = 0
+        for entry in self.homes.dwellingList:
+            left = float(entry.Longitude)
+            bottom = float(entry.Latitude)
+            right = float(entry.Longitude)
+            top = float(entry.Latitude)
+            self.idx.insert(counter, (left, bottom, right, top), obj=counter)
+            counter += 1
+
+    def annotate_images(self):
+        self.create_sortable_index()
+        # furthest north person is at 41.9706778
+        # furthest south person is at ?
+        # furthest west person is at -111.8081775
+        # furthest east person is at -111.7705975
+        self.ourMaps = Maps([Map(1, Coordinate(41.9720, -111.8117775), Coordinate(41.9720, -111.7669975), 'large', 'portrait', 'east', 16),
+                             Map(2, Coordinate(41.9366, -111.806247), Coordinate(41.9366, -111.7958776), 'small', 'landscape', 'east', 17),
+                             Map(3, Coordinate(41.93105, -111.8086775), Coordinate(41.93105, -111.799827), 'small', 'landscape', 'east', 18)])
+        currentPosition = (-112, 45, -112, 45) # must be left, bottom, right, top
+        done = False
+        counter = 1
+        """
+        overrides = {13: (41.9557139, -111.7872486), # allen, craig
+                     15: (41.9523412, -111.788422), # dutro
+                     16: (41.9510287, -111.7850893), # compton
+                     17: (41.950471, -111.7819565), # ernstrom
+                     18: (41.9503411, -111.7882183), # eskelson
+                     19: (41.94972, -111.7850972), # griffiths
+                     }
+        """
+        while done == False:
+            #if counter in overrides.keys():
+            #    currentPosition = [overrides[counter][1], overrides[counter][0], overrides[counter][1], overrides[counter][0]] # must be left, bottom, right, top
+            nearest = list(self.idx.nearest(coordinates = currentPosition,
+                                            num_results=1,
+                                            objects=True))
+            if len(nearest) == 0:
+                done = True
+                continue
+            print counter
+            print "Nearest", nearest
+            nearest = nearest[0]
+            d = self.homes.dwellingList[nearest.object]
+
+            d.save_index(counter)
+            #print "Nearest ID", nearest.id
+            print "Nearest Object", d
+            print "Nearest Bounds", nearest.bounds
+            currentPosition = [d.Longitude, d.Latitude, d.Longitude, d.Latitude] # must be left, bottom, right, top
+            self.idx.delete(nearest.id, currentPosition)
+            self.ourMaps.annotate_coordinate(counter, Coordinate(d.Latitude, d.Longitude))
+            print "*" * 30
+            counter += 1
+        #ourMaps.save()
 
     def isValidCSV(self):
         return self.ValidCSV
@@ -118,11 +188,15 @@ class Application:
     def GetMembershipList(self):
         self.ValidCSV = False
         self.MembershipList = []
-        if self.GetConfigValue('file.csvlocation') == None or not self.GetConfigValue('file.csvlocation')[-4:] == '.csv':
-            print "Not a valid membership list"
-            return
-        MembershipHandle = CSVMembershipParser.CSVMembershipParser(self.GetConfigValue('file.csvlocation'))
-        for Household in MembershipHandle.next():
+        if self.GetConfigValue('file.member_csv_location') == None or not self.GetConfigValue('file.member_csv_location')[-4:] == '.csv':
+            raise Exception("Not a valid membership list")
+        if self.GetConfigValue('file.nonmember_csv_location') == None or not self.GetConfigValue('file.nonmember_csv_location')[-4:] == '.csv':
+            raise Exception("Not a valid nonmembership list")
+        membershipHandle = CSVMembershipParser.CSVMembershipParser(self.GetConfigValue('file.member_csv_location'))
+        for Household in membershipHandle.next():
+            self.MembershipList.append(Household)
+        membershipHandle = CSVMembershipParser.CSVMembershipParser(self.GetConfigValue('file.nonmember_csv_location'))
+        for Household in membershipHandle.next():
             self.MembershipList.append(Household)
         if len(self.MembershipList) > 0:
             self.ValidCSV = True

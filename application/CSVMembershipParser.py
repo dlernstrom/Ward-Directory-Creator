@@ -2,7 +2,7 @@ import CSVMembershipReader
 
 class NoPersonError(Exception):
     """ Exception raised when there isn't really a person at this location."""
-    
+
 class Phone:
     def __init__(self, phoneCSV):
         phoneStripped = phoneCSV.replace(' ', '').replace('(', '').replace(')', '')\
@@ -55,6 +55,7 @@ class FamilyMember:
         return self.nameCSV
 
 class Family:
+    mapIndexString = ''
     """ a container of one or more family members """
     def __init__(self, familyCSV):
         self.surname = familyCSV[0]
@@ -66,7 +67,7 @@ class Family:
             .replace(' P.O.', '\nP.O.')\
             .replace(' Rich', '\nRich')\
             .replace(' RIch', '\nRich')\
-            .replace(' Cove', '\nCove')
+            .replace(' Cove', '\nCove').strip()
         self.family = []
         self.family.append(FamilyMember(familyCSV, 5, isParent = True))
         self.head_of_household = self.family[0]
@@ -84,6 +85,10 @@ class Family:
                 nextValue += 3
         except NoPersonError:
             pass
+
+    def __unicode__(self):
+        return self.coupleName
+
     def get_emails_as_list(self):
         emails = []
         if len(self.familyEmail.emailFormatted):
@@ -92,6 +97,13 @@ class Family:
             if len(member.email.emailFormatted):
                 emails.append(member.email.emailFormatted)
         return emails
+
+    def set_map_index(self, index):
+        if not index == None:
+            self.mapIndexString = 'Map Index: %s' % index
+
+    def __repr__(self):
+        return self.coupleName
 
 class CSVMembershipParser:
     def __init__(self, filename = "Greenfield Ward member directory.csv"):

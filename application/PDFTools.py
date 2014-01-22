@@ -15,6 +15,8 @@ import datetime
 from RotatedTable import RotatedTable90, RotatedTable270
 from TextOnImage import TextOnImage
 
+import __version__
+
 class PDFTools:
     def __init__(self,
                  DEBUG,
@@ -25,9 +27,7 @@ class PDFTools:
                  Single2Double,
                  DictionaryData,
                  BlockData,
-                 QuoteData,
-                 FullVersionString
-                 ):
+                 QuoteData):
         self.DEBUG = DEBUG
         #self.DEBUG = 1
         self.ImagesFolder = str(ImagesFolder)
@@ -38,7 +38,6 @@ class PDFTools:
         self.DictionaryData = DictionaryData
         self.BlockData = BlockData
         self.QuoteData = QuoteData
-        self.FullVersionString = FullVersionString
 
         if self.OutputFolder == None or self.OutputFolder == 'None':
             self.OutputFolder = ''
@@ -497,106 +496,8 @@ class PDFTools:
                 if aFlowable.__class__ is Paragraph or aFlowable.__class__ is Spacer:
                     aFlowable._showBoundary = 1
 
-    def _RecordRequestPage(self, rotation = '90'):
-        self.SuffixFlowables.append(Paragraph(text = "Record Request Form", style = self.styles['Subtitle']))
-        RecordRequestTextA = """<i>To have your records requested into our ward, please fill out this form,
-		remove it from the directory, and turn it in to a member of the Bishopric or the Membership Clerk.</i>"""
-        RecordRequestTextB = """<i>We will contact you with any questions.</i>"""
-        RecordRequestTextC = """<i>Please be sure to have your picture taken so that your family
-		shows up in the next publication of this directory.</i>"""
-        self.SuffixFlowables.append(Paragraph(text = RecordRequestTextA, style = self.styles['RegText']))
-        self.SuffixFlowables.append(Paragraph(text = RecordRequestTextB, style = self.styles['RegText']))
-        myTableData, RowHeights, ColumnWidths, myTableStyle = self._GetRequestForm()
-        if rotation == '90':
-            myRotatedTable = RotatedTable90(myTableData, colWidths = ColumnWidths, rowHeights = RowHeights, hAlign = 'RIGHT')
-        else:
-            myRotatedTable = RotatedTable270(myTableData, colWidths = ColumnWidths, rowHeights = RowHeights, hAlign = 'LEFT')
-        myRotatedTable.setStyle(myTableStyle)
-        self.SuffixFlowables.append(myRotatedTable)
-        self.SuffixFlowables.append(Paragraph(text = RecordRequestTextC, style = self.styles['RegText']))
-        self.SuffixFlowables.append(PageBreak())
-
-    def _ChangeRequestPage(self, rotation = '90'):
-        self.SuffixFlowables.append(Paragraph(text = "Change Request Form", style = self.styles['Subtitle']))
-        RecordRequestTextA = """<i>If you notice any incorrect or missing information in this directory, please fill
-		out the form below and return it to a member of the Bishopric or the Membership Clerk.</i>"""
-        RecordRequestTextB = """<i>We will contact you with any questions.</i>"""
-        RecordRequestTextC = """<i>Please note that only one phone number can be displayed in the directory
-		per family.  Email addresses can only be changed by you through the ward website.</i>"""
-        self.SuffixFlowables.append(Paragraph(text = RecordRequestTextA, style = self.styles['RegText']))
-        self.SuffixFlowables.append(Paragraph(text = RecordRequestTextB, style = self.styles['RegText']))
-        myTableData, RowHeights, ColumnWidths, myTableStyle = self._GetChangeForm()
-        if rotation == '90':
-            myRotatedTable = RotatedTable90(myTableData, colWidths = ColumnWidths, rowHeights = RowHeights, hAlign = 'RIGHT')
-        else:
-            myRotatedTable = RotatedTable270(myTableData, colWidths = ColumnWidths, rowHeights = RowHeights, hAlign = 'LEFT')
-        myRotatedTable.setStyle(myTableStyle)
-        self.SuffixFlowables.append(myRotatedTable)
-        self.SuffixFlowables.append(Paragraph(text = RecordRequestTextC, style = self.styles['RegText']))
-        self.SuffixFlowables.append(PageBreak())
-
-
     def AddDirectorySuffixData(self):
         self.SuffixFlowables = []
-
-        #Back side of get my records in!!!
-        # GET MY RECORDS IN!!!
-        #self._RecordRequestPage(rotation = '90')
-
-        # GET MY RECORDS IN!!!
-        #self._ChangeRequestPage(rotation = '270')
-
-        #How to access the ward website
-        #self.SuffixFlowables.append(Image(self.ImagesFolder + os.sep + '-001.jpg', width=self.FrameWidth, height=self.FrameHeight))
-        Instructions = ["""<para spaceb=10>1 - Go to <b>www.lds.org/units</b>.'</para>""",
-                        """<para spaceb=10>2 - Click on "Register or Sign In." </para>""",
-                        """<para spaceb=10>3 - If you already have an account, enter your username and password.  If not, click on
-						"obtain an account" to set one up.</para>""",
-                                                                                            """<para spaceb=10>4 - Creating an account: Once you've clicked on 'obtain an account' you will be
-						asked to fill out a brief form.  You will need your <b>membership record number</b> and
-						your <b>confirmation date</b>.  Both can be found on your Individual Ordinace Summary
-						(see below) - if you don't have a copy, please see the Ward Clerk.</para>""",
-                                                                                                                            """<para spaceb=10>When creating your account you will create a username and password that you can use to login
-						to the website in the future.</para>""",
-                                                                                       """<para spaceb=10>The information in the membership directory on the website comes straight from church
-						records.  So when you move, your profile automatically moves to your new ward.</para>""",
-                                                                                                                                        """<para spaceb=10>5 - It's that easy!  Just follow the on screen prompts and your account will be setup in
-						no time.  When you are ready to login again, return to www.lds.org/units.</para>""",
-                                                                                                                                   """<para spaceb=10>From the ward website, you will be able to view membership directories for all wards
-						in the stake, stake and ward calendars, and lesson schedules.  When creating your
-						account, if you enter an email address, you can receive information about
-						upcoming stake and ward calendar items in your email inbox.</para>"""]
-        ContentParagraphs = []
-        for Instruction in Instructions:
-            ContentParagraphs.append(Paragraph(text = Instruction, style = self.styles['RegTextL']))
-        self.SuffixFlowables.append(Paragraph(text = "Accessing the Ward Website", style = self.styles['QuoteTitle']))
-        Web1 = Image('wardWeb1.jpg',
-                     width = self.FrameWidth,
-                     height = 1.0 * inch,
-                     kind = 'proportional')
-        Web1.hAlign = 'LEFT'
-        Web2 = Image('wardWeb2.jpg',
-                     width = self.FrameWidth,
-                     height = 1.5 * inch,
-                     kind = 'proportional')
-        Web2.hAlign = 'LEFT'
-        Web3 = Image('wardWeb3.jpg',
-                     width = 2.0 * inch,
-                     height = 2.0 * inch,
-                     kind = 'proportional')
-        Web3.hAlign = 'LEFT'
-        AccessingSiteContent = ContentParagraphs[:2]
-        AccessingSiteContent.extend([Web1, ContentParagraphs[2], Web2, ContentParagraphs[3]])
-        AccessingSiteContent.append(ImageAndFlowables(Web3, ContentParagraphs[4:6], imageLeftPadding=0,
-                                                      imageRightPadding=0, imageTopPadding=0, imageBottomPadding=0,
-                                                      imageSide='left'))
-        AccessingSiteContent.extend(ContentParagraphs[6:])
-        AccessingSiteContent.append(PageBreak())
-        self.SuffixFlowables.append(KeepInFrame(maxWidth = self.FrameWidth,
-                                                maxHeight = self.FrameHeight,
-                                                content = AccessingSiteContent,
-                                                mode = 'truncate'))
-
         ##########################################
         ## LAST PAGE DATA
         #Here, we'll add our comment and disclaimer data to the end of the document
@@ -617,9 +518,9 @@ class PDFTools:
                                                 mode = 'truncate'))
         self.SuffixFlowables.append(Paragraph(text = "Membership data taken from church records available via the",
                                               style = self.styles['RegText']))
-        self.SuffixFlowables.append(Paragraph(text = self.DictionaryData['unit.unitname'] + " website at www.lds.org/units.",
+        self.SuffixFlowables.append(Paragraph(text = self.DictionaryData['unit.unitname'] + " website at www.lds.org/directory.",
                                               style = self.styles['RegText']))
-        self.SuffixFlowables.append(Paragraph(text = "Prepared using Ward Directory Creator " + self.FullVersionString,
+        self.SuffixFlowables.append(Paragraph(text = "Prepared using Ward Directory Creator v.%s" % __version__.__version__,
                                               style = self.styles['RegText']))
         self.SuffixFlowables.append(Paragraph(text = "All information for Church use only.",
                                               style = self.styles['RegText']))
@@ -886,7 +787,6 @@ class PDFTools:
             ContactName = None
         return ContactName
 
-
     def TableizeFamily(self, household):
         Family = []
         if self.DEBUG:
@@ -906,8 +806,8 @@ class PDFTools:
         #Add the obvious entries
         data[0][0] = Preformatted(household.surname.upper(), self.styles['DaveBold'])
         #data[1][3] = Preformatted(household.familyEmail.emailAddress, self.styles['DaveHeading'])
-        data[0][4] = Preformatted(household.familyPhone.phoneFormatted, self.styles['DaveBoldSmall'])
         data[0][3] = Preformatted(household.familyAddress + '\n' + household.familyEmail.emailAddress, self.styles['DaveHeading'])
+        data[0][4] = Preformatted(household.familyPhone.phoneFormatted + '\n' + str(household.mapIndexString), self.styles['DaveBoldSmall'])
         try:
             expectedName = household.expectedPhotoName
             FamilyPicture = Image(self.ImagesFolder + os.sep + expectedName,
@@ -918,7 +818,7 @@ class PDFTools:
                 print self.ImagesFolder + os.sep + expectedName
         except:
             logging.debug(expectedName)
-            FamilyPictureBase = Image('Missing.jpg',
+            FamilyPictureBase = Image('application\\Missing.jpg',
                                       width = 1.5 * inch,
                                       height = 1.125 * inch,
                                       kind = 'proportional')
