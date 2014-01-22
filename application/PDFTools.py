@@ -54,89 +54,71 @@ class PDFTools:
                                        fontName = 'Times-Roman',#Helvetica',
                                        fontSize = 14,
                                        leading = 1.3 * 14,
-                                       alignment = TA_CENTER,
-                                       ))
+                                       alignment = TA_CENTER))
         #Here I create a style for the header pages
         self.styles.add(ParagraphStyle(name = 'DocumentTitle',
                                        parent = self.styles['PrefixBase'],
                                        fontSize = 30,
-                                       leading = 1.2 * 30,
-                                       ))
+                                       leading = 1.2 * 30))
         self.styles.add(ParagraphStyle(name = 'QuoteTitle',
                                        parent = self.styles['PrefixBase'],
                                        fontSize = 26,
-                                       leading = 1.2 * 26,
-                                       ))
+                                       leading = 1.2 * 26))
         self.styles.add(ParagraphStyle(name = 'Subtitle',
                                        parent = self.styles['PrefixBase'],
                                        fontSize = 18,
-                                       leading = 1.2 * 18,
-                                       ))
+                                       leading = 1.2 * 18))
         self.styles.add(ParagraphStyle(name = 'PrefixBaseRight',
                                        parent = self.styles['PrefixBase'],
-                                       alignment = TA_RIGHT,
-                                       ))
+                                       alignment = TA_RIGHT))
         self.styles.add(ParagraphStyle(name = 'PrefixBaseLeft',
                                        parent = self.styles['PrefixBase'],
-                                       alignment = TA_LEFT,
-                                       ))
+                                       alignment = TA_LEFT))
         self.styles.add(ParagraphStyle(name = 'RegText',
                                        #parent = self.styles['PrefixBase'],
                                        fontsize = 8,
                                        alignment = TA_CENTER,
-                                       leading = 1.5 * 8,
-                                       ))
+                                       leading = 1.5 * 8))
         self.styles.add(ParagraphStyle(name = 'RegTextL',
                                        parent = self.styles['RegText'],
-                                       alignment = TA_LEFT,
-                                       ))
+                                       alignment = TA_LEFT))
         self.styles.add(ParagraphStyle(name = 'RegTextR',
                                        parent = self.styles['RegText'],
-                                       alignment = TA_RIGHT,
-                                       ))
-
-
+                                       alignment = TA_RIGHT))
         self.styles.add(ParagraphStyle(name='DaveFooter',
                                        parent=self.styles['Heading3'],
                                        fontSize = 8,
-                                       alignment=TA_CENTER,
-                                       ))
+                                       alignment=TA_CENTER))
         self.styles.add(ParagraphStyle(name='DaveHeaderLeft',
                                        parent=self.styles['Heading3'],
                                        fontSize = 8,
-                                       alignment=TA_LEFT,
-                                       ))
+                                       alignment=TA_LEFT))
         self.styles.add(ParagraphStyle(name='DaveHeaderRight',
                                        parent=self.styles['DaveHeaderLeft'],
-                                       alignment=TA_RIGHT,
-                                       ))
+                                       alignment=TA_RIGHT))
         self.styles.add(ParagraphStyle(name='DaveHeading',
                                        parent=self.styles['Heading3'],
                                        fontName = 'Times-Roman',
                                        spaceAfter=0,
                                        spaceBefore=0,
                                        fontSize = 8,
-                                       leading = 1.5 * 8
-                                       ))
+                                       leading = 1.5 * 8))
         self.styles.add(ParagraphStyle(name='DaveBold',
                                        parent=self.styles['DaveHeading'],
                                        fontName = 'Times-Bold',
                                        fontSize = 10,
-                                       leading = 1.5 * 10
-                                       ))
+                                       leading = 1.5 * 10))
         self.styles.add(ParagraphStyle(name='DaveBoldSmall',
                                        parent=self.styles['DaveBold'],
                                        fontSize = 8,
-                                       leading = 1.5 * 8
-                                       ))
+                                       leading = 1.5 * 8))
         self.styles.add(ParagraphStyle(name = 'TextOnImage',
                                        parent = self.styles['DaveBoldSmall'],
                                        fontSize = 7,
                                        leading = 1.2 * 7,
                                        leftIndent = .06 * inch,
                                        rightIndent = .06 * inch,
-                                       alignment = TA_CENTER
-                                       ))
+                                       alignment = TA_CENTER))
 
         self.CurrentWardDirectory = []
 
@@ -206,213 +188,6 @@ class PDFTools:
         if self.DEBUG:
             print "and return a data = [[,],[,],[,]] to be used in the PDFTools Sections"
         return myDisplayBlock
-
-    def _MakeBoxes(self, StartRow, StartCol, BoxCount):
-        ReturnList = []
-        for Counter in range(BoxCount):
-            ReturnList.append(('BOX', (StartCol + 2 * Counter, StartRow), (StartCol + 2 * Counter, StartRow), .25, colors.black))
-        return ReturnList
-
-    def _GetChangeForm(self):
-        ColumnWidths = []
-        myTableData = []
-        myTableData2 = []
-        #Currently set up for 20 rows
-        RowHeights = []
-        BoxHeight = .25 * inch
-        SpacerHeight = .05 * inch
-        TextHeight = .25 * inch
-        RowHeights.append(TextHeight)		# First Name, Date
-        RowHeights.append(BoxHeight)		# Boxes
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(TextHeight)		# Last Name, Phone Number
-        RowHeights.append(BoxHeight)		# Boxes
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(TextHeight)		# Please describe the problem for us...
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes Row 1
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes Row 2
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes Row 3
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes Row 4
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes Row 5
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes Row 6
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes Row 7
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes Row 8
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes Row 9
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes Row 10
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes Row 11
-        BoxWidth = .2 * inch
-        SpacerWidth = .05 * inch
-        ColumnSetCount = 27
-        ColumnSet = [SpacerWidth, BoxWidth]
-        ColumnWidths = ColumnSet * ColumnSetCount + [SpacerWidth]
-        BlankRow = [''] * len(ColumnWidths)
-        myTableData = []
-        for Counter in range(len(RowHeights)):
-            myTableData.append(BlankRow[:])
-        myTableData[0][1]   = 'First Name'
-        myTableData[0][35]  = "Today's Date (mm/dd/yyyy)"
-        myTableData[1][38]  = '/'
-        myTableData[1][42]  = '/'
-        myTableData[1][43]  = "2"
-        myTableData[1][45]  = "0"
-        myTableData[3][1]   = "Last Name"
-        myTableData[3][35]  = "Phone Number"
-        myTableData[4][34]  = '('
-        myTableData[4][40]  = ')'
-        myTableData[4][46]  = '-'
-        myTableData[8][1]   = 'Please describe the problem(s) as detailed as possible'
-
-        TableStyleData = []
-        TableStyleData += self._MakeBoxes( 1,  1, 16)
-        TableStyleData += self._MakeBoxes( 4,  1, 16)
-        TableStyleData += self._MakeBoxes( 1, 35,  8)
-        TableStyleData += self._MakeBoxes( 4, 35, 10)
-        if self.DEBUG:
-            TableStyleData += [('BOX', (0,0), (-1,-1), .25, colors.black)]
-        TableStyleData += [('ALIGN', (0,1), (-1,1), 'CENTER')]
-        TableStyleData += [('ALIGN', (0,4), (-1,4), 'CENTER')]
-        TableStyleData += [('LINEBELOW', (0,10), (-1,10), .25, colors.black),
-                           ('LINEBELOW', (0,12), (-1,12), .25, colors.black),
-                           ('LINEBELOW', (0,14), (-1,14), .25, colors.black),
-                           ('LINEBELOW', (0,16), (-1,16), .25, colors.black),
-                           ('LINEBELOW', (0,18), (-1,18), .25, colors.black),
-                           ('LINEBELOW', (0,20), (-1,20), .25, colors.black),
-                           ('LINEBELOW', (0,22), (-1,22), .25, colors.black),
-                           ('LINEBELOW', (0,24), (-1,24), .25, colors.black),
-                           ('LINEBELOW', (0,26), (-1,26), .25, colors.black),
-                           ('LINEBELOW', (0,28), (-1,28), .25, colors.black)]
-
-        myTableStyle = TableStyle(TableStyleData)
-        return myTableData, RowHeights, ColumnWidths, myTableStyle
-
-    def _GetRequestForm(self):
-        ColumnWidths = []
-        myTableData = []
-        myTableData2 = []
-        #Currently set up for 20 rows
-        RowHeights = []
-        BoxHeight = .25 * inch
-        SpacerHeight = .05 * inch
-        TextHeight = .25 * inch
-        RowHeights.append(TextHeight)		# Last Name
-        RowHeights.append(BoxHeight)		# Boxes
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(TextHeight)		# Parents First and middle names
-        RowHeights.append(BoxHeight)		# Boxes
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(TextHeight)		# Children's First and Middle Names
-        RowHeights.append(BoxHeight)		# Boxes Child 1
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes Child 2
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes Child 3
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes Child 4
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(BoxHeight)		# Boxes Child 5
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(TextHeight)		# Phone Numbers
-        RowHeights.append(BoxHeight)		# Boxes
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(TextHeight)		# Address
-        RowHeights.append(BoxHeight)		# Boxes
-        RowHeights.append(SpacerHeight)		# Gap
-        RowHeights.append(TextHeight)		# Email Address
-        RowHeights.append(BoxHeight)		# Boxes
-        BoxWidth = .2 * inch
-        SpacerWidth = .05 * inch
-        ColumnSetCount = 27
-        ColumnSet = [SpacerWidth, BoxWidth]
-        ColumnWidths = ColumnSet * ColumnSetCount + [SpacerWidth]
-        BlankRow = [''] * len(ColumnWidths)
-        RowCount = 27
-        myTableData = []
-        for Counter in range(RowCount):
-            myTableData.append(BlankRow[:])
-        myTableData[0][1]   = 'Last Name'
-        myTableData[0][39]  = "Today's Date (mm/dd/yyyy)"
-        myTableData[1][42]  = '/'
-        myTableData[1][46]  = '/'
-        myTableData[1][47]  = "2"
-        myTableData[1][49]  = "0"
-        myTableData[3][1]   = "Parent's First & Middle Names"
-        myTableData[3][39]  = "Birth Date (mm/dd/yyyy)"
-        myTableData[4][42]  = '/'
-        myTableData[4][46]  = '/'
-        myTableData[4][47]  = "1"
-        myTableData[4][49]  = "9"
-        myTableData[6][42]  = '/'
-        myTableData[6][46]  = '/'
-        myTableData[6][47]  = "1"
-        myTableData[6][49]  = "9"
-        myTableData[8][1]   = "Children's First & Middle Names"
-        myTableData[8][39]  = "Birth Date (mm/dd/yyyy)"
-        myTableData[9][42]  = '/'
-        myTableData[9][46]  = '/'
-        myTableData[11][42] = '/'
-        myTableData[11][46] = '/'
-        myTableData[13][42] = '/'
-        myTableData[13][46] = '/'
-        myTableData[15][42] = '/'
-        myTableData[15][46] = '/'
-        myTableData[17][42] = '/'
-        myTableData[17][46] = '/'
-        myTableData[19][1]  = 'Primary Phone Number'
-        myTableData[20][0]  = '('
-        myTableData[20][6]  = ')'
-        myTableData[20][12] = '-'
-        myTableData[20][22] = '('
-        myTableData[20][28] = ')'
-        myTableData[20][34] = '-'
-        myTableData[19][23] = 'Secondary Phone Number'
-        myTableData[22][1]  = 'Street Address'
-        myTableData[22][45] = 'Apartment'
-        myTableData[25][1]  = 'Email Address'
-
-        TableStyleData = []
-        TableStyleData += self._MakeBoxes( 1,  1, 18)
-        TableStyleData += self._MakeBoxes( 4,  1, 18)
-        TableStyleData += self._MakeBoxes( 6,  1, 18)
-        TableStyleData += self._MakeBoxes( 9,  1, 18)
-        TableStyleData += self._MakeBoxes(11,  1, 18)
-        TableStyleData += self._MakeBoxes(13,  1, 18)
-        TableStyleData += self._MakeBoxes(15,  1, 18)
-        TableStyleData += self._MakeBoxes(17,  1, 18)
-        TableStyleData += self._MakeBoxes( 1, 39,  8)
-        TableStyleData += self._MakeBoxes( 4, 39,  8)
-        TableStyleData += self._MakeBoxes( 6, 39,  8)
-        TableStyleData += self._MakeBoxes( 9, 39,  8)
-        TableStyleData += self._MakeBoxes(11, 39,  8)
-        TableStyleData += self._MakeBoxes(13, 39,  8)
-        TableStyleData += self._MakeBoxes(15, 39,  8)
-        TableStyleData += self._MakeBoxes(17, 39,  8)
-        TableStyleData += self._MakeBoxes(20,  1, 10)
-        TableStyleData += self._MakeBoxes(20, 23, 10)
-        TableStyleData += self._MakeBoxes(23,  1, 21)
-        TableStyleData += self._MakeBoxes(23, 45,  5)
-        TableStyleData += self._MakeBoxes(26,  1, 27)
-        if self.DEBUG:
-            TableStyleData += [('BOX', (0,0), (-1,-1), .25, colors.black)]
-        TableStyleData += [('ALIGN', (42,0), (-1,18), 'CENTER')]
-        TableStyleData += [('ALIGN', (0,20), (-1,20), 'CENTER')]
-
-        myTableStyle = TableStyle(TableStyleData)
-        return myTableData, RowHeights, ColumnWidths, myTableStyle
 
     def AddDirectoryPrefixData(self):
         if self.DEBUG:
@@ -641,7 +416,7 @@ class PDFTools:
                 print Item
 
         ##Insert filler flowables
-        for Count in range(Fillers):
+        for Count in xrange(Fillers):
             self.SuffixFlowables = self.PrepareFiller() + self.SuffixFlowables
 
         ##Renumber FamiliesOnPages
