@@ -1,15 +1,10 @@
-import csv
-import math
-
 import wx
-import  wx.lib.filebrowsebutton as filebrowse
+import wx.lib.filebrowsebutton as filebrowse
 
 from ColoredPanel import *
 from rtree import index
-from Calibration import Calibration
 from Coordinate import Coordinate
-from Dwellings import Dwelling, Dwellings
-from Pixel import Pixel
+from Dwellings import Dwellings
 from Maps import Map, Maps
 
 class DwellingsPanel(ColoredPanel):
@@ -79,4 +74,3 @@ class DwellingsPanel(ColoredPanel):
             print "*" * 30
             counter += 1
         ourMaps.save()
-
