@@ -203,10 +203,9 @@ class GeneratePanel(ColoredPanel):
             print "Generating Booklet PDF"
             Booklet = 1
         if Full or Booklet or Single2Double:
-            ImageDirectory = self.parent.GetConfigValue('file.imagesdirectory')
             OutputFolder = self.parent.GetConfigValue('file.pdf_outdirectory')
             DictionaryData = None
-            self.AppHandle.InitiatePDF(ImageDirectory, OutputFolder, Full, Booklet, Single2Double)
+            self.AppHandle.InitiatePDF(OutputFolder, Full, Booklet, Single2Double)
 
         #Generate Missing Image Report
         if self.parent.GetConfigValue('task.missreport') == '1':

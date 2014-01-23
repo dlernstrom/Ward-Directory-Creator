@@ -1,20 +1,22 @@
 import os
 import smtplib
-import string
 import time
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
-import PDFTools
-import CSVMembershipParser
+from PDFTools import PDFTools
+from Configuration import Configuration
+from CSVMembershipParser import CSVMembershipParser
 
-import Configuration
-
-import __version__
 from rtree import index
 from Coordinate import Coordinate
 from Dwellings import Dwellings
 from Maps import Map, Maps
+from Directory import Directory
+from DirectoryPages.Listings import get_listing_pages
+from DirectoryPages.MapsPages import get_maps_pages, get_maps_lookup_pages
+from DirectoryPages.Prefix import get_directory_prefix_pages
+from DirectoryPages.Suffix import get_directory_suffix_pages
 
 ConfigFilename = "WardDirectoryCreator.cfg"
 ConfigDefaults = {
@@ -40,7 +42,7 @@ class Application:
                  parent,
                  DEBUG = 0):
 
-        self.ConfigHandle = Configuration.Configuration(ConfigFilename, ConfigDefaults)
+        self.ConfigHandle = Configuration(ConfigFilename, ConfigDefaults)
         self.ConfigDefaults = ConfigDefaults
 
         self.DEBUG = DEBUG
@@ -59,70 +61,49 @@ class Application:
             self.GetMembershipList()
             self.SetLists()
 
-    def StructureBlockData(self):
-        #Here, I need to return a list of lists about the current block data
-        BlockData = []
-        format = '%I:%M %p'
-        if self.GetConfigValue('block.displaysac'):
-            BlockData.append([time.strptime(self.GetConfigValue('block.sacstart'), format),
-                              "Sacrament Meeting"])
-        if self.GetConfigValue('block.displayss'):
-            BlockData.append([time.strptime(self.GetConfigValue('block.ssstart'), format),
-                              "Sunday School"])
-        if self.GetConfigValue('block.display_pr_rs'):
-            BlockData.append([time.strptime(self.GetConfigValue('block.pr_rs_start'), format),
-                              "Priesthood / Relief Society"])
-        if self.DEBUG:
-            print BlockData
-        BlockData.sort()
-        for Mtg in BlockData:
-            Mtg[0] = time.strftime(format, Mtg[0])
-            if Mtg[0][0] == '0':
-                Mtg[0] = Mtg[0][1:]
-        if self.DEBUG:
-            print BlockData
-        return BlockData
-
-    def GetQuoteData(self):
-        QuoteData = ['','']
-        if self.GetConfigValue('quote.usequote') == '1':
-            QuoteData = [self.GetConfigValue('quote.quotecontent'),
-                         self.GetConfigValue('quote.quoteauthor')]
-        return QuoteData
-
-    def InitiatePDF(self, ImageDirectory, OutputFolder, Full, Booklet, Single2Double):
-        self.annotate_images()
-        PDFToolHandle = PDFTools.PDFTools(self.DEBUG,
-                                          ImageDirectory,
-                                          OutputFolder,
-                                          Full,
-                                          Booklet,
-                                          Single2Double,
-                                          DictionaryData = self.ConfigHandle.GetConfigData(),
-                                          BlockData = self.StructureBlockData(),
-                                          QuoteData = self.GetQuoteData())
-
-        #Here I start adding flowables
-        PDFToolHandle.AddDirectoryPrefixData()
-        NumberOfMembers = 0
-        NumberOfHouseholds = 0
+    def build_directory(self):
         self.GetMembershipList()
-        self.MembershipList = sorted(self.MembershipList, key=lambda h: h.coupleName)
+        self.annotate_images()
         for household in self.MembershipList:
             household.set_map_index(self.homes.find_map_index_for_household(household))
-            NumberOfHouseholds += 1
-            NumberOfMembers += len(household.family)
-            PDFToolHandle.AddFamily(household)
-            if self.DEBUG:
-                print str(NumberOfHouseholds), household.coupleName
-                print '------------------------------------------'
-        PDFToolHandle.AddFooter(str(NumberOfHouseholds) + ' Families')
-        PDFToolHandle.AddFooter(str(NumberOfMembers) + ' Individuals')
-        # TODO: Add map images to PDF
+        directoryCollection = Directory()
+        configData = self.ConfigHandle.GetConfigData()
+        directoryCollection.pages['prefix'] = get_directory_prefix_pages(dictionaryData = configData,
+                                                                         debug = self.DEBUG)
+        directoryCollection.pages['directory'] = get_listing_pages(configData = configData,
+                                                                   membershipList = self.MembershipList,
+                                                                   debug = self.DEBUG)
+        directoryCollection.pages['maps'] = get_maps_pages(configData = configData,
+                                                           membershipList = self.MembershipList,
+                                                           debug = self.DEBUG)
+        directoryCollection.pages['mapsLookup'] = get_maps_lookup_pages(configData = configData,
+                                                                        membershipList = self.MembershipList,
+                                                                        debug = self.DEBUG)
+        directoryCollection.pages['suffix'] = get_directory_suffix_pages(dictionaryData = configData,
+                                                                         debug = self.DEBUG)
+        return directoryCollection
 
-        PDFToolHandle.AddDirectorySuffixData()
-        PDFToolHandle.GenerateWardPagination()
-        PDFToolHandle.GeneratePDFDocs()
+    def InitiatePDF(self, OutputFolder, Full, Booklet, Single2Double):
+        directoryCollection = self.build_directory()
+
+        if OutputFolder == None or OutputFolder == 'None':
+            OutputFolder = ''
+        else:
+            OutputFolder = OutputFolder + os.sep
+        tm = time.strftime("%Y_%m_%d_%H_%M")
+
+        PDFToolHandle = PDFTools(self.DEBUG)
+        if Full:
+            filename = OutputFolder + 'PhotoDirectory_%s.pdf' % tm
+            PDFToolHandle.generate_doc(filename, 'full', directoryCollection.get_pages_for_binding('full'))
+        if Booklet:
+            front = OutputFolder + 'PhotoDirectory_%s_FRONT.pdf' % tm
+            back = OutputFolder + 'PhotoDirectory_%s_BACK.pdf' % tm
+            PDFToolHandle.generate_doc(front, 'front', directoryCollection.get_pages_for_binding('booklet'))
+            PDFToolHandle.generate_doc(back, 'back', directoryCollection.get_pages_for_binding('booklet'))
+        if Single2Double:
+            bookletprinted = OutputFolder + 'PhotoDirectory_%s_Single2Double.pdf' % tm
+            PDFToolHandle.generate_doc(bookletprinted, 'special', directoryCollection.get_pages_for_binding('booklet'))
 
     def create_sortable_index(self):
         self.homes = Dwellings()
@@ -192,14 +173,15 @@ class Application:
             raise Exception("Not a valid membership list")
         if self.GetConfigValue('file.nonmember_csv_location') == None or not self.GetConfigValue('file.nonmember_csv_location')[-4:] == '.csv':
             raise Exception("Not a valid nonmembership list")
-        membershipHandle = CSVMembershipParser.CSVMembershipParser(self.GetConfigValue('file.member_csv_location'))
+        membershipHandle = CSVMembershipParser(self.GetConfigValue('file.member_csv_location'))
         for Household in membershipHandle.next():
             self.MembershipList.append(Household)
-        membershipHandle = CSVMembershipParser.CSVMembershipParser(self.GetConfigValue('file.nonmember_csv_location'))
+        membershipHandle = CSVMembershipParser(self.GetConfigValue('file.nonmember_csv_location'))
         for Household in membershipHandle.next():
             self.MembershipList.append(Household)
         if len(self.MembershipList) > 0:
             self.ValidCSV = True
+        self.MembershipList = sorted(self.MembershipList, key=lambda h: h.coupleName)
 
     def GetNeededImageList(self):
         return map(lambda Member: Member.expectedPhotoName, self.MembershipList)
@@ -327,9 +309,9 @@ class Application:
         NeededList = self.GetNeededImageList()
         ExtraImages = []
         for root, dirs, files in os.walk(LiveFolder):
-            for file in files:
-                if not file in IgnoreList and not string.lower(file) in map(lambda x: string.lower(x), NeededList):
-                    ExtraImages.append(file)
+            for fileName in files:
+                if not fileName in IgnoreList and not fileName.lower() in map(lambda x: x.lower(), NeededList):
+                    ExtraImages.append(fileName)
         return ExtraImages
 
     def MoveSuperflousImages(self, LiveFolder, ArchiveFolder):

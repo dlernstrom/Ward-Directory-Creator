@@ -2,7 +2,7 @@ import time
 
 import wx
 
-import Application
+from Engine import Application
 import Notebook
 
 import __version__
