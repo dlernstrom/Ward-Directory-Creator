@@ -1,6 +1,8 @@
-# PDFTools.py
+import datetime
 import logging
 import os
+import time
+
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
@@ -10,10 +12,10 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib.units import cm, mm, inch, pica
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.lib.enums import TA_LEFT, TA_CENTER, TA_RIGHT
-import time
-import datetime
-from RotatedTable import RotatedTable90, RotatedTable270
+
 from TextOnImage import TextOnImage
+from DirectoryPage import DirectoryPage
+from Directory import Directory
 
 import __version__
 
@@ -29,7 +31,7 @@ class PDFTools:
                  BlockData,
                  QuoteData):
         self.DEBUG = DEBUG
-        #self.DEBUG = 1
+        self.DEBUG = 1
         self.ImagesFolder = str(ImagesFolder)
         self.OutputFolder = str(OutputFolder)
         self.Full = Full
@@ -38,6 +40,7 @@ class PDFTools:
         self.DictionaryData = DictionaryData
         self.BlockData = BlockData
         self.QuoteData = QuoteData
+        self.directoryCollection = Directory()
 
         if self.OutputFolder == None or self.OutputFolder == 'None':
             self.OutputFolder = ''
@@ -193,57 +196,47 @@ class PDFTools:
         if self.DEBUG:
             print "Here's the dictionary I received"
             print self.DictionaryData
-        #TODO: Need to validate that I have at least a blank in all of the following fields:
-        """
-		Send it to a validation function to do the following:
-		unit.unitname
-		unit.stakename
-		bldg.addy1
-		bldg.addy2
-		block.sacstart
-		block.ssstart
-		block.pr_rs_start
-		bldg.phone
-		"""
-        self.PrefixFlowables = []
         #Page 1 Data
-        self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = 1.5 * inch))
-        self.PrefixFlowables.append(Paragraph(text = "<b>" + self.DictionaryData['unit.unitname'] + "</b>", style = self.styles['DocumentTitle']))
-        self.PrefixFlowables.append(Paragraph(text = "Member Directory", style = self.styles['Subtitle']))
-        self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = 2.0 * inch))
-        self.PrefixFlowables.append(Paragraph(text = self.DictionaryData['unit.stakename'], style = self.styles['PrefixBase']))
+        prefixPage = DirectoryPage()
+        prefixPage.flowables.append(Spacer(width = self.FrameWidth, height = 1.5 * inch))
+        prefixPage.flowables.append(Paragraph(text = "<b>" + self.DictionaryData['unit.unitname'] + "</b>", style = self.styles['DocumentTitle']))
+        prefixPage.flowables.append(Paragraph(text = "Member Directory", style = self.styles['Subtitle']))
+        prefixPage.flowables.append(Spacer(width = self.FrameWidth, height = 2.0 * inch))
+        prefixPage.flowables.append(Paragraph(text = self.DictionaryData['unit.stakename'], style = self.styles['PrefixBase']))
         if 'bldg.addy1' in self.DictionaryData.keys():
-            self.PrefixFlowables.append(Paragraph(text = self.DictionaryData['bldg.addy1'], style = self.styles['PrefixBase']))
+            prefixPage.flowables.append(Paragraph(text = self.DictionaryData['bldg.addy1'], style = self.styles['PrefixBase']))
         else:
-            self.PrefixFlowables.append(Paragraph(text = '', style = self.styles['PrefixBase']))
+            prefixPage.flowables.append(Paragraph(text = '', style = self.styles['PrefixBase']))
         if 'bldg.addy2' in self.DictionaryData.keys():
-            self.PrefixFlowables.append(Paragraph(text = self.DictionaryData['bldg.addy2'], style = self.styles['PrefixBase']))
+            prefixPage.flowables.append(Paragraph(text = self.DictionaryData['bldg.addy2'], style = self.styles['PrefixBase']))
         else:
-            self.PrefixFlowables.append(Paragraph(text = '', style = self.styles['PrefixBase']))
-        self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = 2.0 * inch))
+            prefixPage.flowables.append(Paragraph(text = '', style = self.styles['PrefixBase']))
+        prefixPage.flowables.append(Spacer(width = self.FrameWidth, height = 2.0 * inch))
         CurrentDateString = datetime.date.today().strftime("%d %B %Y")
-        self.PrefixFlowables.append(Paragraph(text = "Published: " + CurrentDateString, style = self.styles['PrefixBase']))
-        self.PrefixFlowables.append(PageBreak())
+        prefixPage.flowables.append(Paragraph(text = "Published: " + CurrentDateString, style = self.styles['PrefixBase']))
+        prefixPage.flowables.append(PageBreak())
+        self.directoryCollection.pages['prefix'].append(prefixPage)
 
         #Page 2 Data
-        self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
+        prefixPage = DirectoryPage()
+        prefixPage.flowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
         CurrentYearString = datetime.date.today().strftime("%Y")
-        self.PrefixFlowables.append(Paragraph(text = "<u>" + CurrentYearString + " Meeting Schedule</u>", style = self.styles['Subtitle']))
-        self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
+        prefixPage.flowables.append(Paragraph(text = "<u>" + CurrentYearString + " Meeting Schedule</u>", style = self.styles['Subtitle']))
+        prefixPage.flowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
         TextTable = Table(self.GetBlockData(), [1.5 * inch, 3.0 * inch])
         if self.DEBUG:
             TextTable.setStyle(TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                                            ('BOX', (0,0), (-1,-1), .25, colors.black),
                                            ]))
-        self.PrefixFlowables.append(TextTable)
-        self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
+        prefixPage.flowables.append(TextTable)
+        prefixPage.flowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
         if 'bldg.phone' in self.DictionaryData.keys():
-            self.PrefixFlowables.append(Paragraph(text = "Office Phone: " + self.DictionaryData['bldg.phone'], style = self.styles['PrefixBase']))
+            prefixPage.flowables.append(Paragraph(text = "Office Phone: " + self.DictionaryData['bldg.phone'], style = self.styles['PrefixBase']))
         else:
-            self.PrefixFlowables.append(Paragraph(text = '', style = self.styles['PrefixBase']))
-        self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
-        self.PrefixFlowables.append(HRFlowable(width = "90%", thickness = 1, lineCap= 'square', color = colors.black))
-        self.PrefixFlowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
+            prefixPage.flowables.append(Paragraph(text = '', style = self.styles['PrefixBase']))
+        prefixPage.flowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
+        prefixPage.flowables.append(HRFlowable(width = "90%", thickness = 1, lineCap= 'square', color = colors.black))
+        prefixPage.flowables.append(Spacer(width = self.FrameWidth, height = .125 * inch))
         data = []
 
         for Position in self.GetPositionData():
@@ -255,7 +248,7 @@ class PDFTools:
             TextTable.setStyle(TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                                            ('BOX', (0,0), (-1,-1), .25, colors.black),
                                            ]))
-        self.PrefixFlowables.append(KeepInFrame(maxWidth = self.FrameWidth,
+        prefixPage.flowables.append(KeepInFrame(maxWidth = self.FrameWidth,
                                                 maxHeight = 5.0 * inch,
                                                 content = [TextTable,
                                                            Spacer(width = self.FrameWidth, height = 7.0 * inch)],
@@ -264,12 +257,13 @@ class PDFTools:
 						 and should not be copied without permission of the bishop
 						 or stake president.
 						 """
-        self.PrefixFlowables.append(Paragraph(text = "<b>" + Disclaimer + "</b>", style = self.styles['RegText']))
-        self.PrefixFlowables.append(PageBreak())
+        prefixPage.flowables.append(Paragraph(text = "<b>" + Disclaimer + "</b>", style = self.styles['RegText']))
+        prefixPage.flowables.append(PageBreak())
         if self.DEBUG:
-            for aFlowable in self.PrefixFlowables:
+            for aFlowable in prefixPage.flowables:
                 if aFlowable.__class__ is Paragraph or aFlowable.__class__ is Spacer:
                     aFlowable._showBoundary = 1
+        self.directoryCollection.pages['prefix'].append(prefixPage)
 
     def AddDirectorySuffixData(self):
         self.SuffixFlowables = []
@@ -350,12 +344,10 @@ class PDFTools:
         self.CurrentWardDirectory.append(PageBreak())
         #PREPARE FOR FIRST TIME THROUGH
         self.TotalFlowables = len(self.CurrentWardDirectory) + len(self.PrefixFlowables) + len(self.SuffixFlowables)
-        if self.DEBUG:
-            for element in self.PrefixFlowables:
-                print element.__class__
-            print "Start Length", self.TotalFlowables
+
         GeneratorHandle = self.FlowableGenerator()
         Header_Footer = GeneratorHandle.next()
+
         SingleFlowable = GeneratorHandle.next()
         while self.FlowablesConsumed < self.TotalFlowables:
             #PREPARE FOR A FRAME
@@ -396,14 +388,20 @@ class PDFTools:
         if self.DEBUG:
             pdf_TEST.save()
 
+        # insert map placeholders
+        FlowablesOnPages.insert(-1, [-1, 0, len(self.PrepareFiller()), 0])
+        FlowablesOnPages.insert(-1, [-1, 0, len(self.PrepareFiller()), 0])
+        FlowablesOnPages.insert(-1, [-1, 0, len(self.PrepareFiller()), 0])
+        FlowablesOnPages.insert(-1, [-1, 0, len(self.PrepareFiller()), 0])
+
         UsedFaces = len(FlowablesOnPages)
         if self.DEBUG:
             print str(UsedFaces) + " faces are present"
         Fillers = (4 - UsedFaces % 4) % 4
         if self.DEBUG:
             print str(Fillers) + " blank faces will be added to make full pages"
-        for Count in range(Fillers):
-            pagesFromEndToInsertFillers = -2
+        for Count in xrange(Fillers):
+            pagesFromEndToInsertFillers = -1
             FlowablesOnPages.insert(pagesFromEndToInsertFillers,
                                     [-1, 0, len(self.PrepareFiller()), 0])
         PageCount = (UsedFaces + Fillers) / 4
