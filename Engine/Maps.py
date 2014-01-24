@@ -92,6 +92,13 @@ class Map:
         self.pilImage = pilImage.crop((left, upper, right, lower)) # left, upper, right, lower
         self.rotate_image()
         self.draw  = ImageDraw.Draw(self.pilImage)
+        """
+        # this would put a 3 pixel wide border around the whole thing.  Problem is the large image aliases this away on the bottom edge
+        w, h = self.pilImage.size
+        self.draw.rectangle([(0, 0), (w - 1, h - 1)], outline='#000000')
+        self.draw.rectangle([(1, 1), (w - 2, h - 2)], outline='#000000')
+        self.draw.rectangle([(2, 2), (w - 3, h - 3)], outline='#000000')
+        """
 
     def save_map(self):
         self.pilImage.save(self.mapName, "BMP")
@@ -203,7 +210,7 @@ class Maps:
                                           corner1 = insetMap.upperLeftCoordinate,
                                           corner2 = insetMap.lowerRightCoordinate,
                                           fontSize = 100,
-                                          opacity = 200)
+                                          opacity = 170)
             insetCounter += 1
         for myMap in self.pages:
             myMap.draw_map_title()

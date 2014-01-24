@@ -17,7 +17,14 @@ HALF_PAGE_WIDTH = landscape(letter)[0]/2
 STANDARD_FRAME_WIDTH = HALF_PAGE_WIDTH - 2 * STANDARD_MARGIN
 STANDARD_FRAME_HEIGHT = landscape(letter)[1] - 2 * STANDARD_MARGIN
 STANDARD_TABLE_WIDTH = (STANDARD_FRAME_WIDTH - STANDARD_MARGIN) / 2
-STANDARD_TABLE_HEIGHT = STANDARD_FRAME_HEIGHT - 1.0 * inch
+
+churchFlowableForSizing = Paragraph('For Church Use Only', styles['DaveFooter'])
+FooterRoom = churchFlowableForSizing.wrap(STANDARD_FRAME_WIDTH, STANDARD_FRAME_HEIGHT)[1] + churchFlowableForSizing.getSpaceBefore()
+pageHeaderFlowableForSizing = Paragraph('Page 1', styles['DaveHeaderLeft'])
+headerRoom = pageHeaderFlowableForSizing.wrap(STANDARD_FRAME_WIDTH, STANDARD_FRAME_HEIGHT)[1] + pageHeaderFlowableForSizing.getSpaceBefore()
+
+STANDARD_TABLE_HEIGHT = STANDARD_FRAME_HEIGHT - FooterRoom - headerRoom
+STANDARD_MAP_HEIGHT = STANDARD_FRAME_HEIGHT - headerRoom
 
 def get_maps_pages(configData, maps, membershipList, debug):
     pages = []
@@ -29,7 +36,7 @@ def get_maps_pages(configData, maps, membershipList, debug):
             pg.flowables.append('CURRENT_PAGE_NUMBER')
             pg.flowables.append(Image(oneMap.get_map(),
                                       width = MAP_PAGE_WIDTH,
-                                      height = 8.5 * inch, # overridden by the proportional flag, but still a required parameter, perhaps should set this to the available height remaining TODO
+                                      height = STANDARD_MAP_HEIGHT,
                                       kind = 'proportional'))
             pages.append(pg)
         if oneMap.size == 'large':
@@ -37,14 +44,14 @@ def get_maps_pages(configData, maps, membershipList, debug):
             pg.flowables.append('CURRENT_PAGE_NUMBER')
             pg.flowables.append(Image(oneMap.get_map_half('left'),
                                       width = MAP_PAGE_WIDTH,
-                                      height = 8.5 * inch, # overridden by the proportional flag, but still a required parameter, perhaps should set this to the available height remaining TODO
+                                      height = STANDARD_MAP_HEIGHT,
                                       kind = 'proportional'))
             pages.append(pg)
             pg = DirectoryPage(leftPadding = 0)
             pg.flowables.append('CURRENT_PAGE_NUMBER')
             pg.flowables.append(Image(oneMap.get_map_half('right'),
                                       width = MAP_PAGE_WIDTH,
-                                      height = 8.5 * inch, # overridden by the proportional flag, but still a required parameter, perhaps should set this to the available height remaining TODO
+                                      height = STANDARD_MAP_HEIGHT,
                                       kind = 'proportional'))
             pages.append(pg)
     return pages
@@ -58,6 +65,7 @@ def make_member_dwellings_dict(dwellingsHandle, membershipList):
     return myDict
 
 def get_maps_lookup_pages(configData, dwellingsHandle, membershipList, debug):
+    churchFlowable = Paragraph('%s - For Church Use Only' % configData['unit.unitname'], styles['DaveFooter'])
     pages = []
     memberDwellingsDict = make_member_dwellings_dict(dwellingsHandle, membershipList)
     tableData = [['#', 'Name']]
@@ -95,6 +103,7 @@ def get_maps_lookup_pages(configData, dwellingsHandle, membershipList, debug):
         pg.flowables.append(Table(data = tableData,
                                   colWidths = [STANDARD_TABLE_WIDTH, STANDARD_MARGIN, STANDARD_TABLE_WIDTH],
                                   style = TableStyle([('VALIGN', (0,0), (-1,-1), 'TOP'),])))
+        pg.flowables.append(churchFlowable)
         pages.append(pg)
     return pages
 
