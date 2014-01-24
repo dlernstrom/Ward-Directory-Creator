@@ -1,7 +1,7 @@
 import csv
 
 class Dwelling:
-    index = None
+    mapIndex = None
     def __init__(self, dwellingDict):
         ['Longitude','Latitude','Street','City','State','Zip']
         keys = dwellingDict.keys()
@@ -15,14 +15,17 @@ class Dwelling:
     def __repr__(self):
         return '%s\n%s, %s %s' % (self.Street, self.City, self.State, self.Zip)
 
-    def save_index(self, index):
-        self.index = index
+    def save_map_index(self, mapIndex):
+        self.mapIndex = mapIndex
 
 class Dwellings:
-    dwellingList = []
     def __init__(self):
         self.dwellingsFname = 'C:\\Users\\dlernstrom\\Desktop\\DirectoryCherryCreek\\Cherry_Creek_Dwellings.csv'
+        self.dwellingList = []
         self.read_from_file()
+
+    def order_dwelling_list(self):
+        self.dwellingList = sorted(self.dwellingList, key = lambda x: x.mapIndex)
 
     """
     def __del__(self):
@@ -55,5 +58,5 @@ class Dwellings:
         for d in self.dwellingList:
             #print "Comparing H:\n[%s] to D:\n[%s]" % (household.familyAddress, d.addressForCompare)
             if household.familyAddress == d.addressForCompare:
-                return d.index
+                return d.mapIndex
         return None

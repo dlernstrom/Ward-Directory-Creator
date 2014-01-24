@@ -11,7 +11,7 @@ from Coordinate import Coordinate
 from Pixel import Pixel
 
 class Map:
-    def __init__(self, index, upperLeftCoordinate, upperRightCoordinate, size, initialOrientation, finalDirection, myConfig):
+    def __init__(self, index, upperLeftCoordinate, upperRightCoordinate, size, initialOrientation, finalDirection, myConfig, title, titleCorners):
         self.url = 'http://maps.googleapis.com/maps/api/staticmap'
         self.imgPath = 'C:\\Users\\dlernstrom\\Desktop\\DirectoryCherryCreek\\'
         self.mapName = self.imgPath + 'Map%d_modified.bmp' % index
@@ -25,6 +25,8 @@ class Map:
         self.size = size
         self.initialOrientation = initialOrientation
         self.finalDirection = finalDirection # lowercase
+        self.title = title
+        self.titleCorners = titleCorners
 
         if size == 'small': # 'small' = 5.5"x8.5", at 300dpi, this translates to 1650x2550
             if initialOrientation == 'portrait':
@@ -45,6 +47,8 @@ class Map:
         config = {16: {'horizToCenter': 0.006865, 'horizRepeat': 0.01373, 'horizRepeatPixels': 1280, 'vertToCenter': 0.0051125, 'vertRepeat': 0.009825, 'vertRepeatPixels': 1230, 'fontSize': 60},
                   17: {'horizToCenter': 0.006865, 'horizRepeat': 0.01373, 'horizRepeatPixels': 1280, 'vertToCenter': 0.0051125, 'vertRepeat': 0.009825, 'vertRepeatPixels': 1230, 'fontSize': 20},
                   18: {'horizToCenter': 0.006865, 'horizRepeat': 0.01373, 'horizRepeatPixels': 1280, 'vertToCenter': 0.0051125, 'vertRepeat': 0.009825, 'vertRepeatPixels': 1230, 'fontSize': 15}}
+        self.config = config
+        self.myConfig = myConfig
         self.font  = ImageFont.truetype("arial.ttf", config[myConfig]['fontSize'], encoding="UTF-8") # fontSize of 25 was too small, trying 30
         rowsPerfect = abs(ul.latitude - ll.latitude) / config[myConfig]['vertRepeat']
         rows = int(math.ceil(rowsPerfect))
@@ -92,6 +96,28 @@ class Map:
     def save_map(self):
         self.pilImage.save(self.mapName, "BMP")
 
+    def get_map_half(self, side):
+        w, h = self.pilImage.size
+        upper = 0
+        lower = h
+        if side == 'left':
+            left = 0
+            right = w/2
+        else:
+            left = w/2
+            right = w
+        pilImage = self.pilImage.crop((left, upper, right, lower)) # left, upper, right, lower
+        myFile = StringIO()
+        pilImage.save(myFile, 'PNG')
+        myFile.seek(0)
+        return myFile
+
+    def get_map(self):
+        myFile = StringIO()
+        self.pilImage.save(myFile, 'PNG')
+        myFile.seek(0)
+        return myFile
+
     def rotate_image(self):
         if self.finalDirection == 'east':
             self.pilImage = self.pilImage.rotate(90)
@@ -115,22 +141,48 @@ class Map:
         position = self.get_rotated_position(position)
         self.write_text(str(counter), position)
 
-    def write_text(self, text, position):
-        print "Writing %s at: %s" % (text, position)
-        width, height = self.draw.textsize(text, font=self.font)
+    def write_text(self, text, position, drawBox = True, font = None):
+        if font == None:
+            font = self.font
+        #print "Writing %s at: %s" % (text, position)
+        width, height = self.draw.textsize(text, font=font)
         midWidth = width * 0.5
         midHeight = height * 0.5
-        box = [(position.x - midWidth * 1.2, position.y - midHeight), (position.x + midWidth * 1.2, position.y + midHeight * 2.0)]
-        self.draw.rectangle(box, outline='#000000', fill='#FFFFFF')
-        self.draw.text( (position.x - midWidth, position.y - midHeight), text, fill='#000000', font=self.font)
+        if drawBox:
+            box = [(position.x - midWidth * 1.2, position.y - midHeight), (position.x + midWidth * 1.2, position.y + midHeight * 2.0)]
+            self.draw.rectangle(box, outline='#000000', fill='#FFFFFF')
+        self.draw.text( (position.x - midWidth, position.y - midHeight), text, fill='#000000', font=font)
 
-    def annotate_inset(self, corner1, corner2):
+    def draw_boxed_text(self, text, corner1, corner2, fontSize, opacity):
         position1 = self.calibration.translate_world_to_pixel(corner1)
         position1 = self.get_rotated_position(position1)
         position2 = self.calibration.translate_world_to_pixel(corner2)
         position2 = self.get_rotated_position(position2)
         box = [(position1.x, position1.y), (position2.x, position2.y)]
-        self.draw.rectangle(box, outline='#000000', fill='#FFFFFF')
+        width = abs(position1.x - position2.x)
+        height = abs(position1.y - position2.y)
+        frontBox = Image.new('RGBA', (width, height), (255,255,255,opacity)) # 0 is transparent, 255 is opaque
+        frontBoxDraw = ImageDraw.Draw(frontBox)
+        frontBoxDraw.rectangle([(0,0), (width-1, height-1)], outline='#000000')
+        self.pilImage.paste(frontBox, box = (min(position1.x, position2.x), min(position1.y, position2.y)), mask=frontBox)
+        middleOfBox = Pixel(min(position1.x, position2.x) + abs(position2.x - position1.x)/2,
+                            min(position1.y, position2.y) + abs(position2.y - position1.y)/2)
+        font = ImageFont.truetype("arial.ttf", fontSize, encoding="UTF-8")
+        if not '\n' in text:
+            self.write_text(text = text, position = middleOfBox, drawBox = False, font = font)
+        else:
+            width, height = self.draw.textsize(text, font=font)
+            posTop = Pixel(middleOfBox.x, middleOfBox.y - height)
+            self.write_text(text = text.split('\n')[0], position = posTop, drawBox = False, font = font)
+            posBottom = Pixel(middleOfBox.x, middleOfBox.y + height)
+            self.write_text(text = text.split('\n')[1], position = posBottom, drawBox = False, font = font)
+
+    def draw_map_title(self):
+        self.draw_boxed_text(text = self.title,
+                             corner1 = self.titleCorners[0],
+                             corner2 = self.titleCorners[1],
+                             fontSize = int(self.config[self.myConfig]['fontSize'] * 1.5),
+                             opacity = 220)
 
 class Maps:
     def __init__(self, pages):
@@ -141,12 +193,22 @@ class Maps:
 
     def annotate_coordinate(self, counter, coordinate):
         for mapPage in self.pages:
-            print "annotating %s: %s" % (counter, coordinate)
+            #print "annotating %s: %s" % (counter, coordinate)
             mapPage.annotate(counter, coordinate)
 
-    def save(self):
+    def annotate_insets(self):
+        insetCounter = 1
         for insetMap in self.pages[1:]:
-            self.pages[0].annotate_inset(insetMap.upperLeftCoordinate, insetMap.lowerRightCoordinate)
+            self.pages[0].draw_boxed_text(text = "See\nInset %d" % insetCounter,
+                                          corner1 = insetMap.upperLeftCoordinate,
+                                          corner2 = insetMap.lowerRightCoordinate,
+                                          fontSize = 100,
+                                          opacity = 200)
+            insetCounter += 1
+        for myMap in self.pages:
+            myMap.draw_map_title()
+
+    def save(self):
+        self.annotate_insets()
         for mapPage in self.pages:
             mapPage.save_map()
-

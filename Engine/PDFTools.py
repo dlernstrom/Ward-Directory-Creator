@@ -32,9 +32,9 @@ class PDFTools:
         pdf.setFont('Helvetica', 18)
 
         for page in layout:
-            leftFrame = pages[page[0]].get_frame(debug = self.DEBUG, side = 'Left', pdfHandle = pdf)
+            pages[page[0]].make_frame(debug = self.DEBUG, side = 'Left', pdfHandle = pdf)
             try:
-                rightFrame = pages[page[1]].get_frame(debug = self.DEBUG, side = 'Right', pdfHandle = pdf)
+                pages[page[1]].make_frame(debug = self.DEBUG, side = 'Right', pdfHandle = pdf)
             except IndexError:
                 pass
             pdf.showPage()

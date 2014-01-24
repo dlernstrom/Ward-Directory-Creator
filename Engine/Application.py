@@ -74,9 +74,11 @@ class Application:
                                                                    membershipList = self.MembershipList,
                                                                    debug = self.DEBUG)
         directoryCollection.pages['maps'] = get_maps_pages(configData = configData,
+                                                           maps = self.ourMaps,
                                                            membershipList = self.MembershipList,
                                                            debug = self.DEBUG)
         directoryCollection.pages['mapsLookup'] = get_maps_lookup_pages(configData = configData,
+                                                                        dwellingsHandle = self.homes,
                                                                         membershipList = self.MembershipList,
                                                                         debug = self.DEBUG)
         directoryCollection.pages['suffix'] = get_directory_suffix_pages(dictionaryData = configData,
@@ -123,9 +125,9 @@ class Application:
         # furthest south person is at ?
         # furthest west person is at -111.8081775
         # furthest east person is at -111.7705975
-        self.ourMaps = Maps([Map(1, Coordinate(41.9720, -111.8117775), Coordinate(41.9720, -111.7669975), 'large', 'portrait', 'east', 16),
-                             Map(2, Coordinate(41.9366, -111.806247), Coordinate(41.9366, -111.7958776), 'small', 'landscape', 'east', 17),
-                             Map(3, Coordinate(41.93105, -111.8086775), Coordinate(41.93105, -111.799827), 'small', 'landscape', 'east', 18)])
+        self.ourMaps = Maps([Map(1, Coordinate(41.9720, -111.8117775), Coordinate(41.9720, -111.7669975), 'large', 'portrait', 'east', 16, "Cherry Creek Ward", [Coordinate(41.9702841,-111.8060452), Coordinate(41.9523412,-111.8081775)]),
+                             Map(2, Coordinate(41.9366, -111.806247), Coordinate(41.9366, -111.7958776), 'small', 'landscape', 'east', 17, "Inset 1", [Coordinate(41.9359261,-111.7964), Coordinate(41.934148,-111.79725)]),
+                             Map(3, Coordinate(41.93105, -111.8086775), Coordinate(41.93105, -111.799827), 'small', 'landscape', 'east', 18, "Inset 2", [Coordinate(41.9306082,-111.800404), Coordinate(41.9292656,-111.8011141)])])
         currentPosition = (-112, 45, -112, 45) # must be left, bottom, right, top
         done = False
         counter = 1
@@ -148,11 +150,9 @@ class Application:
                 done = True
                 continue
             print counter
-            print "Nearest", nearest
             nearest = nearest[0]
             d = self.homes.dwellingList[nearest.object]
-
-            d.save_index(counter)
+            d.save_map_index(counter)
             #print "Nearest ID", nearest.id
             print "Nearest Object", d
             print "Nearest Bounds", nearest.bounds
@@ -161,6 +161,7 @@ class Application:
             self.ourMaps.annotate_coordinate(counter, Coordinate(d.Latitude, d.Longitude))
             print "*" * 30
             counter += 1
+        self.homes.order_dwelling_list()
         #ourMaps.save()
 
     def isValidCSV(self):

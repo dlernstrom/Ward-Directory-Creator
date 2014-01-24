@@ -37,7 +37,7 @@ class DirectoryPage:
         self.flowables = []
         self.pageNumber = 0
 
-    def get_frame(self, debug, side = 'Left', pdfHandle = None): # or Right
+    def get_frame(self, debug, side = 'Left'): # or Right
         x1 = 0
         if side == 'Right':
             x1 = landscape(letter)[0]/2
@@ -50,11 +50,13 @@ class DirectoryPage:
                    rightPadding = self.rightPadding,
                    topPadding = self.topPadding,
                    showBoundary = debug)
-        if pdfHandle:
-            counter = 0
-            for flowable in self.flowables:
-                if flowable == 'CURRENT_PAGE_NUMBER':
-                    flowable = Paragraph('Page %d' % self.pageNumber, styles['DaveHeader%s' % side])
-                fm.add(flowable, pdfHandle)
-                counter += 1
         return fm
+
+    def make_frame(self, debug, side, pdfHandle):
+        fm = self.get_frame(debug, side)
+        counter = 0
+        for flowable in self.flowables:
+            if flowable == 'CURRENT_PAGE_NUMBER':
+                flowable = Paragraph('Page %d' % self.pageNumber, styles['DaveHeader%s' % side])
+            fm.add(flowable, pdfHandle)
+            counter += 1

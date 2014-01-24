@@ -48,23 +48,32 @@ def paginate_listings(configData, familyFlowables, debug):
 
     pages = []
     pg = DirectoryPage()
-    fm = pg.get_frame(debug)
+    fm = pg.get_frame(debug = debug)
+    carryOver = None
     for fam in familyFlowables:
         if len(pg.flowables) == 0:
             fm.add(churchFlowable, pdf_TEST)
             fm.add(Paragraph('Page ' + str(pdf_TEST.getPageNumber() - 1), styles['DaveHeaderLeft']), pdf_TEST)
             pg.flowables.append('CURRENT_PAGE_NUMBER')
+        if carryOver:
+            fm.add(carryOver, pdf_TEST)
+            pg.flowables.append(carryOver)
+            carryOver = None
 
         if fm.add(fam, pdf_TEST):
             pg.flowables.append(fam)
             continue
+        carryOver = fam
         pg.flowables.append(churchFlowable) # this goes at the bottom
         pages.append(pg)
         # start a new test pdf page
         pdf_TEST.showPage()
 
         pg = DirectoryPage()
-        fm = pg.get_frame(debug)
+        fm = pg.get_frame(debug = debug)
+    if carryOver:
+        fm.add(carryOver, pdf_TEST)
+        pg.flowables.append(carryOver)
 
     if len(pg.flowables):
         pg.flowables.append(churchFlowable) # this goes at the bottom
@@ -94,17 +103,17 @@ def tableize_family(configData, ImageDirectory, household, debug):
     data[0][0] = Preformatted(household.surname.upper(), styles['DaveBold'])
     data[0][3] = Preformatted(household.familyAddress + '\n' + household.familyEmail.emailAddress, styles['DaveHeading'])
     data[0][4] = Preformatted(household.familyPhone.phoneFormatted + '\n' + str(household.mapIndexString), styles['DaveBoldSmall'])
-    try:
-        expectedName = household.expectedPhotoName
-        picturePath = ImageDirectory + os.sep + expectedName
-        logging.debug(picturePath)
+
+    expectedName = household.expectedPhotoName
+    picturePath = ImageDirectory + os.sep + expectedName
+    if os.path.isfile(picturePath):
         FamilyPicture = Image(picturePath,
                               width = 1.5 * inch,
                               height = 1.125 * inch,
                               kind = 'proportional')
         if debug:
             print picturePath
-    except:
+    else:
         logging.debug(expectedName)
         FamilyPictureBase = Image('Engine\\Missing.jpg',
                                   width = 1.5 * inch,
