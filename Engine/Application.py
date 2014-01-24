@@ -131,18 +131,27 @@ class Application:
         currentPosition = (-112, 45, -112, 45) # must be left, bottom, right, top
         done = False
         counter = 1
-        """
         overrides = {13: (41.9557139, -111.7872486), # allen, craig
                      15: (41.9523412, -111.788422), # dutro
                      16: (41.9510287, -111.7850893), # compton
                      17: (41.950471, -111.7819565), # ernstrom
                      18: (41.9503411, -111.7882183), # eskelson
                      19: (41.94972, -111.7850972), # griffiths
+                     29: (41.9414439, -111.787962),#
+                     31: (41.9408163, -111.7813266),#
+                     32: (41.940414, -111.787455),#
+                     33: (41.9397178, -111.7944185),# woodland
+                     34: (41.9392206, -111.7881929),
+                     35: (41.938246, -111.780649),
+                     37: (41.9373516, -111.7860991),
+                     40: (41.930458, -111.779926),
+                     70: (41.9351858, -111.7988637),
+                     73: (41.9349648, -111.802612),
+                     75: (41.9354462, -111.8032709),
                      }
-        """
         while done == False:
-            #if counter in overrides.keys():
-            #    currentPosition = [overrides[counter][1], overrides[counter][0], overrides[counter][1], overrides[counter][0]] # must be left, bottom, right, top
+            if counter in overrides.keys():
+                currentPosition = [overrides[counter][1], overrides[counter][0], overrides[counter][1], overrides[counter][0]] # must be left, bottom, right, top
             nearest = list(self.idx.nearest(coordinates = currentPosition,
                                             num_results=1,
                                             objects=True))
@@ -155,7 +164,7 @@ class Application:
             d.save_map_index(counter)
             #print "Nearest ID", nearest.id
             print "Nearest Object", d
-            print "Nearest Bounds", nearest.bounds
+            print "XXX: (%s, %s)," % (d.Latitude, d.Longitude)
             currentPosition = [d.Longitude, d.Latitude, d.Longitude, d.Latitude] # must be left, bottom, right, top
             self.idx.delete(nearest.id, currentPosition)
             self.ourMaps.annotate_coordinate(counter, Coordinate(d.Latitude, d.Longitude))

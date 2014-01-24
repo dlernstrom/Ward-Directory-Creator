@@ -4,7 +4,7 @@ import os
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.lib.units import inch
-from reportlab.platypus import Preformatted, Frame, Image, PageBreak, Paragraph, Table, TableStyle, Spacer, ParagraphAndImage
+from reportlab.platypus import Preformatted, Frame, Image, PageBreak, Paragraph, Table, TableStyle, Spacer
 from reportlab.platypus.flowables import HRFlowable, KeepInFrame
 from reportlab.pdfgen.canvas import Canvas
 

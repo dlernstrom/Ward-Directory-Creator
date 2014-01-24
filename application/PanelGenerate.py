@@ -215,7 +215,7 @@ class GeneratePanel(ColoredPanel):
             dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg, caption = "Report", size=(500,600))
             dlg.ShowModal()
         if self.parent.GetConfigValue('task.missimages') == '1':
-            print "Generating missing report"
+            print "Generating missing images report"
             LiveFolder = self.parent.GetConfigValue('file.imagesdirectory')
             msg = self.AppHandle.GetImagesReportMsg()
             dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg, caption = "Report", size=(500,600))
@@ -224,6 +224,8 @@ class GeneratePanel(ColoredPanel):
     def makingActive(self):
         if self.parent.GetConfigValue('task.missreport') == '1':
             self.CB_MissingReport.SetValue(True)
+        if self.parent.GetConfigValue('task.missimages') == '1':
+            self.CB_MissingImages.SetValue(True)
         if self.parent.GetConfigValue('task.sendemail') == '1':
             self.CB_SendEmail.SetValue(True)
         if self.parent.GetConfigValue('task.genmissfile') == '1':

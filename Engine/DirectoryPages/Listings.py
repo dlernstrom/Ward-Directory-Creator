@@ -4,12 +4,18 @@ import os
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.lib.units import inch
-from reportlab.platypus import Preformatted, Frame, Image, Paragraph, Table, TableStyle#Spacer, ParagraphAndImage
+from reportlab.platypus import Preformatted, Frame, Image, Paragraph, Table, TableStyle, Spacer
+from reportlab.platypus.flowables import KeepInFrame
 from reportlab.pdfgen.canvas import Canvas
 
 from PDFStyles import styles
 from TextOnImage import TextOnImage
 from DirectoryPage import DirectoryPage
+
+STANDARD_MARGIN = 0.25 * inch
+HALF_PAGE_WIDTH = landscape(letter)[0]/2
+STANDARD_FRAME_WIDTH = HALF_PAGE_WIDTH - 2 * STANDARD_MARGIN
+STANDARD_FRAME_HEIGHT = landscape(letter)[1] - 2 * STANDARD_MARGIN
 
 def get_missing_text(configData):
     if not 'missing.missingname' in configData.keys():
@@ -42,41 +48,63 @@ def get_listing_pages(configData, membershipList, debug):
     pages = paginate_listings(configData, familyFlowables, debug)
     return pages
 
+
 def paginate_listings(configData, familyFlowables, debug):
     pdf_TEST = Canvas("DIRECTORY_TEST.pdf", pagesize = landscape(letter))
     churchFlowable = Paragraph('%s - For Church Use Only' % configData['unit.unitname'], styles['DaveFooter'])
+    FooterRoom = churchFlowable.wrap(STANDARD_FRAME_WIDTH, STANDARD_FRAME_HEIGHT)[1] + churchFlowable.getSpaceBefore()
+    pageHeaderFlowableForSizing = Paragraph('Page 1', styles['DaveHeaderLeft'])
+    headerRoom = pageHeaderFlowableForSizing.wrap(STANDARD_FRAME_WIDTH, STANDARD_FRAME_HEIGHT)[1] + pageHeaderFlowableForSizing.getSpaceBefore()
 
     pages = []
     pg = DirectoryPage()
     fm = pg.get_frame(debug = debug)
     carryOver = None
+    tmpList = []
     for fam in familyFlowables:
         if len(pg.flowables) == 0:
             fm.add(churchFlowable, pdf_TEST)
             fm.add(Paragraph('Page ' + str(pdf_TEST.getPageNumber() - 1), styles['DaveHeaderLeft']), pdf_TEST)
             pg.flowables.append('CURRENT_PAGE_NUMBER')
+
         if carryOver:
             fm.add(carryOver, pdf_TEST)
-            pg.flowables.append(carryOver)
+            #pg.flowables.append(carryOver)
+            tmpList.append(carryOver)
             carryOver = None
 
         if fm.add(fam, pdf_TEST):
-            pg.flowables.append(fam)
+            #pg.flowables.append(fam)
+            tmpList.append(fam)
             continue
         carryOver = fam
-        pg.flowables.append(churchFlowable) # this goes at the bottom
+
+        content = tmpList + [Spacer(width = STANDARD_FRAME_WIDTH, height = 9 * inch)]
+        pg.flowables.append(KeepInFrame(maxWidth = STANDARD_FRAME_WIDTH,
+                                        maxHeight = STANDARD_FRAME_HEIGHT - FooterRoom - headerRoom,
+                                        content = content,
+                                        mode = 'truncate'))
+        pg.flowables.append(churchFlowable)
+
         pages.append(pg)
         # start a new test pdf page
         pdf_TEST.showPage()
 
         pg = DirectoryPage()
         fm = pg.get_frame(debug = debug)
+        tmpList = []
     if carryOver:
         fm.add(carryOver, pdf_TEST)
-        pg.flowables.append(carryOver)
+        tmpList.append(carryOver)
+        #pg.flowables.append(carryOver)
 
-    if len(pg.flowables):
-        pg.flowables.append(churchFlowable) # this goes at the bottom
+    if len(tmpList):
+        content = tmpList + [Spacer(width = STANDARD_FRAME_WIDTH, height = 9 * inch)]
+        pg.flowables.append(KeepInFrame(maxWidth = STANDARD_FRAME_WIDTH,
+                                        maxHeight = STANDARD_FRAME_HEIGHT - FooterRoom - headerRoom,
+                                        content = content,
+                                        mode = 'truncate'))
+        pg.flowables.append(churchFlowable)
         pages.append(pg)
         pdf_TEST.showPage()
     if debug:
