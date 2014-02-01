@@ -53,13 +53,13 @@ class LeadershipPanel(ColoredPanel):
         self.YW = LeadershipRow(self, "Young Womens", ShortDesc = 'leadership.yw', NameType = 'Parent')
         self.Primary = LeadershipRow(self, "Primary", ShortDesc = 'leadership.primary', NameType = 'Parent')
         self.WM = LeadershipRow(self, "Ward Mission Leader", ShortDesc = 'leadership.wml')
-        self.Act = LeadershipRow(self, "Activities Committee", ShortDesc = 'leadership.act', NameType = 'Parent')
+        self.SS = LeadershipRow(self, "Sunday School President", ShortDesc = 'leadership.ss')
         self.Newsletter = LeadershipRow(self, "Ward Newsletter", ShortDesc = 'leadership.news', NameType = 'Parent')
         self.Directory = LeadershipRow(self, "Ward Directory", ShortDesc = 'leadership.dir', NameType = 'Parent')
 
         self.PageRows = [self.Bishop, self.First, self.Second, self.Exec, self.WardClerk, self.Financial,
                          self.Membership, self.EQ, self.HP, self.RS, self.YM, self.YW,
-                         self.Primary, self.WM, self.Act, self.Newsletter, self.Directory]
+                         self.Primary, self.WM, self.SS, self.Newsletter, self.Directory]
 
         #######################################################################
         ## Non wrapped items
@@ -146,7 +146,7 @@ class LeadershipPanel(ColoredPanel):
         if not self.parent.isValidCSV():
             self.disable_all()
             return
-        
+
         NameType = None
         #optimized for repeat searches
         for Row in self.PageRows:

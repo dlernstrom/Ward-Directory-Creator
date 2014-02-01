@@ -17,8 +17,8 @@ def get_callings_data(configData):
     #Return a list of dictionaries of the positions ordered correctly
     #TODO: This should happen by my parent... I am the customer and should get it how I want it already
     RoleList = ['bish', 'first', 'second', 'exec', 'clerk', 'fin', 'mem', "NULL",
-                'hp', 'eq', 'rs', 'ym', 'yw', 'primary', "NULL",
-                'wml', 'act', 'news', 'dir']
+                'hp', 'eq', 'rs', 'ym', 'yw', 'primary', 'ss', "NULL",
+                'wml', 'act', 'news', 'miss']
     RoleDict = {'bish' :	'Bishop',
                 'first' :	'1st Counselor',
                 'second' :	'2nd Counselor',
@@ -32,13 +32,19 @@ def get_callings_data(configData):
                 'ym' :		"Young Men's President",
                 'yw' :		"Young Women's President",
                 'primary' :	'Primary President',
+                'ss':           'Sunday School President',
                 'wml' :		'Ward Mission Leader',
                 'act' :		'Activities Committee Chair',
                 'news' :	'Ward Newsletter',
                 'dir' :		'Ward Directory',
-                "NULL" :	''}
+                "NULL" :	'',
+                'miss':         'Missionaries'}
     LeadershipList = []
     for Role in RoleList:
+        if Role == 'miss':
+            LeadershipList.append({"Role" :		'',
+                                   "Name" :		RoleDict[Role],
+                                   "Phone" :	'(435) 232-7293'})
         try:
             if configData['leadership.' + Role + 'disp'] == '1':
                 LeadershipList.append({"Role" :		RoleDict[Role],
@@ -135,7 +141,7 @@ def get_directory_prefix_pages(dictionaryData, debug):
         data.append([[Paragraph(text = Position['Role'], style = styles['RegTextR'])],
                      [Paragraph(text = Position['Name'], style = styles['RegTextL'])],
                      [Paragraph(text = Position['Phone'], style = styles['RegTextL'])]])
-    TextTable = Table(data, [1.8 * inch, 2.0 * inch, 1.2 * inch])
+    TextTable = Table(data, [2.0 * inch, 1.8 * inch, 1.2 * inch])
     if debug:
         TextTable.setStyle(TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
                                        ('BOX', (0,0), (-1,-1), .25, colors.black),

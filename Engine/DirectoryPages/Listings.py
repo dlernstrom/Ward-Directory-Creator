@@ -33,6 +33,8 @@ def get_listing_pages(configData, membershipList, debug):
     numberOfMembers = 0
     numberOfHouseholds = 0
     for household in membershipList:
+        if not household.isMember:
+            continue
         numberOfHouseholds += 1
         numberOfMembers += len(household.family)
         familyFlowables.append(tableize_family(configData, ImageDirectory, household, debug))
@@ -47,7 +49,6 @@ def get_listing_pages(configData, membershipList, debug):
 
     pages = paginate_listings(configData, familyFlowables, debug)
     return pages
-
 
 def paginate_listings(configData, familyFlowables, debug):
     pdf_TEST = Canvas("DIRECTORY_TEST.pdf", pagesize = landscape(letter))
@@ -148,7 +149,7 @@ def tableize_family(configData, ImageDirectory, household, debug):
                                   height = 1.125 * inch,
                                   kind = 'proportional')
         MissingImageText = Paragraph(text = get_missing_text(configData), style = styles['TextOnImage'])
-        FamilyPicture = TextOnImage(P = MissingImageText, I = FamilyPictureBase, xpad = 0, ypad = 0.05 * inch, side = 'center')
+        FamilyPicture = TextOnImage(P = MissingImageText, I = FamilyPictureBase, xpad = 0, ypad = 0.3 * inch, side = 'center') # was at .05 * inch
         if debug:
             print 'Missing.jpg'
 

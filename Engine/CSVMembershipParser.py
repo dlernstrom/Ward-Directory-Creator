@@ -57,7 +57,8 @@ class FamilyMember:
 class Family:
     mapIndexString = ''
     """ a container of one or more family members """
-    def __init__(self, familyCSV):
+    def __init__(self, familyCSV, isMember):
+        self.isMember = isMember
         self.surname = familyCSV[0]
         self.coupleName = familyCSV[1]
         self.familyPhone = Phone(familyCSV[2])
@@ -111,11 +112,14 @@ class CSVMembershipParser:
         self.MembershipHandle = CSVMembershipReader.CSVMembershipReader(self.filename)
 
     def next(self):
+        isMember = True
+        if 'non' in self.filename:
+            isMember = False
         try:
             for familyData in self.MembershipHandle:
                 if familyData[0] == 'Family Name':
                     continue
-                yield Family(familyData)
+                yield Family(familyData, isMember = isMember)
         except IOError:
             return
 

@@ -74,7 +74,7 @@ def get_maps_lookup_pages(configData, dwellingsHandle, membershipList, debug):
         print "Dwelling: %s %s" % (dwelling.mapIndex, dwelling)
         members = memberDwellingsDict.get(dwellingCounter, [])
         print "Members: %s" % str(members)
-        membersString = '\n'.join(map(lambda x: x.coupleName, members))
+        membersString = '\n'.join(map(lambda x: '%s%s' % ('' if x.isMember else '*',x.coupleName), members))
         tableData.append([dwellingCounter + 1, membersString])
     mapIndexWidth = 0.3 * inch
     nameWidth = STANDARD_TABLE_WIDTH - mapIndexWidth
