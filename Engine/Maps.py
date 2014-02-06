@@ -4,7 +4,7 @@ import urllib, urllib2
 from cStringIO import StringIO
 
 import PIL
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 
 from Calibration import Calibration
 from Coordinate import Coordinate
@@ -74,6 +74,9 @@ class Map:
             pilImage.save(self.imgPath + cachedName)
         else:
             pilImage = Image.open(self.imgPath + cachedName)
+
+        enh = ImageEnhance.Contrast(pilImage)
+        pilImage = enh.enhance(2.5)
 
         print "Rows Perfect: %s" % rowsPerfect
         print "Rows: %s" % rows
