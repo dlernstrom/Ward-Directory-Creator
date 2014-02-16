@@ -22,8 +22,8 @@ class PDFTools:
                 elif jobType == 'back':
                     layout.append([pageside * 2 + 1, sides * 2 - 2 - 2 * pageside])
                 elif jobType == 'special':
-                    SpecialPageLayout.append([(sides * 2 - 1) - 2 * pageside, pageside * 2])
-                    SpecialPageLayout.append([pageside * 2 + 1, sides * 2 - 2 - 2 * pageside])
+                    layout.append([(sides * 2 - 1) - 2 * pageside, pageside * 2])
+                    layout.append([pageside * 2 + 1, sides * 2 - 2 - 2 * pageside])
 
         pdf = Canvas(filename, pagesize = landscape(letter))
         pdf.setAuthor('David Ernstrom')
