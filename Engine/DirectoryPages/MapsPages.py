@@ -69,6 +69,7 @@ def get_maps_lookup_pages(configData, dwellingsHandle, membershipList, debug):
     pages = []
     memberDwellingsDict = make_member_dwellings_dict(dwellingsHandle, membershipList)
     tableData = [['#', 'Name']]
+    ofstream = open(u'SortedByNumber.csv', u'w')
     for dwellingCounter in xrange(len(dwellingsHandle.dwellingList)): # we are confident that this has already been sorted by map index
         dwelling = dwellingsHandle.dwellingList[dwellingCounter]
         print "Dwelling: %s %s" % (dwelling.mapIndex, dwelling)
@@ -76,6 +77,8 @@ def get_maps_lookup_pages(configData, dwellingsHandle, membershipList, debug):
         print "Members: %s" % str(members)
         membersString = '\n'.join(map(lambda x: '%s%s' % ('' if x.isMember else '*',x.coupleName), members))
         tableData.append([dwellingCounter + 1, membersString])
+        ofstream.write(u'"%s","%s","%s"\n' % (dwellingCounter + 1, dwelling.Street, membersString.replace(u'\n', u'')))
+    ofstream.close()
     mapIndexWidth = 0.3 * inch
     nameWidth = STANDARD_TABLE_WIDTH - mapIndexWidth
     myTable = Table(data = tableData,

@@ -128,60 +128,17 @@ class Application:
         # furthest west person is at -111.8081775
         # furthest east person is at -111.7705975
         self.ourMaps = Maps([Map(1, Coordinate(41.9720, -111.8117775), Coordinate(41.9720, -111.7669975), 'large', 'portrait', 'east', 16, "Cherry Creek Ward", [Coordinate(41.9702841,-111.8060452), Coordinate(41.9523412,-111.8081775)]),
-                             Map(2, Coordinate(41.9366, -111.806247), Coordinate(41.9366, -111.7958776), 'small', 'landscape', 'east', 17, "Inset 1", [Coordinate(41.9359261,-111.7964), Coordinate(41.934148,-111.79725)]),
-                             Map(3, Coordinate(41.9313799, -111.80875), Coordinate(41.9313799, -111.79955), 'small', 'landscape', 'east', 18, "Inset 2", [Coordinate(41.9306082,-111.800404), Coordinate(41.9292656,-111.8011141)])])
+                             Map(2, Coordinate(41.9385, -111.808), Coordinate(41.9385, -111.7963776), 'large', 'portrait', 'east', 17, "Inset 1", [Coordinate(41.9359261,-111.7964), Coordinate(41.934148,-111.79725)]),
+                             ])
         currentPosition = (-112, 45, -112, 45) # must be left, bottom, right, top
         done = False
         counter = 1
-        overrides = {7: (41.9646525, -111.776777),
-                     8: (41.9656381, -111.7788342),
-                     9: (41.9639087, -111.7753051),
-                     11: (41.9594132, -111.7796387),
-                     15: (41.95687, -111.783775),
-                     16: (41.9537827, -111.7820407), # claudia beeney
-                     17: (41.9557139, -111.7872486), # allen, craig
-                     20: (41.9527252, -111.7854261), # Stallard
-                     22: (41.950471, -111.7819565), # ernstrom
-                     23: (41.9523412, -111.788422), # dutro
-                     25: (41.94972, -111.7850972), # floyd griff
-                     36: (41.9414439, -111.787962),
-                     38: (41.9408163, -111.7813266),
-                     39: (41.940414, -111.787455),
-                     40: (41.9397178, -111.7944185),
-                     41: (41.9392206, -111.7881929),
-                     42: (41.938246, -111.780649),
-                     44: (41.9373516, -111.7860991),
-                     48: (41.931241, -111.7823051),
-                     75: (41.934126, -111.80055),
-                     77: (41.934931, -111.8010959),
-                     78: (41.935188, -111.800637),
-                     88: (41.935462, -111.799187),
-                     90: (41.935051, -111.799856),
-                     100: (41.9349648, -111.802612),
-                     102: (41.9354462, -111.8032709),
-                     104: (41.9348859, -111.8029934),
-                     106: (41.9346405, -111.8037181),
-                     110: (41.9337922, -111.8050698),
-                     112: (41.9330397, -111.804966),
-                     124: (41.9285393, -111.8003886),
-                     128: (41.9269528, -111.8026337),
-                     133: (41.9280942, -111.8031176),
-                     141: (41.9278887, -111.8052702),
-                     142: (41.9278835, -111.8045496),
-                     143: (41.928216, -111.8053694),
-                     150: (41.9290114, -111.8011141),
-                     152: (41.9296263, -111.803214),
-                     158: (41.9285052, -111.8059139),
-                     161: (41.9270505, -111.8059784),
-                     162: (41.9270027, -111.8073113),
-                     164: (41.9270032, -111.8081775),
-                     180: (41.928289, -111.807166),
-                     193: (41.9291407, -111.8053663),
-                     204: (41.9532703, -111.8029656),
-                     }
+        d = None
         while done == False:
-            if counter in overrides.keys():
-                currentPosition = [overrides[counter][1], overrides[counter][0], overrides[counter][1], overrides[counter][0]] # must be left, bottom, right, top
+            prevCoordinateKey = (currentPosition[1], currentPosition[0])
+            if not d == None:
+                if not d.NextDwellingOverride == '':
+                    currentPosition = [d.NextDwellingOverride[1], d.NextDwellingOverride[0], d.NextDwellingOverride[1], d.NextDwellingOverride[0]] # must be left, bottom, right, top
             nearest = list(self.idx.nearest(coordinates = currentPosition,
                                             num_results=1,
                                             objects=True))
