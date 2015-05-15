@@ -166,22 +166,34 @@ class Application:
     def GetMembershipList(self):
         self.ValidCSV = False
         self.MembershipList = []
-        if self.GetConfigValue('file.member_csv_location') == None or not self.GetConfigValue('file.member_csv_location')[-4:] == '.csv':
-            raise Exception("Not a valid membership list")
-        if self.GetConfigValue('file.nonmember_csv_location') == None or not self.GetConfigValue('file.nonmember_csv_location')[-4:] == '.csv':
-            raise Exception("Not a valid nonmembership list")
-        membershipHandle = CSVMembershipParser(self.GetConfigValue('file.member_csv_location'))
-        for Household in membershipHandle.next():
-            self.MembershipList.append(Household)
-        membershipHandle = CSVMembershipParser(self.GetConfigValue('file.nonmember_csv_location'))
-        for Household in membershipHandle.next():
-            self.MembershipList.append(Household)
+        self.MembershipList.extend(self.member_list)
+        self.MembershipList.extend(self.nonmember_list)
         if len(self.MembershipList) > 0:
             self.ValidCSV = True
         self.MembershipList = sorted(self.MembershipList, key=lambda h: h.coupleName)
 
+    @property
+    def member_list(self):
+        if self.GetConfigValue('file.member_csv_location') == None or not self.GetConfigValue('file.member_csv_location')[-4:] == '.csv':
+            raise Exception("Not a valid membership list")
+        a = []
+        membershipHandle = CSVMembershipParser(self.GetConfigValue('file.member_csv_location'))
+        for Household in membershipHandle.next():
+            a.append(Household)
+        return a
+
+    @property
+    def nonmember_list(self):
+        if self.GetConfigValue('file.nonmember_csv_location') == None or not self.GetConfigValue('file.nonmember_csv_location')[-4:] == '.csv':
+            raise Exception("Not a valid nonmembership list")
+        a = []
+        membershipHandle = CSVMembershipParser(self.GetConfigValue('file.nonmember_csv_location'))
+        for Household in membershipHandle.next():
+            a.append(Household)
+        return a
+
     def GetNeededImageList(self):
-        return map(lambda Member: Member.expectedPhotoName, self.MembershipList)
+        return map(lambda Member: Member.expectedPhotoName, self.member_list)
 
     def GetFamilyOfDuplicateAddressList(self):
         AddressesSeen = []
@@ -203,7 +215,7 @@ class Application:
     def GetMissingHouseholds(self):
         ImagesDirectory = self.GetConfigValue('file.imagesdirectory')
         MissingImages = []
-        for Family in self.MembershipList:
+        for Family in self.member_list:
             if not os.path.exists(ImagesDirectory + os.sep + Family.expectedPhotoName):
                 MissingImages.append(Family.coupleName)
         return MissingImages
@@ -211,7 +223,7 @@ class Application:
     def GetMissingImages(self):
         ImagesDirectory = self.GetConfigValue('file.imagesdirectory')
         MissingImages = []
-        for Family in self.MembershipList:
+        for Family in self.member_list:
             if not os.path.exists(ImagesDirectory + os.sep + Family.expectedPhotoName):
                 MissingImages.append(Family.expectedPhotoName)
         return MissingImages
