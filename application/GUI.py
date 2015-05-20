@@ -4,36 +4,19 @@ import time
 
 import wx
 
-from Engine import Application
 import Notebook
-
 import __version__
+from Engine import Application
 
-SEND_EMAILS = 0
-#SMTP_SERVER = 'smtp.forward.email.dupont.com'
-#SMTP_SERVER = 'smtp.comcast.net'
 DEBUG = 0
-
-########################
-## Application Options:
-## -Analyze Ward Data
-##     -Parse Ward Data
-##     -Paginate Ward
-##     -Add Filler Pages
-##     -Repaginate Ward
-## -Generate Booklet PDF
-## -Generate Standard PDF
-## -Generate Missing List
-## -Email Missing List
-## -Extract Moved Family Images
 
 
 class MyFrame(wx.Frame):
-    def __init__(
-        self, parent, ID, title, pos=wx.DefaultPosition,
-        size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE
-        ):
-        wx.Frame.__init__(self, parent, ID, title, pos, size, style)
+    def __init__(self):
+        super(MyFrame, self).__init__(
+            None, -1, "Ward Directory Creator",
+            style=wx.MINIMIZE_BOX | wx.MAXIMIZE_BOX | wx.SYSTEM_MENU | \
+                  wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
 
         self.AppHandle = Application.Application(self, DEBUG)
 
@@ -49,17 +32,3 @@ class MyFrame(wx.Frame):
 
     def OnDoPrint(self, event):
         self.AppHandle.InitiatePDF()
-
-
-class MyApp(wx.App):
-    def OnInit(self):
-        win = MyFrame(None, -1, "Ward Directory Creator", size=wx.DefaultSize,
-                      style = wx.MINIMIZE_BOX | wx.MAXIMIZE_BOX
-                      | wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
-        win.Show(True)
-        return True
-
-
-if __name__ == '__main__':
-    app = MyApp(False)
-    app.MainLoop()

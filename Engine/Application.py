@@ -6,22 +6,23 @@ import time
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 
-from PDFTools import PDFTools
-from Configuration import Configuration
-from CSVMembershipParser import CSVMembershipParser
-
 from rtree import index
+
+from Configuration import Configuration
 from Coordinate import Coordinate
-from Dwellings import Dwellings
-from Maps import Map, Maps
+from CSVMembershipParser import CSVMembershipParser
 from Directory import Directory
 from DirectoryPages.Listings import get_listing_pages
 from DirectoryPages.MapsPages import get_maps_pages, get_maps_lookup_pages
 from DirectoryPages.Prefix import get_directory_prefix_pages
 from DirectoryPages.Suffix import get_directory_suffix_pages
+from Dwellings import Dwellings
+from Maps import Map, Maps
+from PDFTools import PDFTools
 
-ConfigFilename = "WardDirectoryCreator.cfg"
-ConfigDefaults = {
+
+CONFIG_FILENAME = "WardDirectoryCreator.cfg"
+CONFIG_DEFAULTS = {
     "unit.unitname":			"Your Ward Name Here",
     "unit.unit_type":			"Ward",
     "unit.stakename":			"Your Stake Name Here",
@@ -41,16 +42,14 @@ ConfigDefaults = {
 
 
 class Application:
-    def __init__(self,
-                 parent,
-                 DEBUG = 0):
+    def __init__(self, parent, DEBUG=0):
 
-        self.ConfigHandle = Configuration(ConfigFilename, ConfigDefaults)
-        self.ConfigDefaults = ConfigDefaults
+        self.ConfigHandle = Configuration(CONFIG_FILENAME, CONFIG_DEFAULTS)
+        self.ConfigDefaults = CONFIG_DEFAULTS
 
         self.DEBUG = DEBUG
-
-        self.GetMembershipList()
+        self.ValidCSV = False
+        #self.GetMembershipList()
 
     def GetConfigValue(self, DictionaryField):
         return self.ConfigHandle.GetValueByKey(DictionaryField)

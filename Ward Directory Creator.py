@@ -10,7 +10,18 @@ handler = logging.getLogger()
 handler.setLevel(logging.DEBUG)
 handler.addHandler(logging.NullHandler())
 
-from application import GUI
+import wx
 
-app = GUI.MyApp(False)
-app.MainLoop()
+from application.GUI import MyFrame
+
+
+class MyApp(wx.App):
+    def OnInit(self):
+        win = MyFrame()
+        win.Show(True)
+        return True
+
+
+if __name__ == '__main__':
+    app = MyApp(False)
+    app.MainLoop()

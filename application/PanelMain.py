@@ -214,8 +214,10 @@ class MainPanel(ColoredPanel):
         self.parent.SetConfigValue('quote.quoteauthor', evt.GetString())
 
     def OnRestoreQuote(self, evt):
-        self.TXT_Quote.SetValue(self.parent.AppHandle.ConfigDefaults['quote.quotecontent'])
-        self.TXT_Author.SetValue(self.parent.AppHandle.ConfigDefaults['quote.quoteauthor'])
+        self.TXT_Quote.SetValue(
+            self.parent.AppHandle.ConfigDefaults['quote.quotecontent'])
+        self.TXT_Author.SetValue(
+            self.parent.AppHandle.ConfigDefaults['quote.quoteauthor'])
 
     def makingActive(self):
         return
