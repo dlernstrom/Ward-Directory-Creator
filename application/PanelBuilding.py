@@ -10,7 +10,7 @@ import  wx.lib.filebrowsebutton as filebrowse
 
 class BuildingPanel(ColoredPanel):
     def __init__(self, parent):
-        ColoredPanel.__init__(self, parent, wx.BLUE)
+        super(BuildingPanel, self).__init__(parent, wx.BLUE)
 
         self.parent = parent
 
