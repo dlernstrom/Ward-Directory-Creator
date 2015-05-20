@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import time
 
 import wx
@@ -25,6 +27,7 @@ DEBUG = 0
 ## -Email Missing List
 ## -Extract Moved Family Images
 
+
 class MyFrame(wx.Frame):
     def __init__(
         self, parent, ID, title, pos=wx.DefaultPosition,
@@ -47,6 +50,7 @@ class MyFrame(wx.Frame):
     def OnDoPrint(self, event):
         self.AppHandle.InitiatePDF()
 
+
 class MyApp(wx.App):
     def OnInit(self):
         win = MyFrame(None, -1, "Ward Directory Creator", size=wx.DefaultSize,
@@ -54,6 +58,7 @@ class MyApp(wx.App):
                       | wx.SYSTEM_MENU | wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
         win.Show(True)
         return True
+
 
 if __name__ == '__main__':
     app = MyApp(False)

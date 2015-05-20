@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import PageBreak, Paragraph, Spacer
 from reportlab.platypus.flowables import KeepInFrame
@@ -10,12 +13,14 @@ import __version__
 STANDARD_MARGIN = 0.25 * inch
 STANDARD_FRAME_WIDTH = landscape(letter)[0]/2 - 2 * STANDARD_MARGIN
 
+
 def get_quote_data(configData):
     quoteData = ['','']
     if configData['quote.usequote'] == '1':
         quoteData = [configData['quote.quotecontent'],
                      configData['quote.quoteauthor']]
     return quoteData
+
 
 def get_directory_suffix_pages(dictionaryData, debug):
     pages = []
@@ -61,4 +66,3 @@ def get_directory_suffix_pages(dictionaryData, debug):
             if aFlowable.__class__ is Paragraph or aFlowable.__class__ is Spacer:
                 aFlowable._showBoundary = 1
     return pages
-

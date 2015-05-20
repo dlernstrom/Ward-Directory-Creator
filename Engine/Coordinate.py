@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+
 class Coordinate:
     latitude = None # 41.93
     longitude = None # -111.80

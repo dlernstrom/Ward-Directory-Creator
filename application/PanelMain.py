@@ -1,10 +1,13 @@
-#PanelMain.py
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import wx
 from ColoredPanel import *
 import wx.lib.filebrowsebutton as filebrowse
 from wx.lib.wordwrap import wordwrap
 
 import __version__
+
 
 class MainPanel(ColoredPanel):
     def __init__(self, parent):

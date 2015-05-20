@@ -1,4 +1,8 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from reportlab.platypus.flowables import ParagraphAndImage
+
 
 class TextOnImage(ParagraphAndImage):
     '''combine a Paragraph ON an Image'''

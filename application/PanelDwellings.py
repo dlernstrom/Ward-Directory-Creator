@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import wx
 import wx.lib.filebrowsebutton as filebrowse
 
 from ColoredPanel import *
+
 
 class DwellingsPanel(ColoredPanel):
     Title = "Dwellings"

@@ -1,7 +1,9 @@
-#Configuration
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+import string
 
 import ConfigParser
-import string
+
 
 class Configuration:
     def __init__(self, filename, defaults):
@@ -62,10 +64,3 @@ class Configuration:
             s, o = k.split('.')
             cp.set(s, o, v)
         cp.write(open(self.filename, "w"))
-
-if __name__=="__main__":
-    ConfigHandle = Configuration("some.cfg")
-    print "Result:", ConfigHandle.GetValueByKey('coolpeople.coolest')
-    ConfigHandle.SetValueByKey('coolpeople.coolest', 'David L Ernstrom')
-    #print ConfigHandle
-    #ConfigHandle.write(Config)

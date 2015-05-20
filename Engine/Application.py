@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import os
 import smtplib
 import time
@@ -36,6 +38,7 @@ ConfigDefaults = {
     "bldg.addy1":				"Address Line 1",
     "bldg.addy2":				"City, State ZIP CODE"
 }
+
 
 class Application:
     def __init__(self,

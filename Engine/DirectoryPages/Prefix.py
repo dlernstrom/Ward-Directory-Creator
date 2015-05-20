@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import datetime
 import time
 
@@ -12,6 +14,7 @@ from PDFStyles import styles
 
 STANDARD_MARGIN = 0.25 * inch
 STANDARD_FRAME_WIDTH = landscape(letter)[0]/2 - 2 * STANDARD_MARGIN
+
 
 def get_callings_data(configData):
     #Return a list of dictionaries of the positions ordered correctly
@@ -66,6 +69,7 @@ def get_callings_data(configData):
                                    "Phone" :	" "})
     return LeadershipList
 
+
 def get_block_data(configData):
     BlockData = []
     format = '%I:%M %p'
@@ -89,6 +93,7 @@ def get_block_data(configData):
         myDisplayBlock.append([[Paragraph(text = Mtg[0], style = styles['PrefixBaseRight'])],
                                [Paragraph(text = Mtg[1], style = styles['PrefixBaseLeft'])]])
     return myDisplayBlock
+
 
 def get_directory_prefix_pages(dictionaryData, debug):
     pages = []

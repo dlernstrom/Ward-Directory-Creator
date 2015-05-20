@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import math
 import os
 import urllib, urllib2
@@ -9,6 +11,7 @@ from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 from Calibration import Calibration
 from Coordinate import Coordinate
 from Pixel import Pixel
+
 
 class Map:
     # upperLeftCoordinate and upperRightCoordinate are as though the user was facing North

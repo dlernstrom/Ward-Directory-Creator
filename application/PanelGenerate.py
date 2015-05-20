@@ -1,8 +1,12 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import wx
 import wx.lib
 import wx.lib.dialogs
 from ColoredPanel import *
 import  wx.lib.filebrowsebutton as filebrowse
+
 
 class GeneratePanel(ColoredPanel):
     def __init__(self, parent):

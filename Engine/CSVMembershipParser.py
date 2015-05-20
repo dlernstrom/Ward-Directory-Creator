@@ -1,7 +1,12 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import CSVMembershipReader
+
 
 class NoPersonError(Exception):
     """ Exception raised when there isn't really a person at this location."""
+
 
 class Phone:
     def __init__(self, phoneCSV):
@@ -31,8 +36,8 @@ class EmailAddress:
                               name.split(',')[0].strip().upper())
             self.emailFormatted = '%s <%s>' % (name, emailAddress)
 
+
 class FamilyMember:
-    """ a family member. """
     def __init__(self, familyCSV, startEntry, isParent = False):
         self.isParent = isParent
         familySurname = familyCSV[0]
@@ -53,6 +58,7 @@ class FamilyMember:
         self.email = EmailAddress(familyCSV[startEntry + 2], self.fullName)
     def __str__(self):
         return self.nameCSV
+
 
 class Family:
     mapIndexString = ''
@@ -106,8 +112,9 @@ class Family:
     def __repr__(self):
         return self.coupleName
 
+
 class CSVMembershipParser:
-    def __init__(self, filename = "Greenfield Ward member directory.csv"):
+    def __init__(self, filename):
         self.filename = filename
         self.MembershipHandle = CSVMembershipReader.CSVMembershipReader(self.filename)
 
@@ -122,9 +129,3 @@ class CSVMembershipParser:
                 yield Family(familyData, isMember = isMember)
         except IOError:
             return
-
-if __name__ == '__main__':
-    CSV_LOCATION = 'C:\\Documents and Settings\\Administrator\\Desktop\\Directory\\'
-    Handle = CSVMembershipParser(CSV_LOCATION + "Greenfield Ward member directory.csv")
-    for Family in Handle.next():
-        print Family

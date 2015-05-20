@@ -1,4 +1,7 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import csv
+
 
 class CSVMembershipReader:
     def __init__(self, filename = "Greenfield Ward member directory.csv"):
@@ -13,8 +16,3 @@ class CSVMembershipReader:
         if self.Household[0] == 'familyname':
             self.Household = self.MembershipHandle.next()
         return self.Household
-
-if __name__ == '__main__':
-    Handle = CSVMembershipReader("Greenfield Ward member directory.csv")
-    for Household in Handle:
-        print Household

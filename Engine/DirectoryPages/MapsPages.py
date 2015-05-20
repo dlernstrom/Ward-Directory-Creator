@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import logging
 import os
 
@@ -25,6 +27,7 @@ headerRoom = pageHeaderFlowableForSizing.wrap(STANDARD_FRAME_WIDTH, STANDARD_FRA
 
 STANDARD_TABLE_HEIGHT = STANDARD_FRAME_HEIGHT - FooterRoom - headerRoom
 STANDARD_MAP_HEIGHT = STANDARD_FRAME_HEIGHT - headerRoom
+
 
 def get_maps_pages(configData, maps, membershipList, debug):
     pages = []
@@ -56,6 +59,7 @@ def get_maps_pages(configData, maps, membershipList, debug):
             pages.append(pg)
     return pages
 
+
 def make_member_dwellings_dict(dwellingsHandle, membershipList):
     myDict = {}
     for household in membershipList:
@@ -63,6 +67,7 @@ def make_member_dwellings_dict(dwellingsHandle, membershipList):
         if not index == None:
             myDict[index - 1] = myDict.get(index - 1, []) + [household]
     return myDict
+
 
 def get_maps_lookup_pages(configData, dwellingsHandle, membershipList, debug):
     churchFlowable = Paragraph('%s - For Church Use Only' % configData['unit.unitname'], styles['DaveFooter'])
@@ -110,6 +115,7 @@ def get_maps_lookup_pages(configData, dwellingsHandle, membershipList, debug):
         pages.append(pg)
     return pages
 
+
 def PrepareFiller(title, pageCounter):
     LineSpace_List = []
     for counter in xrange(30):
@@ -122,4 +128,3 @@ def PrepareFiller(title, pageCounter):
                               mode = 'truncate'),
                   PageBreak()]
     return ReturnList
-

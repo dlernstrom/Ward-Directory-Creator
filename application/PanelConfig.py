@@ -1,7 +1,10 @@
-#PanelConfig.py
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import wx
 from ColoredPanel import *
 import  wx.lib.filebrowsebutton as filebrowse
+
 
 class ConfigPanel(ColoredPanel):
     def __init__(self, parent):

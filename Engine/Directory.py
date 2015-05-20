@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import PageBreak, Paragraph, Spacer# Table, Image, Frame, Preformatted
@@ -9,6 +12,7 @@ from DirectoryPages.DirectoryPage import DirectoryPage
 
 STANDARD_MARGIN = 0.25 * inch
 STANDARD_FRAME_WIDTH = landscape(letter)[0]/2 - 2 * STANDARD_MARGIN
+
 
 class Directory:
     flowableSectionOrder = ['prefix', 'directory', 'pre-map-spacers', 'maps', 'mapsLookup', 'post-map-spacers', 'suffix']

@@ -1,4 +1,8 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import smtplib
+
 
 def mail(serverURL=None, sender='', to='', subject='', text=''):
 	"""
@@ -10,5 +14,3 @@ def mail(serverURL=None, sender='', to='', subject='', text=''):
 	mailServer = smtplib.SMTP(serverURL)
 	mailServer.sendmail(sender, to, message)
 	mailServer.quit()
-
-#mail('smtp.forward.email.dupont.com', 'David@Ernstrom.net', 'david.ernstrom@usa.dupont.com', 'TestSubject', 'Testmessage')

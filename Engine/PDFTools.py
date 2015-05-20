@@ -1,7 +1,11 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from reportlab.pdfgen.canvas import Canvas
 from reportlab.platypus import Paragraph
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter, landscape
+
 
 class PDFTools:
     def __init__(self, DEBUG):

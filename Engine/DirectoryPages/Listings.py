@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import logging
 import os
 
@@ -17,6 +19,7 @@ HALF_PAGE_WIDTH = landscape(letter)[0]/2
 STANDARD_FRAME_WIDTH = HALF_PAGE_WIDTH - 2 * STANDARD_MARGIN
 STANDARD_FRAME_HEIGHT = landscape(letter)[1] - 2 * STANDARD_MARGIN
 
+
 def get_missing_text(configData):
     if not 'missing.missingname' in configData.keys():
         return ''
@@ -24,6 +27,7 @@ def get_missing_text(configData):
     CommaIndex = ContactName.index(',')
     ContactName = ContactName[CommaIndex + 2:] + ' ' + ContactName[:CommaIndex]
     return "Please contact %s to have your photograph added" % ContactName
+
 
 def get_listing_pages(configData, membershipList, debug):
     ImageDirectory = configData['file.imagesdirectory']
@@ -49,6 +53,7 @@ def get_listing_pages(configData, membershipList, debug):
 
     pages = paginate_listings(configData, familyFlowables, debug)
     return pages
+
 
 def paginate_listings(configData, familyFlowables, debug):
     pdf_TEST = Canvas("DIRECTORY_TEST.pdf", pagesize = landscape(letter))
@@ -111,6 +116,7 @@ def paginate_listings(configData, familyFlowables, debug):
     if debug:
         pdf_TEST.save()
     return pages
+
 
 def tableize_family(configData, ImageDirectory, household, debug):
     Family = []

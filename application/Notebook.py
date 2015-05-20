@@ -1,4 +1,8 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 import wx
+
 from PanelMain import *
 from PanelConfig import *
 from PanelBuilding import *
@@ -6,6 +10,7 @@ from PanelLeadership import *
 from PanelGenerate import *
 from PanelDwellings import *
 from PanelHelp import *
+
 
 class Notebook(wx.Notebook):
     def __init__(self, parent, id, AppHandle):

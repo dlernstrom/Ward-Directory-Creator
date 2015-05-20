@@ -1,10 +1,12 @@
-#PanelBuilding.py
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 import wx
 import wx.lib
 import wx.lib.masked
 from ColoredPanel import *
 import  wx.lib.filebrowsebutton as filebrowse
+
 
 class BuildingPanel(ColoredPanel):
     def __init__(self, parent):

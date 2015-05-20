@@ -1,8 +1,10 @@
-#PanelLeadership.py
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
 import wx
 from ColoredPanel import *
 import  wx.lib.filebrowsebutton as filebrowse
+
 
 class LeadershipRow(wx.BoxSizer):
     def __init__(self, parent, Description, ShortDesc, NameType = 'HoH'):
