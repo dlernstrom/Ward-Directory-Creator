@@ -3,22 +3,20 @@ from __future__ import unicode_literals
 
 import wx
 
-from PanelMain import *
-from PanelConfig import *
-from PanelBuilding import *
-from PanelLeadership import *
-from PanelGenerate import *
-from PanelDwellings import *
-from PanelHelp import *
+from PanelMain import MainPanel
+from PanelConfig import ConfigPanel
+from PanelBuilding import BuildingPanel
+from PanelLeadership import LeadershipPanel
+from PanelGenerate import GeneratePanel
 
 
 class Notebook(wx.Notebook):
-    def __init__(self, parent, id, AppHandle):
-        wx.Notebook.__init__(self, parent, id, size=wx.DefaultSize
-                             )
+    def __init__(self, parent, AppHandle):
+        super(Notebook, self).__init__(parent, -1, size=wx.DefaultSize)
         self.parent = parent
         self.AppHandle = AppHandle
-        self.TextBoxFont = wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False, "Georgia")
+        self.TextBoxFont = wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False,
+                                   "Georgia")
         self.SetFont(self.TextBoxFont)
 
         self.myMainPanel = MainPanel(self)
@@ -35,12 +33,6 @@ class Notebook(wx.Notebook):
 
         self.myGeneratePanel = GeneratePanel(self)
         self.AddPage(self.myGeneratePanel, self.myGeneratePanel.Title)
-
-        self.myDwellingPanel = DwellingsPanel(self)
-        self.AddPage(self.myDwellingPanel, self.myDwellingPanel.Title)
-
-        self.myHelpPanel = HelpPanel(self)
-        self.AddPage(self.myHelpPanel, self.myHelpPanel.Title)
 
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGING, self.OnPageChanging)

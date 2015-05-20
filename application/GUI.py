@@ -5,7 +5,7 @@ import time
 import wx
 
 import Notebook
-import __version__
+from __version__ import __version__
 from Engine import Application
 
 DEBUG = 0
@@ -20,10 +20,9 @@ class MyFrame(wx.Frame):
 
         self.AppHandle = Application.Application(self, DEBUG)
 
-        self.SetTitle("Ward Directory Creator v." + __version__.__version__)
         self.StatusBar = wx.StatusBar(self, -1)
-        self.StatusBar.SetStatusText("Version " + __version__.__version__)
-        self.myNotebook = Notebook.Notebook(self, -1, self.AppHandle)
+        self.StatusBar.SetStatusText("Version " + __version__)
+        self.myNotebook = Notebook.Notebook(self, self.AppHandle)
 
         self.Fit()
 
