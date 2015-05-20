@@ -1,9 +1,13 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.platypus import Frame, Paragraph
 
 from PDFStyles import styles
 DEFAULT_PADDING = 0.25 * inch
+
 
 class DirectoryPage:
     """
