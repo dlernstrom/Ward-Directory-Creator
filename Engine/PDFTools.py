@@ -12,7 +12,8 @@ class PDFTools:
         self.DEBUG = 1
 
     def AddFooter(self, FooterText):
-        self.CurrentWardDirectory.append(Paragraph(FooterText, self.styles['DaveFooter']))
+        self.CurrentWardDirectory.append(Paragraph(FooterText,
+                                                   self.styles['DaveFooter']))
 
     def generate_doc(self, filename, jobType, pages):
         layout =[]
@@ -36,9 +37,11 @@ class PDFTools:
         pdf.setFont('Helvetica', 18)
 
         for page in layout:
-            pages[page[0]].make_frame(debug = self.DEBUG, side = 'Left', pdfHandle = pdf)
+            pages[page[0]].make_frame(debug=self.DEBUG, side='Left',
+                                      pdfHandle=pdf)
             try:
-                pages[page[1]].make_frame(debug = self.DEBUG, side = 'Right', pdfHandle = pdf)
+                pages[page[1]].make_frame(debug=self.DEBUG, side='Right',
+                                          pdfHandle=pdf)
             except IndexError:
                 pass
             pdf.showPage()

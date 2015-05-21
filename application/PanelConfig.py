@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import wx
 from ColoredPanel import *
-import  wx.lib.filebrowsebutton as filebrowse
+from wx.lib.filebrowsebutton import FileBrowseButton, DirBrowseButton
 
 
 class ConfigPanel(ColoredPanel):
@@ -11,50 +11,53 @@ class ConfigPanel(ColoredPanel):
         ColoredPanel.__init__(self, parent, None)
         self.parent = parent
 
-        ############################################################################
+        #######################################################################
         ## File/Folder Configuration
         FolderBox = wx.StaticBox(self, -1, "File/Folder Configuration")
         FolderBox.SetFont(self.StandardFont)
-        self.FolderBoxSizer = FolderBoxSizer = wx.StaticBoxSizer(FolderBox, wx.VERTICAL)
+        self.FolderBoxSizer = FolderBoxSizer = wx.StaticBoxSizer(FolderBox,
+                                                                 wx.VERTICAL)
 
-        self.memberCsvFile = filebrowse.FileBrowseButton(self, -1, size=(700, 30),
-                                                         labelText = "Membership File",
-                                                         fileMask = "*.csv",
-                                                         changeCallback = self.new_member_csv_file_callback)
+        self.memberCsvFile = FileBrowseButton(
+            self, -1, size=(700, 30), labelText="Membership File",
+            fileMask="*.csv", changeCallback=self.new_member_csv_file_callback)
         FolderBoxSizer.Add(self.memberCsvFile, 0, wx.TOP | wx.LEFT, 10)
 
-        self.nonMemberCsvFile = filebrowse.FileBrowseButton(self, -1, size=(700, 30),
-                                                            labelText = "Nonmember File",
-                                                            fileMask = "*.csv",
-                                                            changeCallback = self.new_nonmember_csv_file_callback)
+        self.nonMemberCsvFile = FileBrowseButton(
+            self, -1, size=(700, 30), labelText="Nonmember File",
+            fileMask="*.csv",
+            changeCallback=self.new_nonmember_csv_file_callback)
         FolderBoxSizer.Add(self.nonMemberCsvFile, 0, wx.TOP | wx.LEFT, 10)
 
-        self.ImagesDirectory = filebrowse.DirBrowseButton(self, -1, size=(700, 30),
-                                                          labelText = "Images Directory",
-                                                          changeCallback = self.NewImagesDirectory)
+        self.ImagesDirectory = DirBrowseButton(
+            self, -1, size=(700, 30), labelText="Images Directory",
+            changeCallback=self.NewImagesDirectory)
         FolderBoxSizer.Add(self.ImagesDirectory, 0, wx.TOP | wx.LEFT, 10)
 
-        self.PDF_Out_Directory = filebrowse.DirBrowseButton(self, -1, size=(700, 30),
-                                                            labelText = "PDF Output Directory",
-                                                            changeCallback = self.NewPDFDirectory)
+        self.PDF_Out_Directory = DirBrowseButton(
+            self, -1, size=(700, 30), labelText="PDF Output Directory",
+            changeCallback=self.NewPDFDirectory)
         FolderBoxSizer.Add(self.PDF_Out_Directory, 0, wx.TOP | wx.LEFT, 10)
 
-        self.Image_Archive_Directory = filebrowse.DirBrowseButton(self, -1, size=(700, 30),
-                                                                  labelText = "Image Archive Directory",
-                                                                  changeCallback = self.NewArchiveDirectory)
-        FolderBoxSizer.Add(self.Image_Archive_Directory, 0, wx.TOP | wx.LEFT | wx.BOTTOM, 10)
+        self.Image_Archive_Directory = DirBrowseButton(
+            self, -1, size=(700, 30), labelText="Image Archive Directory",
+            changeCallback=self.NewArchiveDirectory)
+        FolderBoxSizer.Add(self.Image_Archive_Directory, 0,
+                           wx.TOP | wx.LEFT | wx.BOTTOM, 10)
 
-        ############################################################################
+        #######################################################################
         ## Missing Image Configuration Section
         MissingBox = wx.StaticBox(self, -1, "Missing Image Configuration")
         MissingBox.SetFont(self.StandardFont)
-        self.MissingBoxSizer = MissingBoxSizer = wx.StaticBoxSizer(MissingBox, wx.VERTICAL)
+        self.MissingBoxSizer = MissingBoxSizer = wx.StaticBoxSizer(MissingBox,
+                                                                   wx.VERTICAL)
 
         self.StaticName = wx.StaticText(self, -1, "Contact Name:")
         self.StaticName.SetFont(self.StandardFont)
         MissingBoxSizer.Add(self.StaticName, 0, wx.TOP | wx.LEFT, 10)
 
-        self.Contact_Dropdown = wx.ComboBox(self, -1, size=(250,-1), style = wx.CB_READONLY )
+        self.Contact_Dropdown = wx.ComboBox(self, -1, size=(250, -1),
+                                            style=wx.CB_READONLY )
         self.Contact_Dropdown.SetFont(self.TextBoxFont)
         MissingBoxSizer.Add(self.Contact_Dropdown, 0, wx.TOP | wx.LEFT, 10)
 
@@ -70,18 +73,19 @@ class ConfigPanel(ColoredPanel):
         self.CB_OverridePhone.SetFont(self.StandardFont)
         MissingBoxSizer.Add(self.CB_OverridePhone, 0, wx.TOP | wx.LEFT, 10)
 
-        ############################################################################
+        #######################################################################
         ## Email Configuration Section
         EmailBox = wx.StaticBox(self, -1, "Email Configuration")
         EmailBox.SetFont(self.StandardFont)
-        self.EmailBoxSizer = EmailBoxSizer = wx.StaticBoxSizer(EmailBox, wx.VERTICAL)
+        self.EmailBoxSizer = EmailBoxSizer = wx.StaticBoxSizer(EmailBox,
+                                                               wx.VERTICAL)
 
         self.StaticRecipients = wx.StaticText(self, -1, "Email Recipients")
         self.StaticRecipients.SetFont(self.StandardFont)
         EmailBoxSizer.Add(self.StaticRecipients, 0, wx.TOP | wx.LEFT, 10)
 
-        self.Email_Dropdown = wx.ComboBox(self, -1, size = (390, 24),
-                                          style = wx.CB_READONLY)
+        self.Email_Dropdown = wx.ComboBox(self, -1, size=(390, 24),
+                                          style=wx.CB_READONLY)
         self.Email_Dropdown.SetFont(self.TextBoxFont)
         EmailBoxSizer.Add(self.Email_Dropdown, 0, wx.TOP | wx.LEFT, 10)
 
@@ -89,7 +93,7 @@ class ConfigPanel(ColoredPanel):
         self.BTN_AddEmail.SetFont(self.TextBoxFont)
         EmailBoxSizer.Add(self.BTN_AddEmail, 0, wx.TOP | wx.LEFT, 10)
 
-        self.EmailList = wx.ListBox(self, -1, size = (390, 151))
+        self.EmailList = wx.ListBox(self, -1, size=(390, 151))
         self.EmailList.SetFont(self.TextBoxFont)
         EmailBoxSizer.Add(self.EmailList, 1, wx.TOP | wx.LEFT, 10)
 
@@ -99,7 +103,9 @@ class ConfigPanel(ColoredPanel):
 
         #######################################################################
         ## Non wrapped items
-        logo = wx.StaticBitmap(self, -1, self.logo_bmp, (self.logo_bmp.GetWidth(), self.logo_bmp.GetHeight()))
+        logo = wx.StaticBitmap(self, -1, self.logo_bmp,
+                               (self.logo_bmp.GetWidth(),
+                                self.logo_bmp.GetHeight()))
 
         #######################################################################
         ## Sizer encapsulation section
@@ -136,15 +142,20 @@ class ConfigPanel(ColoredPanel):
 
         #Here's the logic to set up the prevalues from config file
         if self.parent.GetConfigValue('file.member_csv_location'):
-            self.memberCsvFile.SetValue(self.parent.GetConfigValue('file.member_csv_location'))
+            self.memberCsvFile.SetValue(
+                self.parent.GetConfigValue('file.member_csv_location'))
         if self.parent.GetConfigValue('file.nonmember_csv_location'):
-            self.nonMemberCsvFile.SetValue(self.parent.GetConfigValue('file.nonmember_csv_location'))
+            self.nonMemberCsvFile.SetValue(
+                self.parent.GetConfigValue('file.nonmember_csv_location'))
         if self.parent.GetConfigValue('file.imagesdirectory'):
-            self.ImagesDirectory.SetValue(self.parent.GetConfigValue('file.imagesdirectory'))
+            self.ImagesDirectory.SetValue(
+                self.parent.GetConfigValue('file.imagesdirectory'))
         if self.parent.GetConfigValue('file.pdf_outdirectory'):
-            self.PDF_Out_Directory.SetValue(self.parent.GetConfigValue('file.pdf_outdirectory'))
+            self.PDF_Out_Directory.SetValue(
+                self.parent.GetConfigValue('file.pdf_outdirectory'))
         if self.parent.GetConfigValue('file.imagearchivedir'):
-            self.Image_Archive_Directory.SetValue(self.parent.GetConfigValue('file.imagearchivedir'))
+            self.Image_Archive_Directory.SetValue(
+                self.parent.GetConfigValue('file.imagearchivedir'))
         if self.parent.GetConfigValue('missing.overridephone') == '1':
             self.CB_OverridePhone.SetValue(True)
         else:
@@ -152,15 +163,18 @@ class ConfigPanel(ColoredPanel):
 
     def new_member_csv_file_callback(self, evt):
         self.parent.SetConfigValue('file.member_csv_location', evt.GetString())
-        #This will call an error if the handler is called prior to init being completed
+        # This will call an error if the handler
+        # is called prior to init being completed
         try:
             self.makingActive()
         except AttributeError:
             pass
 
     def new_nonmember_csv_file_callback(self, evt):
-        self.parent.SetConfigValue('file.nonmember_csv_location', evt.GetString())
-        #This will call an error if the handler is called prior to init being completed
+        self.parent.SetConfigValue('file.nonmember_csv_location',
+                                   evt.GetString())
+        # This will call an error if the handler
+        # is called prior to init being completed
         try:
             self.makingActive()
         except AttributeError:
@@ -202,10 +216,10 @@ class ConfigPanel(ColoredPanel):
         self.BTN_AddEmail.Enable(True)
 
     def OnAddEmail(self, evt):
-        #TODO: Remove the entry from the list of choices...
+        # TODO: Remove the entry from the list of choices...
         self.BTN_AddEmail.Enable(False)
         self.EmailList.Append(self.Email_Dropdown.GetStringSelection())
-        #Clear for next usage
+        # Clear for next usage
         self.Email_Dropdown.SetSelection(wx.NOT_FOUND)
         self.SaveEmails()
 
@@ -218,9 +232,9 @@ class ConfigPanel(ColoredPanel):
 
     def LoadEmails(self):
         if not self.parent.GetConfigValue('email.recipients') == None:
-            RecipientList = self.parent.GetConfigValue('email.recipients').split(',')
+            r = self.parent.GetConfigValue('email.recipients').split(',')
             self.EmailList.Clear()
-            self.EmailList.InsertItems(RecipientList, 0)
+            self.EmailList.InsertItems(r, 0)
 
     def ListboxClicked(self, evt):
         self.BTN_RemoveEmail.Enable(True)
@@ -242,28 +256,33 @@ class ConfigPanel(ColoredPanel):
             self.EmailList.Enable(True)
             self.BTN_RemoveEmail.Enable(False)
 
-            #Refresh choices to name list
+            # Refresh choices to name list
             self.Contact_Dropdown.Clear()
-            NameList = self.parent.parent.AppHandle.GetNameList(NameType = 'Parent')
+            NameList = self.parent.parent.AppHandle.GetNameList(
+                NameType='Parent')
             for Name in NameList:
                 self.Contact_Dropdown.Append(Name)
             if self.parent.GetConfigValue('missing.missingname') in NameList:
-                self.Contact_Dropdown.SetStringSelection(self.parent.GetConfigValue('missing.missingname'))
+                self.Contact_Dropdown.SetStringSelection(
+                    self.parent.GetConfigValue('missing.missingname'))
                 self.CB_OverridePhone.Enable(True)
                 if self.parent.GetConfigValue('missing.overridephone') == '1':
                     self.TXT_Phone.Enable(True)
                     if self.parent.GetConfigValue('missing.missingphone'):
-                        self.TXT_Phone.SetValue(self.parent.GetConfigValue('missing.missingphone'))
+                        self.TXT_Phone.SetValue(
+                            self.parent.GetConfigValue('missing.missingphone'))
                 else:
                     self.TXT_Phone.Enable(False)
-                    self.TXT_Phone.SetValue(self.parent.parent.AppHandle.GetPhoneNumber(self.parent.GetConfigValue('missing.missingname')))
+                    self.TXT_Phone.SetValue(
+                        self.parent.parent.AppHandle.GetPhoneNumber(
+                            self.parent.GetConfigValue('missing.missingname')))
             else:
                 if self.parent.GetConfigValue('missing.missingname'):
                     OldMissingName = self.parent.GetConfigValue('missing.missingname')
                 self.TXT_Phone.Enable(False)
                 self.CB_OverridePhone.Enable(False)
 
-            #Now let's populate the email addresses
+            # Now let's populate the email addresses
             EmailAddys = self.parent.parent.AppHandle.GetMemberEmails()
             self.Email_Dropdown.Clear()
             for Email in EmailAddys:

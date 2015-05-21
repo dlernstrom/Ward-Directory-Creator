@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter, landscape
-from reportlab.platypus import PageBreak, Paragraph, Spacer# Table, Image, Frame, Preformatted
+from reportlab.platypus import PageBreak, Paragraph, Spacer
 from reportlab.platypus.flowables import HRFlowable, KeepInFrame
 from reportlab.lib import colors
 
@@ -15,7 +15,8 @@ STANDARD_FRAME_WIDTH = landscape(letter)[0]/2 - 2 * STANDARD_MARGIN
 
 
 class Directory:
-    flowableSectionOrder = ['prefix', 'directory', 'pre-map-spacers', 'maps', 'mapsLookup', 'post-map-spacers', 'suffix']
+    flowableSectionOrder = ['prefix', 'directory', 'pre-map-spacers', 'maps',
+                            'mapsLookup', 'post-map-spacers', 'suffix']
     pages = {'prefix': [],
              'directory': [],
              'maps': [],
@@ -71,7 +72,8 @@ class Directory:
         mapsLookupLen = len(self.pages['mapsLookup'])
         suffixLength = len(self.pages['suffix'])
 
-        usedFaces = prefixLength + listingsLength + preMapSpacersLength + mapsLength + mapsLookupLen + suffixLength
+        usedFaces = prefixLength + listingsLength + preMapSpacersLength + \
+            mapsLength + mapsLookupLen + suffixLength
         print "POST MAP SPACERS"
         print "%d faces are present" % usedFaces
         fillers = (pageModulo - usedFaces % pageModulo) % pageModulo
@@ -85,13 +87,15 @@ class Directory:
     def PrepareFiller(self):
         LineSpace_List = []
         for counter in xrange(30):
-            LineSpace_List.append(Spacer(width = STANDARD_FRAME_WIDTH, height = .25 * inch))
-            LineSpace_List.append(HRFlowable(width = "90%", thickness = 1, lineCap= 'square', color = colors.black))
-        ReturnList = [Paragraph(text = "NOTES", style = styles['Subtitle']),
-                      KeepInFrame(maxWidth = STANDARD_FRAME_WIDTH,
-                                  maxHeight = 7.5 * inch,
-                                  content = LineSpace_List,
-                                  mode = 'truncate'),
+            LineSpace_List.append(Spacer(width=STANDARD_FRAME_WIDTH,
+                                         height=.25 * inch))
+            LineSpace_List.append(
+                HRFlowable(width="90%", thickness=1, lineCap='square',
+                           color=colors.black))
+        ReturnList = [Paragraph(text="NOTES", style=styles['Subtitle']),
+                      KeepInFrame(maxWidth=STANDARD_FRAME_WIDTH,
+                                  maxHeight=7.5 * inch,
+                                  content=LineSpace_List,
+                                  mode='truncate'),
                       PageBreak()]
         return ReturnList
-

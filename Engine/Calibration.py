@@ -27,5 +27,4 @@ class Calibration:
         pixelCoordinateX = targetXRatioWorld * self.pixelXDistance + self.pixel1.x
         pixelCoordinateY = targetYRatioWorld * self.pixelYDistance + self.pixel1.y
         pixelCoordinates = Pixel(pixelCoordinateX, pixelCoordinateY)
-        #print pixelCoordinates
         return pixelCoordinates

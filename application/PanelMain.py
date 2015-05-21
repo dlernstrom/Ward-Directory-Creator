@@ -2,10 +2,9 @@
 from __future__ import unicode_literals
 
 import wx
-from ColoredPanel import *
-import wx.lib.filebrowsebutton as filebrowse
 from wx.lib.wordwrap import wordwrap
 
+from ColoredPanel import *
 import __version__
 
 
@@ -13,11 +12,12 @@ class MainPanel(ColoredPanel):
     def __init__(self, parent):
         ColoredPanel.__init__(self, parent, wx.BLUE)
 
-        #########################################################################
+        #######################################################################
         ## Ward/Branch Configuration Section
         WardBox = wx.StaticBox(self, -1, "Ward/Branch Configuration")
         WardBox.SetFont(self.StandardFont)
-        self.WardBoxSizer = WardBoxSizer = wx.StaticBoxSizer(WardBox, wx.VERTICAL)
+        self.WardBoxSizer = WardBoxSizer = wx.StaticBoxSizer(WardBox,
+                                                             wx.VERTICAL)
 
         StaticWardName = wx.StaticText(self, -1, "Unit Name:")
         StaticWardName.SetFont(self.StandardFont)
@@ -48,14 +48,16 @@ class MainPanel(ColoredPanel):
         TXT_StakeName = wx.TextCtrl(self, -1, size=(250,25))
         TXT_StakeName.SetFont(self.TextBoxFont)
         if self.parent.GetConfigValue('unit.stakename'):
-            TXT_StakeName.SetValue(self.parent.GetConfigValue('unit.stakename'))
+            TXT_StakeName.SetValue(
+                self.parent.GetConfigValue('unit.stakename'))
         WardBoxSizer.Add(TXT_StakeName, 0, wx.TOP | wx.LEFT, 10)
 
-        ############################################################################
+        #######################################################################
         ## Quote Configuration Section
         QuoteBox = wx.StaticBox(self, -1, "Quote Configuration")
         QuoteBox.SetFont(self.StandardFont)
-        self.QuoteBoxSizer = QuoteBoxSizer = wx.StaticBoxSizer(QuoteBox, wx.VERTICAL)
+        self.QuoteBoxSizer = QuoteBoxSizer = wx.StaticBoxSizer(QuoteBox,
+                                                               wx.VERTICAL)
 
         self.CB_UseQuote = wx.CheckBox(self, -1, "Use Quote")
         self.CB_UseQuote.SetFont(self.StandardFont)
@@ -71,7 +73,8 @@ class MainPanel(ColoredPanel):
             self.StaticInspQuote.Enable(False)
         QuoteBoxSizer.Add(self.StaticInspQuote, 0, wx.TOP | wx.LEFT, 10)
 
-        self.TXT_Quote = wx.TextCtrl(self, -1, size = (350, 100), style = wx.PROCESS_ENTER | wx.TE_MULTILINE )
+        self.TXT_Quote = wx.TextCtrl(self, -1, size=(350, 100),
+                                     style=wx.PROCESS_ENTER | wx.TE_MULTILINE)
         self.TXT_Quote.SetFont(self.TextBoxFont)
         if int(self.parent.GetConfigValue('quote.usequote')):
             self.TXT_Quote.Enable(True)
@@ -89,14 +92,15 @@ class MainPanel(ColoredPanel):
             self.StaticAuthor.Enable(False)
         QuoteBoxSizer.Add(self.StaticAuthor, 0, wx.TOP | wx.LEFT, 10)
 
-        self.TXT_Author = wx.TextCtrl(self, -1, size=(250,25))
+        self.TXT_Author = wx.TextCtrl(self, -1, size=(250, 25))
         self.TXT_Author.SetFont(self.TextBoxFont)
         if int(self.parent.GetConfigValue('quote.usequote')):
             self.TXT_Author.Enable(True)
         else:
             self.TXT_Author.Enable(False)
         if not self.parent.GetConfigValue('quote.quoteauthor') == None:
-            self.TXT_Author.SetValue(self.parent.GetConfigValue('quote.quoteauthor'))
+            self.TXT_Author.SetValue(
+                self.parent.GetConfigValue('quote.quoteauthor'))
         QuoteBoxSizer.Add(self.TXT_Author, 0, wx.TOP | wx.LEFT, 10)
 
         self.BTN_RestoreQuote = wx.Button(self, -1, "Restore Default")
@@ -109,10 +113,13 @@ class MainPanel(ColoredPanel):
 
         #######################################################################
         ## Non wrapped items
-        StaticHeading = wx.StaticText(self, -1, "Ward Directory Creator", style = wx.ALIGN_CENTRE)
+        StaticHeading = wx.StaticText(self, -1, "Ward Directory Creator",
+                                      style=wx.ALIGN_CENTRE)
         StaticHeading.SetFont(self.TitleFont)
 
-        logo = wx.StaticBitmap(self, -1, self.logo_bmp, (self.logo_bmp.GetWidth(), self.logo_bmp.GetHeight()))
+        logo = wx.StaticBitmap(self, -1, self.logo_bmp,
+                               (self.logo_bmp.GetWidth(),
+                                self.logo_bmp.GetHeight()))
 
         self.AboutBoxButton = wx.Button(self, -1, "About WDC")
         self.AboutBoxButton.SetFont(self.StandardFont)
@@ -120,7 +127,8 @@ class MainPanel(ColoredPanel):
         #######################################################################
         ## Sizer encapsulation section
         left_level3 = wx.BoxSizer(wx.VERTICAL)
-        left_level3.Add(self.WardBoxSizer, 6, wx.EXPAND | wx.TOP | wx.BOTTOM | wx.LEFT, 25)
+        left_level3.Add(self.WardBoxSizer, 6,
+                        wx.EXPAND | wx.TOP | wx.BOTTOM | wx.LEFT, 25)
         left_level3.Add(logo, 0, wx.TOP | wx.BOTTOM | wx.LEFT, 25)
 
         right_level3 = wx.BoxSizer(wx.VERTICAL)
@@ -128,12 +136,12 @@ class MainPanel(ColoredPanel):
         right_level3.Add(self.AboutBoxButton, 1, wx.ALL | wx.ALIGN_CENTRE, 25)
 
         top_level2 = wx.BoxSizer(wx.HORIZONTAL)
-        top_level2.Add(StaticHeading, 1, wx.EXPAND | wx.ALIGN_CENTER_HORIZONTAL)
+        top_level2.Add(StaticHeading, 1,
+                       wx.EXPAND | wx.ALIGN_CENTER_HORIZONTAL)
 
         bottom_level2 = wx.BoxSizer(wx.HORIZONTAL)
         bottom_level2.Add(left_level3, 2, wx.EXPAND)
         bottom_level2.Add(right_level3, 3, wx.EXPAND)
-        #bottom_level2.Hide(left_level3)
 
         inside_border_level1 = wx.BoxSizer(wx.VERTICAL)
         inside_border_level1.Add(top_level2, 0, wx.EXPAND | wx.ALL, 25)
@@ -170,14 +178,13 @@ class MainPanel(ColoredPanel):
                                     "more accurate directory listing. For best results, download a new copy of the "
                                     "csv file each time you generate a directory.",
                                     350, wx.ClientDC(self))
-        info.WebSite = ("http://directory.ernstrom.net", "Ward Directory Creator")
-        info.Developers = [ "David Ernstrom",
-                            "Tina Ernstrom"]
+        info.WebSite = ("http://directory.ernstrom.net",
+                        "Ward Directory Creator")
+        info.Developers = ["David Ernstrom", "Tina Ernstrom"]
         licenseText = "By using this application, you agree not to reverse engineer, modify, pirate, disassemble, or otherwise use the application in ways not intended by the author(s)."
         info.License = wordwrap(licenseText, 500, wx.ClientDC(self))
         # Then we call wx.AboutBox giving it that info object
         wx.AboutBox(info)
-
 
     def OnWardChanged(self, evt):
         self.parent.SetConfigValue('unit.unitname', evt.GetString())

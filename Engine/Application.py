@@ -66,31 +66,28 @@ class Application:
     def build_directory(self):
         self.GetMembershipList()
         self.annotate_images()
-        #return # return here if only mapping houses
         for household in self.MembershipList:
-            household.set_map_index(self.homes.find_map_index_for_household(household))
+            household.set_map_index(
+                self.homes.find_map_index_for_household(household))
         directoryCollection = Directory()
         configData = self.ConfigHandle.GetConfigData()
-        directoryCollection.pages['prefix'] = get_directory_prefix_pages(dictionaryData = configData,
-                                                                         debug = self.DEBUG)
-        directoryCollection.pages['directory'] = get_listing_pages(configData = configData,
-                                                                   membershipList = self.MembershipList,
-                                                                   debug = self.DEBUG)
-        directoryCollection.pages['maps'] = get_maps_pages(configData = configData,
-                                                           maps = self.ourMaps,
-                                                           membershipList = self.MembershipList,
-                                                           debug = self.DEBUG)
-        directoryCollection.pages['mapsLookup'] = get_maps_lookup_pages(configData = configData,
-                                                                        dwellingsHandle = self.homes,
-                                                                        membershipList = self.MembershipList,
-                                                                        debug = self.DEBUG)
-        directoryCollection.pages['suffix'] = get_directory_suffix_pages(dictionaryData = configData,
-                                                                         debug = self.DEBUG)
+        directoryCollection.pages['prefix'] = get_directory_prefix_pages(
+            dictionaryData=configData, debug=self.DEBUG)
+        directoryCollection.pages['directory'] = get_listing_pages(
+            configData=configData, membershipList=self.MembershipList,
+            debug=self.DEBUG)
+        directoryCollection.pages['maps'] = get_maps_pages(
+            configData=configData, maps=self.ourMaps,
+            membershipList=self.MembershipList, debug=self.DEBUG)
+        directoryCollection.pages['mapsLookup'] = get_maps_lookup_pages(
+            configData=configData, dwellingsHandle=self.homes,
+            membershipList=self.MembershipList, debug=self.DEBUG)
+        directoryCollection.pages['suffix'] = get_directory_suffix_pages(
+            dictionaryData=configData, debug=self.DEBUG)
         return directoryCollection
 
     def InitiatePDF(self, OutputFolder, Full, Booklet, Single2Double):
         directoryCollection = self.build_directory()
-        #return # return here if only mapping houses
 
         if OutputFolder == None or OutputFolder == 'None':
             OutputFolder = ''
@@ -101,15 +98,23 @@ class Application:
         PDFToolHandle = PDFTools(self.DEBUG)
         if Full:
             filename = OutputFolder + 'PhotoDirectory_%s.pdf' % tm
-            PDFToolHandle.generate_doc(filename, 'full', directoryCollection.get_pages_for_binding('full'))
+            PDFToolHandle.generate_doc(
+                filename, 'full',
+                directoryCollection.get_pages_for_binding('full'))
         if Booklet:
             front = OutputFolder + 'PhotoDirectory_%s_FRONT.pdf' % tm
             back = OutputFolder + 'PhotoDirectory_%s_BACK.pdf' % tm
-            PDFToolHandle.generate_doc(front, 'front', directoryCollection.get_pages_for_binding('booklet'))
-            PDFToolHandle.generate_doc(back, 'back', directoryCollection.get_pages_for_binding('booklet'))
+            PDFToolHandle.generate_doc(
+                front, 'front',
+                directoryCollection.get_pages_for_binding('booklet'))
+            PDFToolHandle.generate_doc(
+                back, 'back',
+                directoryCollection.get_pages_for_binding('booklet'))
         if Single2Double:
             bookletprinted = OutputFolder + 'PhotoDirectory_%s_Single2Double.pdf' % tm
-            PDFToolHandle.generate_doc(bookletprinted, 'special', directoryCollection.get_pages_for_binding('booklet'))
+            PDFToolHandle.generate_doc(
+                bookletprinted, 'special',
+                directoryCollection.get_pages_for_binding('booklet'))
 
     def create_sortable_index(self):
         self.homes = Dwellings()
@@ -129,9 +134,10 @@ class Application:
         # furthest south person is at ?
         # furthest west person is at -111.8081775
         # furthest east person is at -111.7705975
-        self.ourMaps = Maps([Map(1, Coordinate(41.9720, -111.8117775), Coordinate(41.9720, -111.7669975), 'large', 'portrait', 'east', 16, "Cherry Creek Ward", [Coordinate(41.9702841,-111.8060452), Coordinate(41.9523412,-111.8081775)]),
-                             Map(2, Coordinate(41.9385, -111.808), Coordinate(41.9385, -111.7963776), 'large', 'portrait', 'east', 17, "Inset 1", [Coordinate(41.9359261,-111.7964), Coordinate(41.934148,-111.79725)]),
-                             ])
+        self.ourMaps = Maps(
+            [Map(1, Coordinate(41.9720, -111.8117775), Coordinate(41.9720, -111.7669975), 'large', 'portrait', 'east', 16, "Cherry Creek Ward", [Coordinate(41.9702841,-111.8060452), Coordinate(41.9523412,-111.8081775)]),
+             Map(2, Coordinate(41.9385, -111.808), Coordinate(41.9385, -111.7963776), 'large', 'portrait', 'east', 17, "Inset 1", [Coordinate(41.9359261,-111.7964), Coordinate(41.934148,-111.79725)]),
+             ])
         currentPosition = (-112, 45, -112, 45) # must be left, bottom, right, top
         done = False
         counter = 1
@@ -140,8 +146,12 @@ class Application:
             prevCoordinateKey = (currentPosition[1], currentPosition[0])
             if not d == None:
                 if not d.NextDwellingOverride == '':
-                    currentPosition = [d.NextDwellingOverride[1], d.NextDwellingOverride[0], d.NextDwellingOverride[1], d.NextDwellingOverride[0]] # must be left, bottom, right, top
-            nearest = list(self.idx.nearest(coordinates = currentPosition,
+                    # must be left, bottom, right, top
+                    currentPosition = [d.NextDwellingOverride[1],
+                                       d.NextDwellingOverride[0],
+                                       d.NextDwellingOverride[1],
+                                       d.NextDwellingOverride[0]]
+            nearest = list(self.idx.nearest(coordinates=currentPosition,
                                             num_results=1,
                                             objects=True))
             if len(nearest) == 0:
@@ -154,9 +164,15 @@ class Application:
             #print "Nearest ID", nearest.id
             print "Nearest Object", d
             print "XXX: (%s, %s)," % (d.Latitude, d.Longitude)
-            currentPosition = [d.Longitude, d.Latitude, d.Longitude, d.Latitude] # must be left, bottom, right, top
+            # must be left, bottom, right, top
+            currentPosition = [d.Longitude,
+                               d.Latitude,
+                               d.Longitude,
+                               d.Latitude]
             self.idx.delete(nearest.id, currentPosition)
-            self.ourMaps.annotate_coordinate(counter, Coordinate(d.Latitude, d.Longitude))
+            self.ourMaps.annotate_coordinate(counter,
+                                             Coordinate(d.Latitude,
+                                                        d.Longitude))
             print "*" * 30
             counter += 1
         self.homes.order_dwelling_list()
@@ -172,24 +188,29 @@ class Application:
         self.MembershipList.extend(self.nonmember_list)
         if len(self.MembershipList) > 0:
             self.ValidCSV = True
-        self.MembershipList = sorted(self.MembershipList, key=lambda h: h.coupleName)
+        self.MembershipList = sorted(self.MembershipList,
+                                     key=lambda h: h.coupleName)
 
     @property
     def member_list(self):
-        if self.GetConfigValue('file.member_csv_location') == None or not self.GetConfigValue('file.member_csv_location')[-4:] == '.csv':
+        if self.GetConfigValue('file.member_csv_location') == None or \
+                not self.GetConfigValue('file.member_csv_location')[-4:] == '.csv':
             raise Exception("Not a valid membership list")
         a = []
-        membershipHandle = CSVMembershipParser(self.GetConfigValue('file.member_csv_location'))
+        membershipHandle = CSVMembershipParser(
+            self.GetConfigValue('file.member_csv_location'))
         for Household in membershipHandle.next():
             a.append(Household)
         return a
 
     @property
     def nonmember_list(self):
-        if self.GetConfigValue('file.nonmember_csv_location') == None or not self.GetConfigValue('file.nonmember_csv_location')[-4:] == '.csv':
+        if self.GetConfigValue('file.nonmember_csv_location') == None or \
+                not self.GetConfigValue('file.nonmember_csv_location')[-4:] == '.csv':
             raise Exception("Not a valid nonmembership list")
         a = []
-        membershipHandle = CSVMembershipParser(self.GetConfigValue('file.nonmember_csv_location'))
+        membershipHandle = CSVMembershipParser(
+            self.GetConfigValue('file.nonmember_csv_location'))
         for Household in membershipHandle.next():
             a.append(Household)
         return a
@@ -202,7 +223,8 @@ class Application:
         AddressesAlreadyDuped = []
         ReportMsg = ''
         for Family in self.MembershipList:
-            if not Family.familyAddress in AddressesAlreadyDuped and Family.familyAddress in AddressesSeen:
+            if not Family.familyAddress in AddressesAlreadyDuped and \
+                    Family.familyAddress in AddressesSeen:
                 ReportMsg += 'Address Already found\n'
                 ReportMsg += 'Address: ' + Family.familyAddress + '\n'
                 for Name in self.MembershipList:
@@ -255,10 +277,10 @@ class Application:
         return emailList
 
     def SetLists(self):
-        self.SetNameList(NameType = 'HoH')
-        self.SetNameList(NameType = 'Parent')
+        self.SetNameList(NameType='HoH')
+        self.SetNameList(NameType='Parent')
 
-    def GetNameList(self, NameType = 'HoH'):
+    def GetNameList(self, NameType='HoH'):
         if NameType == 'HoH':
             return self.NameList_HoH
         elif NameType == 'Parent':
@@ -266,7 +288,7 @@ class Application:
         else:
             print "I haven't implimented 'Family' type yet."
 
-    def SetNameList(self, NameType = 'HoH'):
+    def SetNameList(self, NameType='HoH'):
         #This will return a list of all HeadOfHousehold/Spouses in ward
         if NameType == 'HoH':
             self.NameList_HoH = []
@@ -294,7 +316,7 @@ class Application:
             SMTP_Pass = self.GetConfigValue('email.pass')
             session = smtplib.SMTP(SMTP_SERVER)
             if not SMTP_User == None and not SMTP_Pass == None:
-                session.login(user = SMTP_User, password = SMTP_Pass)
+                session.login(user=SMTP_User, password=SMTP_Pass)
             msg = MIMEMultipart()
             msg['From'] = 'Ward Directory Creator <david@ernstrom.net>'
             msg['Subject'] = 'Missing Persons Email'
@@ -302,9 +324,9 @@ class Application:
             for ToAddy in self.GetMissingMsgEmails():
                 print ToAddy
                 msg['To'] = ToAddy
-                smtpresult = session.sendmail(from_addr = 'Ward Directory Creator <david@ernstrom.net>',
-                                              to_addrs = ToAddy,
-                                              msg = msg.as_string())
+                smtpresult = session.sendmail(from_addr='Ward Directory Creator <david@ernstrom.net>',
+                                              to_addrs=ToAddy,
+                                              msg=msg.as_string())
             session.close()
 
     def MakeMissingFile(self):
@@ -320,15 +342,19 @@ class Application:
         ExtraImages = []
         for root, dirs, files in os.walk(LiveFolder):
             for fileName in files:
-                if not fileName in IgnoreList and not fileName.lower() in map(lambda x: x.lower(), NeededList):
+                if not fileName in IgnoreList and \
+                        not fileName.lower() in map(lambda x: x.lower(),
+                                                    NeededList):
                     ExtraImages.append(fileName)
         return ExtraImages
 
     def MoveSuperflousImages(self, LiveFolder, ArchiveFolder):
         for Image in self.GetSuperfluousImageList(LiveFolder):
             try:
-                os.rename(LiveFolder + os.sep + Image, ArchiveFolder + os.sep + Image)
+                os.rename(LiveFolder + os.sep + Image,
+                          ArchiveFolder + os.sep + Image)
             except WindowsError:
                 os.mkdir(ArchiveFolder)
-                os.rename(LiveFolder + os.sep + Image, ArchiveFolder + os.sep + Image)
+                os.rename(LiveFolder + os.sep + Image,
+                          ArchiveFolder + os.sep + Image)
             print Image, "moved to archive"

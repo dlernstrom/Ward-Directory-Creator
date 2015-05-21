@@ -5,7 +5,6 @@ import wx
 import wx.lib
 import wx.lib.dialogs
 from ColoredPanel import *
-import  wx.lib.filebrowsebutton as filebrowse
 
 
 class GeneratePanel(ColoredPanel):
@@ -40,7 +39,8 @@ class GeneratePanel(ColoredPanel):
         self.StaticPass.SetFont(self.StandardFont)
         EmailBoxSizer.Add(self.StaticPass, 0, wx.TOP | wx.LEFT, 10)
 
-        self.TXT_Pass = wx.TextCtrl(self, -1, size = (200, -1), style = wx.TE_PASSWORD)
+        self.TXT_Pass = wx.TextCtrl(self, -1, size=(200, -1),
+                                    style=wx.TE_PASSWORD)
         self.TXT_Pass.SetFont(self.StandardFont)
         EmailBoxSizer.Add(self.TXT_Pass, 0, wx.TOP | wx.LEFT, 10)
 
@@ -50,7 +50,8 @@ class GeneratePanel(ColoredPanel):
         StaticBox.SetFont(self.StandardFont)
         GenerateSizer = wx.StaticBoxSizer(StaticBox, wx.VERTICAL)
 
-        self.CB_MissingReport = wx.CheckBox(self, -1, "View Missing Pictures Report")
+        self.CB_MissingReport = wx.CheckBox(self, -1,
+                                            "View Missing Pictures Report")
         self.CB_MissingReport.SetFont(self.StandardFont)
         GenerateSizer.Add(self.CB_MissingReport, 0, wx.TOP | wx.LEFT, 10)
 
@@ -58,15 +59,18 @@ class GeneratePanel(ColoredPanel):
         self.CB_MissingImages.SetFont(self.StandardFont)
         GenerateSizer.Add(self.CB_MissingImages, 0, wx.TOP | wx.LEFT, 10)
 
-        self.CB_SendEmail = wx.CheckBox(self, -1, "Send Missing Pictures Email")
+        self.CB_SendEmail = wx.CheckBox(self, -1,
+                                        "Send Missing Pictures Email")
         self.CB_SendEmail.SetFont(self.StandardFont)
         GenerateSizer.Add(self.CB_SendEmail, 0, wx.TOP | wx.LEFT, 10)
 
-        self.CB_MissingFile = wx.CheckBox(self, -1, "Generate Missing Pictures File")
+        self.CB_MissingFile = wx.CheckBox(self, -1,
+                                          "Generate Missing Pictures File")
         self.CB_MissingFile.SetFont(self.StandardFont)
         GenerateSizer.Add(self.CB_MissingFile, 0, wx.TOP | wx.LEFT, 10)
 
-        self.CB_ExtractMoveOuts = wx.CheckBox(self, -1, 'Archive "Moved-Out" Images')
+        self.CB_ExtractMoveOuts = wx.CheckBox(self, -1,
+                                              'Archive "Moved-Out" Images')
         self.CB_ExtractMoveOuts.SetFont(self.StandardFont)
         GenerateSizer.Add(self.CB_ExtractMoveOuts, 0, wx.TOP | wx.LEFT, 10)
 
@@ -78,13 +82,16 @@ class GeneratePanel(ColoredPanel):
         self.CB_GenPDF_Booklet.SetFont(self.StandardFont)
         GenerateSizer.Add(self.CB_GenPDF_Booklet, 0, wx.TOP | wx.LEFT, 10)
 
-        self.CB_GenPDF_Single2Double = wx.CheckBox(self, -1, "Generate Single2Double PDF")
+        self.CB_GenPDF_Single2Double = wx.CheckBox(
+            self, -1, "Generate Single2Double PDF")
         self.CB_GenPDF_Single2Double.SetFont(self.StandardFont)
-        GenerateSizer.Add(self.CB_GenPDF_Single2Double, 0, wx.TOP | wx.LEFT, 10)
+        GenerateSizer.Add(self.CB_GenPDF_Single2Double, 0,
+                          wx.TOP | wx.LEFT, 10)
 
         self.BTN_Go = wx.Button(self, -1, "Go!")
         self.BTN_Go.SetFont(self.StandardFont)
-        GenerateSizer.Add(self.BTN_Go, 0, wx.TOP | wx.ALIGN_CENTER_HORIZONTAL, 10)
+        GenerateSizer.Add(self.BTN_Go, 0,
+                          wx.TOP | wx.ALIGN_CENTER_HORIZONTAL, 10)
 
         ##############################################
         ## Here's the outer sizer container stuff
@@ -96,14 +103,20 @@ class GeneratePanel(ColoredPanel):
         border_level0.Add(EmailBoxSizer, 1, wx.EXPAND | wx.ALL, 25)
 
         self.Bind(wx.EVT_BUTTON, self.OnGoButton, self.BTN_Go)
-        self.Bind(wx.EVT_CHECKBOX, self.OnCheckMissingReport, self.CB_MissingReport)
-        self.Bind(wx.EVT_CHECKBOX, self.OnCheckMissingImages, self.CB_MissingImages)
+        self.Bind(wx.EVT_CHECKBOX, self.OnCheckMissingReport,
+                  self.CB_MissingReport)
+        self.Bind(wx.EVT_CHECKBOX, self.OnCheckMissingImages,
+                  self.CB_MissingImages)
         self.Bind(wx.EVT_CHECKBOX, self.OnCheckSendEmail, self.CB_SendEmail)
-        self.Bind(wx.EVT_CHECKBOX, self.OnCheckMissingFile, self.CB_MissingFile)
-        self.Bind(wx.EVT_CHECKBOX, self.OnCheckExtractMoveOuts, self.CB_ExtractMoveOuts)
+        self.Bind(wx.EVT_CHECKBOX, self.OnCheckMissingFile,
+                  self.CB_MissingFile)
+        self.Bind(wx.EVT_CHECKBOX, self.OnCheckExtractMoveOuts,
+                  self.CB_ExtractMoveOuts)
         self.Bind(wx.EVT_CHECKBOX, self.OnCheckGenFull, self.CB_GenPDF_Full)
-        self.Bind(wx.EVT_CHECKBOX, self.OnCheckGenBooklet, self.CB_GenPDF_Booklet)
-        self.Bind(wx.EVT_CHECKBOX, self.OnCheckGenSing2Doub, self.CB_GenPDF_Single2Double)
+        self.Bind(wx.EVT_CHECKBOX, self.OnCheckGenBooklet,
+                  self.CB_GenPDF_Booklet)
+        self.Bind(wx.EVT_CHECKBOX, self.OnCheckGenSing2Doub,
+                  self.CB_GenPDF_Single2Double)
         self.Bind(wx.EVT_TEXT, self.OnSMTPChanged, self.TXT_SMTPAddy)
         self.Bind(wx.EVT_TEXT, self.OnUserChanged, self.TXT_User)
         self.Bind(wx.EVT_TEXT, self.OnPassChanged, self.TXT_Pass)
@@ -111,11 +124,13 @@ class GeneratePanel(ColoredPanel):
         self.SetSizer(border_level0)
         border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])
 
-        #Here's the logic to set up the prevalues from config file
+        # Here's the logic to set up the prevalues from config file
         if self.parent.GetConfigValue('email.smtp'):
-            self.TXT_SMTPAddy.SetValue(self.parent.GetConfigValue('email.smtp'))
+            self.TXT_SMTPAddy.SetValue(
+                self.parent.GetConfigValue('email.smtp'))
         if self.parent.GetConfigValue('email.username'):
-            self.TXT_User.SetValue(self.parent.GetConfigValue('email.username'))
+            self.TXT_User.SetValue(
+                self.parent.GetConfigValue('email.username'))
         if self.parent.GetConfigValue('email.pass'):
             self.TXT_Pass.SetValue(self.parent.GetConfigValue('email.pass'))
 
@@ -179,7 +194,7 @@ class GeneratePanel(ColoredPanel):
             self.parent.SetConfigValue('task.gensingle2double', '0')
 
     def OnGoButton(self, evt):
-        #Here, I need to check each of the (7) things to do and do them
+        # Here, I need to check each of the (7) things to do and do them
         if self.parent.GetConfigValue('task.sendemail') == '1':
             print "Sending Emails"
             self.AppHandle.SendEmails()
@@ -209,20 +224,25 @@ class GeneratePanel(ColoredPanel):
         if Full or Booklet or Single2Double:
             OutputFolder = self.parent.GetConfigValue('file.pdf_outdirectory')
             DictionaryData = None
-            self.AppHandle.InitiatePDF(OutputFolder, Full, Booklet, Single2Double)
+            self.AppHandle.InitiatePDF(OutputFolder, Full, Booklet,
+                                       Single2Double)
 
         #Generate Missing Image Report
         if self.parent.GetConfigValue('task.missreport') == '1':
             print "Generating missing report"
             LiveFolder = self.parent.GetConfigValue('file.imagesdirectory')
             msg = self.AppHandle.GetReportMsg()
-            dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg, caption = "Report", size=(500,600))
+            dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg,
+                                                       caption="Report",
+                                                       size=(500, 600))
             dlg.ShowModal()
         if self.parent.GetConfigValue('task.missimages') == '1':
             print "Generating missing images report"
             LiveFolder = self.parent.GetConfigValue('file.imagesdirectory')
             msg = self.AppHandle.GetImagesReportMsg()
-            dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg, caption = "Report", size=(500,600))
+            dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg,
+                                                       caption="Report",
+                                                       size=(500, 600))
             dlg.ShowModal()
 
     def makingActive(self):

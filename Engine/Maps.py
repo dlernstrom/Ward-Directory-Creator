@@ -32,7 +32,8 @@ class Map:
         self.title = title
         self.titleCorners = titleCorners
 
-        if size == 'small': # 'small' = 5.5"x8.5", at 300dpi, this translates to 1650x2550
+        # 'small' = 5.5"x8.5", at 300dpi, this translates to 1650x2550
+        if size == 'small':
             if initialOrientation == 'portrait':
                 heightRatio = 2550.0 / 1650.0
             else:
@@ -53,7 +54,7 @@ class Map:
                   18: {'horizToCenter': 0.006865, 'horizRepeat': 0.01373, 'horizRepeatPixels': 1280, 'vertToCenter': 0.0051125, 'vertRepeat': 0.009825, 'vertRepeatPixels': 1230, 'fontSize': 15}}
         self.config = config
         self.myConfig = myConfig
-        self.font  = ImageFont.truetype("arial.ttf", config[myConfig]['fontSize'], encoding="UTF-8") # fontSize of 25 was too small, trying 30
+        self.font = ImageFont.truetype("arial.ttf", config[myConfig]['fontSize'], encoding="UTF-8") # fontSize of 25 was too small, trying 30
         rowsPerfect = abs(ul.latitude - ll.latitude) / config[myConfig]['vertRepeat']
         rows = int(math.ceil(rowsPerfect))
         colsPerfect = abs(ul.longitude - ur.longitude) / config[myConfig]['horizRepeat']
@@ -92,10 +93,11 @@ class Map:
         upper = 0 # north
         right = w - int(colsRatio * w) # east
         lower = h - int(rowsRatio * h) # south
-        self.calibration = Calibration(coord1 = ul,
-                                       pixel1 = Pixel(0, 0),
-                                       coord2 = unCroppedLR,
-                                       pixel2 = Pixel(pilImage.size[0], pilImage.size[1]))
+        self.calibration = Calibration(coord1=ul,
+                                       pixel1=Pixel(0, 0),
+                                       coord2=unCroppedLR,
+                                       pixel2=Pixel(pilImage.size[0],
+                                                    pilImage.size[1]))
         self.pilImage = pilImage.crop((left, upper, right, lower)) # left, upper, right, lower
         self.rotate_image()
         self.draw  = ImageDraw.Draw(self.pilImage)
@@ -163,9 +165,11 @@ class Map:
         midWidth = width * 0.5
         midHeight = height * 0.5
         if drawBox:
-            box = [(position.x - midWidth * 1.2, position.y - midHeight), (position.x + midWidth * 1.2, position.y + midHeight * 2.0)]
+            box = [(position.x - midWidth * 1.2, position.y - midHeight),
+                   (position.x + midWidth * 1.2, position.y + midHeight * 2.0)]
             self.draw.rectangle(box, outline='#000000', fill='#FFFFFF')
-        self.draw.text( (position.x - midWidth, position.y - midHeight), text, fill='#000000', font=font)
+        self.draw.text((position.x - midWidth, position.y - midHeight),
+                       text, fill='#000000', font=font)
 
     def draw_boxed_text(self, text, corner1, corner2, fontSize, opacity):
         position1 = self.calibration.translate_world_to_pixel(corner1)
@@ -178,25 +182,28 @@ class Map:
         frontBox = Image.new('RGBA', (width, height), (255,255,255,opacity)) # 0 is transparent, 255 is opaque
         frontBoxDraw = ImageDraw.Draw(frontBox)
         frontBoxDraw.rectangle([(0,0), (width-1, height-1)], outline='#000000')
-        self.pilImage.paste(frontBox, box = (min(position1.x, position2.x), min(position1.y, position2.y)), mask=frontBox)
+        self.pilImage.paste(frontBox, box=(min(position1.x, position2.x), min(position1.y, position2.y)), mask=frontBox)
         middleOfBox = Pixel(min(position1.x, position2.x) + abs(position2.x - position1.x)/2,
                             min(position1.y, position2.y) + abs(position2.y - position1.y)/2)
         font = ImageFont.truetype("arial.ttf", fontSize, encoding="UTF-8")
         if not '\n' in text:
-            self.write_text(text = text, position = middleOfBox, drawBox = False, font = font)
+            self.write_text(
+                text=text, position=middleOfBox, drawBox=False, font=font)
         else:
             width, height = self.draw.textsize(text, font=font)
             posTop = Pixel(middleOfBox.x, middleOfBox.y - height)
-            self.write_text(text = text.split('\n')[0], position = posTop, drawBox = False, font = font)
+            self.write_text(text=text.split('\n')[0], position=posTop,
+                            drawBox=False, font=font)
             posBottom = Pixel(middleOfBox.x, middleOfBox.y + height)
-            self.write_text(text = text.split('\n')[1], position = posBottom, drawBox = False, font = font)
+            self.write_text(text=text.split('\n')[1], position=posBottom,
+                            drawBox=False, font=font)
 
     def draw_map_title(self):
-        self.draw_boxed_text(text = self.title,
-                             corner1 = self.titleCorners[0],
-                             corner2 = self.titleCorners[1],
-                             fontSize = int(self.config[self.myConfig]['fontSize'] * 1.5),
-                             opacity = 220)
+        self.draw_boxed_text(text=self.title,
+                             corner1=self.titleCorners[0],
+                             corner2=self.titleCorners[1],
+                             fontSize=int(self.config[self.myConfig]['fontSize'] * 1.5),
+                             opacity=220)
 
 class Maps:
     def __init__(self, pages):
@@ -213,11 +220,12 @@ class Maps:
     def annotate_insets(self):
         insetCounter = 1
         for insetMap in self.pages[1:]:
-            self.pages[0].draw_boxed_text(text = "See\nInset %d" % insetCounter,
-                                          corner1 = insetMap.upperLeftCoordinate,
-                                          corner2 = insetMap.lowerRightCoordinate,
-                                          fontSize = 100,
-                                          opacity = 170)
+            self.pages[0].draw_boxed_text(
+                text="See\nInset %d" % insetCounter,
+                corner1=insetMap.upperLeftCoordinate,
+                corner2=insetMap.lowerRightCoordinate,
+                fontSize=100,
+                opacity=170)
             insetCounter += 1
         for myMap in self.pages:
             myMap.draw_map_title()

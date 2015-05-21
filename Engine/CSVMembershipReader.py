@@ -4,7 +4,7 @@ import csv
 
 
 class CSVMembershipReader:
-    def __init__(self, filename = "Greenfield Ward member directory.csv"):
+    def __init__(self, filename="Greenfield Ward member directory.csv"):
         self.filename = filename
 
     def __iter__(self):

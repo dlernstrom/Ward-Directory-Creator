@@ -7,7 +7,6 @@ from decimal import Decimal
 class Dwelling:
     mapIndex = None
     def __init__(self, dwellingDict):
-        #['Longitude','Latitude','Street','City','State','Zip']
         keys = dwellingDict.keys()
         for key in keys:
             setattr(self, key, dwellingDict[key])
@@ -28,14 +27,15 @@ class Dwelling:
         self.mapIndex = mapIndex
         self.dwellingDict['MapIndex'] = mapIndex
 
+
 class Dwellings:
     def __init__(self):
-        self.dwellingsFname = u'C:\\Users\\dlernstrom\\Desktop\\DirectoryCherryCreek\\Cherry_Creek_Dwellings.csv'
+        self.dwellingsFname = r'C:\Users\dlernstrom\Desktop\DirectoryCherryCreek\Cherry_Creek_Dwellings.csv'
         self.dwellingList = []
         self.read_from_file()
 
     def order_dwelling_list(self):
-        self.dwellingList = sorted(self.dwellingList, key = lambda x: x.mapIndex)
+        self.dwellingList = sorted(self.dwellingList, key=lambda x: x.mapIndex)
 
     def __del__(self):
         self.write_to_file()
@@ -59,14 +59,16 @@ class Dwellings:
 
     def write_to_file(self):
         print "Saving file"
-        writer = csv.DictWriter(open(self.dwellingsFname, 'wb'), ["MapIndex", "Longitude","Latitude","Street","City","State","Zip", 'NextDwellingOverride'])
+        writer = csv.DictWriter(open(self.dwellingsFname, 'wb'),
+                                ["MapIndex", "Longitude", "Latitude", "Street",
+                                 "City", "State", "Zip",
+                                 'NextDwellingOverride'])
         writer.writeheader()
         for d in self.dwellingList:
             writer.writerow(d.dwellingDict)
 
     def find_map_index_for_household(self, household):
         for d in self.dwellingList:
-            #print "Comparing H:\n[%s] to D:\n[%s]" % (household.familyAddress, d.addressForCompare)
             if household.familyAddress == d.addressForCompare:
                 return d.mapIndex
         return None
