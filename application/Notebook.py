@@ -39,7 +39,7 @@ class Notebook(wx.Notebook):
         self.SetPageSize(self.myMainPanel.GetSize())
 
     def GetConfigValue(self, DictionaryField):
-        return self.AppHandle.GetConfigValue(DictionaryField)
+        return self.AppHandle.get_conf_val(DictionaryField)
 
     def SetConfigValue(self, DictionaryField, value):
         self.AppHandle.SetConfigValue(DictionaryField, value)

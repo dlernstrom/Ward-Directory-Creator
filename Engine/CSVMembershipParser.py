@@ -25,6 +25,7 @@ class Phone:
     def __str__(self):
         return self.phoneFormatted
 
+
 class EmailAddress:
     def __init__(self, emailAddress, name):
         emailAddress = emailAddress.split(' ')[0].split(',')[0].split('\r')[0].split('\n')[0]
@@ -81,7 +82,7 @@ class Family:
         self.parents = [self.head_of_household]
         self.expectedPhotoName = self.head_of_household.fullName.replace(',', '').replace(' ', '') + '.jpg'
         try:
-            self.family.append(FamilyMember(familyCSV, 8, isParent = True))
+            self.family.append(FamilyMember(familyCSV, 8, isParent=True))
             self.parents.append(self.family[-1])
         except NoPersonError:
             pass

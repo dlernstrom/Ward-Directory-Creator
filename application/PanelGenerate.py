@@ -125,14 +125,14 @@ class GeneratePanel(ColoredPanel):
         border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])
 
         # Here's the logic to set up the prevalues from config file
-        if self.parent.GetConfigValue('email.smtp'):
+        if self.parent.get_conf_val('email.smtp'):
             self.TXT_SMTPAddy.SetValue(
-                self.parent.GetConfigValue('email.smtp'))
-        if self.parent.GetConfigValue('email.username'):
+                self.parent.get_conf_val('email.smtp'))
+        if self.parent.get_conf_val('email.username'):
             self.TXT_User.SetValue(
-                self.parent.GetConfigValue('email.username'))
-        if self.parent.GetConfigValue('email.pass'):
-            self.TXT_Pass.SetValue(self.parent.GetConfigValue('email.pass'))
+                self.parent.get_conf_val('email.username'))
+        if self.parent.get_conf_val('email.pass'):
+            self.TXT_Pass.SetValue(self.parent.get_conf_val('email.pass'))
 
         self.Title = "Generate"
 
@@ -195,50 +195,50 @@ class GeneratePanel(ColoredPanel):
 
     def OnGoButton(self, evt):
         # Here, I need to check each of the (7) things to do and do them
-        if self.parent.GetConfigValue('task.sendemail') == '1':
+        if self.parent.get_conf_val('task.sendemail') == '1':
             print "Sending Emails"
             self.AppHandle.SendEmails()
-        if self.parent.GetConfigValue('task.genmissfile') == '1':
+        if self.parent.get_conf_val('task.genmissfile') == '1':
             print "Generating Missing File"
-        if self.parent.GetConfigValue('task.extract_moveouts') == '1':
+        if self.parent.get_conf_val('task.extract_moveouts') == '1':
             print "Extracting Move-Outs"
-            LiveFolder = self.parent.GetConfigValue('file.imagesdirectory')
-            ArchiveFolder = self.parent.GetConfigValue('file.imagearchivedir')
+            LiveFolder = self.parent.get_conf_val('file.imagesdirectory')
+            ArchiveFolder = self.parent.get_conf_val('file.imagearchivedir')
             self.AppHandle.MoveSuperflousImages(LiveFolder, ArchiveFolder)
 
         #Generate PDF Stuff Here
         Full = 0
-        if self.parent.GetConfigValue('task.genfull') == '1':
+        if self.parent.get_conf_val('task.genfull') == '1':
             print "Generating Full PDF"
             Full = 1
 
         Single2Double = 0
-        if self.parent.GetConfigValue('task.gensingle2double') == '1':
+        if self.parent.get_conf_val('task.gensingle2double') == '1':
             print "Generating Single2Double PDF"
             Single2Double = 1
 
         Booklet = 0
-        if self.parent.GetConfigValue('task.genbooklet') == '1':
+        if self.parent.get_conf_val('task.genbooklet') == '1':
             print "Generating Booklet PDF"
             Booklet = 1
         if Full or Booklet or Single2Double:
-            OutputFolder = self.parent.GetConfigValue('file.pdf_outdirectory')
+            OutputFolder = self.parent.get_conf_val('file.pdf_outdirectory')
             DictionaryData = None
             self.AppHandle.InitiatePDF(OutputFolder, Full, Booklet,
                                        Single2Double)
 
         #Generate Missing Image Report
-        if self.parent.GetConfigValue('task.missreport') == '1':
+        if self.parent.get_conf_val('task.missreport') == '1':
             print "Generating missing report"
-            LiveFolder = self.parent.GetConfigValue('file.imagesdirectory')
+            LiveFolder = self.parent.get_conf_val('file.imagesdirectory')
             msg = self.AppHandle.GetReportMsg()
             dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg,
                                                        caption="Report",
                                                        size=(500, 600))
             dlg.ShowModal()
-        if self.parent.GetConfigValue('task.missimages') == '1':
+        if self.parent.get_conf_val('task.missimages') == '1':
             print "Generating missing images report"
-            LiveFolder = self.parent.GetConfigValue('file.imagesdirectory')
+            LiveFolder = self.parent.get_conf_val('file.imagesdirectory')
             msg = self.AppHandle.GetImagesReportMsg()
             dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg,
                                                        caption="Report",
@@ -246,19 +246,19 @@ class GeneratePanel(ColoredPanel):
             dlg.ShowModal()
 
     def makingActive(self):
-        if self.parent.GetConfigValue('task.missreport') == '1':
+        if self.parent.get_conf_val('task.missreport') == '1':
             self.CB_MissingReport.SetValue(True)
-        if self.parent.GetConfigValue('task.missimages') == '1':
+        if self.parent.get_conf_val('task.missimages') == '1':
             self.CB_MissingImages.SetValue(True)
-        if self.parent.GetConfigValue('task.sendemail') == '1':
+        if self.parent.get_conf_val('task.sendemail') == '1':
             self.CB_SendEmail.SetValue(True)
-        if self.parent.GetConfigValue('task.genmissfile') == '1':
+        if self.parent.get_conf_val('task.genmissfile') == '1':
             self.CB_MissingFile.SetValue(True)
-        if self.parent.GetConfigValue('task.extract_moveouts') == '1':
+        if self.parent.get_conf_val('task.extract_moveouts') == '1':
             self.CB_ExtractMoveOuts.SetValue(True)
-        if self.parent.GetConfigValue('task.genfull') == '1':
+        if self.parent.get_conf_val('task.genfull') == '1':
             self.CB_GenPDF_Full.SetValue(True)
-        if self.parent.GetConfigValue('task.genbooklet') == '1':
+        if self.parent.get_conf_val('task.genbooklet') == '1':
             self.CB_GenPDF_Booklet.SetValue(True)
-        if self.parent.GetConfigValue('task.gensingle2double') == '1':
+        if self.parent.get_conf_val('task.gensingle2double') == '1':
             self.CB_GenPDF_Single2Double.SetValue(True)

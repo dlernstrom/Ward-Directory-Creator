@@ -43,7 +43,6 @@ CONFIG_DEFAULTS = {
 
 class Application:
     def __init__(self, parent, DEBUG=0):
-
         self.ConfigHandle = Configuration(CONFIG_FILENAME, CONFIG_DEFAULTS)
         self.ConfigDefaults = CONFIG_DEFAULTS
 
@@ -51,7 +50,7 @@ class Application:
         self.ValidCSV = False
         #self.GetMembershipList()
 
-    def GetConfigValue(self, DictionaryField):
+    def get_conf_val(self, DictionaryField):
         return self.ConfigHandle.GetValueByKey(DictionaryField)
 
     def SetConfigValue(self, DictionaryField, value):
@@ -91,19 +90,19 @@ class Application:
 
         if OutputFolder == None or OutputFolder == 'None':
             OutputFolder = ''
-        else:
-            OutputFolder = OutputFolder + os.sep
         tm = time.strftime("%Y_%m_%d_%H_%M")
 
         PDFToolHandle = PDFTools(self.DEBUG)
         if Full:
-            filename = OutputFolder + 'PhotoDirectory_%s.pdf' % tm
+            filename = os.path.join(OutputFolder, 'PhotoDirectory_%s.pdf' % tm)
             PDFToolHandle.generate_doc(
                 filename, 'full',
                 directoryCollection.get_pages_for_binding('full'))
         if Booklet:
-            front = OutputFolder + 'PhotoDirectory_%s_FRONT.pdf' % tm
-            back = OutputFolder + 'PhotoDirectory_%s_BACK.pdf' % tm
+            front = os.path.join(OutputFolder,
+                                 'PhotoDirectory_%s_FRONT.pdf' % tm)
+            back = os.path.join(OutputFolder,
+                                'PhotoDirectory_%s_BACK.pdf' % tm)
             PDFToolHandle.generate_doc(
                 front, 'front',
                 directoryCollection.get_pages_for_binding('booklet'))
@@ -111,7 +110,8 @@ class Application:
                 back, 'back',
                 directoryCollection.get_pages_for_binding('booklet'))
         if Single2Double:
-            bookletprinted = OutputFolder + 'PhotoDirectory_%s_Single2Double.pdf' % tm
+            fname = 'PhotoDirectory_%s_Single2Double.pdf' % tm
+            bookletprinted = os.path.join(OutputFolder, fname)
             PDFToolHandle.generate_doc(
                 bookletprinted, 'special',
                 directoryCollection.get_pages_for_binding('booklet'))
@@ -138,7 +138,8 @@ class Application:
             [Map(1, Coordinate(41.9720, -111.8117775), Coordinate(41.9720, -111.7669975), 'large', 'portrait', 'east', 16, "Cherry Creek Ward", [Coordinate(41.9702841,-111.8060452), Coordinate(41.9523412,-111.8081775)]),
              Map(2, Coordinate(41.9385, -111.808), Coordinate(41.9385, -111.7963776), 'large', 'portrait', 'east', 17, "Inset 1", [Coordinate(41.9359261,-111.7964), Coordinate(41.934148,-111.79725)]),
              ])
-        currentPosition = (-112, 45, -112, 45) # must be left, bottom, right, top
+        # must be left, bottom, right, top
+        currentPosition = (-112, 45, -112, 45)
         done = False
         counter = 1
         d = None
@@ -161,7 +162,7 @@ class Application:
             nearest = nearest[0]
             d = self.homes.dwellingList[nearest.object]
             d.save_map_index(counter)
-            #print "Nearest ID", nearest.id
+            # print "Nearest ID", nearest.id
             print "Nearest Object", d
             print "XXX: (%s, %s)," % (d.Latitude, d.Longitude)
             # must be left, bottom, right, top
@@ -193,24 +194,24 @@ class Application:
 
     @property
     def member_list(self):
-        if self.GetConfigValue('file.member_csv_location') == None or \
-                not self.GetConfigValue('file.member_csv_location')[-4:] == '.csv':
+        if self.get_conf_val('file.member_csv_location') == None or \
+                not self.get_conf_val('file.member_csv_location')[-4:] == '.csv':
             raise Exception("Not a valid membership list")
         a = []
         membershipHandle = CSVMembershipParser(
-            self.GetConfigValue('file.member_csv_location'))
+            self.get_conf_val('file.member_csv_location'))
         for Household in membershipHandle.next():
             a.append(Household)
         return a
 
     @property
     def nonmember_list(self):
-        if self.GetConfigValue('file.nonmember_csv_location') == None or \
-                not self.GetConfigValue('file.nonmember_csv_location')[-4:] == '.csv':
+        if self.get_conf_val('file.nonmember_csv_location') == None or \
+                not self.get_conf_val('file.nonmember_csv_location')[-4:] == '.csv':
             raise Exception("Not a valid nonmembership list")
         a = []
         membershipHandle = CSVMembershipParser(
-            self.GetConfigValue('file.nonmember_csv_location'))
+            self.get_conf_val('file.nonmember_csv_location'))
         for Household in membershipHandle.next():
             a.append(Household)
         return a
@@ -237,24 +238,26 @@ class Application:
         return Report
 
     def GetMissingHouseholds(self):
-        ImagesDirectory = self.GetConfigValue('file.imagesdirectory')
+        ImagesDirectory = self.get_conf_val('file.imagesdirectory')
         MissingImages = []
         for Family in self.member_list:
-            if not os.path.exists(ImagesDirectory + os.sep + Family.expectedPhotoName):
+            if not os.path.exists(os.path.join(ImagesDirectory,
+                                               Family.expectedPhotoName)):
                 MissingImages.append(Family.coupleName)
         return MissingImages
 
     def GetMissingImages(self):
-        ImagesDirectory = self.GetConfigValue('file.imagesdirectory')
+        ImagesDirectory = self.get_conf_val('file.imagesdirectory')
         MissingImages = []
         for Family in self.member_list:
-            if not os.path.exists(ImagesDirectory + os.sep + Family.expectedPhotoName):
+            if not os.path.exists(os.path.join(ImagesDirectory,
+                                               Family.expectedPhotoName)):
                 MissingImages.append(Family.expectedPhotoName)
         return MissingImages
 
     def GetReportMsg(self):
         MissingList = self.GetMissingHouseholds()
-        message = "The following " + str(len(MissingList)) + " households are missing pictures\n\n"
+        message = "%d households are missing pictures\n\n" % len(MissingList)
         for Name in MissingList:
             message += Name + '\n'
         message += self.GetFamilyOfDuplicateAddressList()
@@ -262,13 +265,13 @@ class Application:
 
     def GetImagesReportMsg(self):
         MissingList = self.GetMissingImages()
-        message = "The following " + str(len(MissingList)) + " images are missing\n\n"
+        message = "The following %d images are missing\n\n" % len(MissingList)
         for Name in MissingList:
             message += Name + '\n'
         return message
 
     def GetMissingMsgEmails(self):
-        return self.GetConfigValue('email.recipients').split(',')
+        return self.get_conf_val('email.recipients').split(',')
 
     def GetMemberEmails(self):
         emailList = []
@@ -289,7 +292,7 @@ class Application:
             print "I haven't implimented 'Family' type yet."
 
     def SetNameList(self, NameType='HoH'):
-        #This will return a list of all HeadOfHousehold/Spouses in ward
+        # This will return a list of all HeadOfHousehold/Spouses in ward
         if NameType == 'HoH':
             self.NameList_HoH = []
             for family in self.MembershipList:
@@ -310,10 +313,10 @@ class Application:
                         return household.familyPhone.phoneFormatted
 
     def SendEmails(self):
-        if not self.GetConfigValue('email.smtp') == None:
-            SMTP_SERVER = self.GetConfigValue('email.smtp')
-            SMTP_User = self.GetConfigValue('email.username')
-            SMTP_Pass = self.GetConfigValue('email.pass')
+        if not self.get_conf_val('email.smtp') == None:
+            SMTP_SERVER = self.get_conf_val('email.smtp')
+            SMTP_User = self.get_conf_val('email.username')
+            SMTP_Pass = self.get_conf_val('email.pass')
             session = smtplib.SMTP(SMTP_SERVER)
             if not SMTP_User == None and not SMTP_Pass == None:
                 session.login(user=SMTP_User, password=SMTP_Pass)
@@ -324,7 +327,8 @@ class Application:
             for ToAddy in self.GetMissingMsgEmails():
                 print ToAddy
                 msg['To'] = ToAddy
-                smtpresult = session.sendmail(from_addr='Ward Directory Creator <david@ernstrom.net>',
+                frm = 'Ward Directory Creator <david@ernstrom.net>'
+                smtpresult = session.sendmail(from_addr=frm,
                                               to_addrs=ToAddy,
                                               msg=msg.as_string())
             session.close()
@@ -349,12 +353,9 @@ class Application:
         return ExtraImages
 
     def MoveSuperflousImages(self, LiveFolder, ArchiveFolder):
+        if not os.path.exists(ArchiveFolder):
+            os.mkdir(ArchiveFolder)
         for Image in self.GetSuperfluousImageList(LiveFolder):
-            try:
-                os.rename(LiveFolder + os.sep + Image,
-                          ArchiveFolder + os.sep + Image)
-            except WindowsError:
-                os.mkdir(ArchiveFolder)
-                os.rename(LiveFolder + os.sep + Image,
-                          ArchiveFolder + os.sep + Image)
+            os.rename(os.path.join(LiveFolder, Image),
+                      os.path.join(ArchiveFolder, Image))
             print Image, "moved to archive"

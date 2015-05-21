@@ -43,7 +43,6 @@ class Dwellings:
 
     def __del__(self):
         self.write_to_file()
-        pass
 
     def read_from_file(self):
         reader = csv.DictReader(open(self.dwellingsFname))

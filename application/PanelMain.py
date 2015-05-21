@@ -25,19 +25,19 @@ class MainPanel(ColoredPanel):
 
         TXT_WardName = wx.TextCtrl(self, -1, size=(250,25))
         TXT_WardName.SetFont(self.TextBoxFont)
-        if self.parent.GetConfigValue('unit.unitname'):
-            TXT_WardName.SetValue(self.parent.GetConfigValue('unit.unitname'))
+        if self.parent.get_conf_val('unit.unitname'):
+            TXT_WardName.SetValue(self.parent.get_conf_val('unit.unitname'))
         WardBoxSizer.Add(TXT_WardName, 0, wx.TOP | wx.LEFT, 10)
 
         self.RB_Ward = wx.RadioButton(self, -1, "Ward", style = wx.RB_GROUP)
         self.RB_Ward.SetFont(self.StandardFont)
-        if self.parent.GetConfigValue('unit.unit_type') == 'Ward':
+        if self.parent.get_conf_val('unit.unit_type') == 'Ward':
             self.RB_Ward.SetValue(True)
         WardBoxSizer.Add(self.RB_Ward, 0, wx.TOP | wx.LEFT, 10)
 
         self.RB_Branch = wx.RadioButton(self, -1, "Branch")
         self.RB_Branch.SetFont(self.StandardFont)
-        if self.parent.GetConfigValue('unit.unit_type') == 'Branch':
+        if self.parent.get_conf_val('unit.unit_type') == 'Branch':
             self.RB_Branch.SetValue(True)
         WardBoxSizer.Add(self.RB_Branch, 0, wx.TOP | wx.LEFT, 10)
 
@@ -47,9 +47,9 @@ class MainPanel(ColoredPanel):
 
         TXT_StakeName = wx.TextCtrl(self, -1, size=(250,25))
         TXT_StakeName.SetFont(self.TextBoxFont)
-        if self.parent.GetConfigValue('unit.stakename'):
+        if self.parent.get_conf_val('unit.stakename'):
             TXT_StakeName.SetValue(
-                self.parent.GetConfigValue('unit.stakename'))
+                self.parent.get_conf_val('unit.stakename'))
         WardBoxSizer.Add(TXT_StakeName, 0, wx.TOP | wx.LEFT, 10)
 
         #######################################################################
@@ -61,13 +61,13 @@ class MainPanel(ColoredPanel):
 
         self.CB_UseQuote = wx.CheckBox(self, -1, "Use Quote")
         self.CB_UseQuote.SetFont(self.StandardFont)
-        if int(self.parent.GetConfigValue('quote.usequote')):
+        if int(self.parent.get_conf_val('quote.usequote')):
             self.CB_UseQuote.SetValue(True)
         QuoteBoxSizer.Add(self.CB_UseQuote, 0, wx.TOP | wx.LEFT, 10)
 
         self.StaticInspQuote = wx.StaticText(self, -1, "Inspirational Quote:")
         self.StaticInspQuote.SetFont(self.StandardFont)
-        if int(self.parent.GetConfigValue('quote.usequote')):
+        if int(self.parent.get_conf_val('quote.usequote')):
             self.StaticInspQuote.Enable(True)
         else:
             self.StaticInspQuote.Enable(False)
@@ -76,17 +76,17 @@ class MainPanel(ColoredPanel):
         self.TXT_Quote = wx.TextCtrl(self, -1, size=(350, 100),
                                      style=wx.PROCESS_ENTER | wx.TE_MULTILINE)
         self.TXT_Quote.SetFont(self.TextBoxFont)
-        if int(self.parent.GetConfigValue('quote.usequote')):
+        if int(self.parent.get_conf_val('quote.usequote')):
             self.TXT_Quote.Enable(True)
         else:
             self.TXT_Quote.Enable(False)
-        if not self.parent.GetConfigValue('quote.quotecontent') == None:
-            self.TXT_Quote.SetValue(self.parent.GetConfigValue('quote.quotecontent'))
+        if not self.parent.get_conf_val('quote.quotecontent') == None:
+            self.TXT_Quote.SetValue(self.parent.get_conf_val('quote.quotecontent'))
         QuoteBoxSizer.Add(self.TXT_Quote, 0, wx.TOP | wx.LEFT, 10)
 
         self.StaticAuthor = wx.StaticText(self, -1, "Author:")
         self.StaticAuthor.SetFont(self.StandardFont)
-        if int(self.parent.GetConfigValue('quote.usequote')):
+        if int(self.parent.get_conf_val('quote.usequote')):
             self.StaticAuthor.Enable(True)
         else:
             self.StaticAuthor.Enable(False)
@@ -94,18 +94,18 @@ class MainPanel(ColoredPanel):
 
         self.TXT_Author = wx.TextCtrl(self, -1, size=(250, 25))
         self.TXT_Author.SetFont(self.TextBoxFont)
-        if int(self.parent.GetConfigValue('quote.usequote')):
+        if int(self.parent.get_conf_val('quote.usequote')):
             self.TXT_Author.Enable(True)
         else:
             self.TXT_Author.Enable(False)
-        if not self.parent.GetConfigValue('quote.quoteauthor') == None:
+        if not self.parent.get_conf_val('quote.quoteauthor') == None:
             self.TXT_Author.SetValue(
-                self.parent.GetConfigValue('quote.quoteauthor'))
+                self.parent.get_conf_val('quote.quoteauthor'))
         QuoteBoxSizer.Add(self.TXT_Author, 0, wx.TOP | wx.LEFT, 10)
 
         self.BTN_RestoreQuote = wx.Button(self, -1, "Restore Default")
         self.BTN_RestoreQuote.SetFont(self.StandardFont)
-        if int(self.parent.GetConfigValue('quote.usequote')):
+        if int(self.parent.get_conf_val('quote.usequote')):
             self.BTN_RestoreQuote.Enable(True)
         else:
             self.BTN_RestoreQuote.Enable(False)

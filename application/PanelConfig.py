@@ -141,22 +141,22 @@ class ConfigPanel(ColoredPanel):
         self.Title = "Configuration"
 
         #Here's the logic to set up the prevalues from config file
-        if self.parent.GetConfigValue('file.member_csv_location'):
+        if self.parent.get_conf_val('file.member_csv_location'):
             self.memberCsvFile.SetValue(
-                self.parent.GetConfigValue('file.member_csv_location'))
-        if self.parent.GetConfigValue('file.nonmember_csv_location'):
+                self.parent.get_conf_val('file.member_csv_location'))
+        if self.parent.get_conf_val('file.nonmember_csv_location'):
             self.nonMemberCsvFile.SetValue(
-                self.parent.GetConfigValue('file.nonmember_csv_location'))
-        if self.parent.GetConfigValue('file.imagesdirectory'):
+                self.parent.get_conf_val('file.nonmember_csv_location'))
+        if self.parent.get_conf_val('file.imagesdirectory'):
             self.ImagesDirectory.SetValue(
-                self.parent.GetConfigValue('file.imagesdirectory'))
-        if self.parent.GetConfigValue('file.pdf_outdirectory'):
+                self.parent.get_conf_val('file.imagesdirectory'))
+        if self.parent.get_conf_val('file.pdf_outdirectory'):
             self.PDF_Out_Directory.SetValue(
-                self.parent.GetConfigValue('file.pdf_outdirectory'))
-        if self.parent.GetConfigValue('file.imagearchivedir'):
+                self.parent.get_conf_val('file.pdf_outdirectory'))
+        if self.parent.get_conf_val('file.imagearchivedir'):
             self.Image_Archive_Directory.SetValue(
-                self.parent.GetConfigValue('file.imagearchivedir'))
-        if self.parent.GetConfigValue('missing.overridephone') == '1':
+                self.parent.get_conf_val('file.imagearchivedir'))
+        if self.parent.get_conf_val('missing.overridephone') == '1':
             self.CB_OverridePhone.SetValue(True)
         else:
             self.CB_OverridePhone.SetValue(False)
@@ -193,7 +193,7 @@ class ConfigPanel(ColoredPanel):
         self.parent.SetConfigValue('missing.missingname', evt.GetString())
         self.CB_OverridePhone.SetValue(False)
         self.CB_OverridePhone.Enable(True)
-        NameInQuestion = self.parent.GetConfigValue('missing.missingname')
+        NameInQuestion = self.parent.get_conf_val('missing.missingname')
         Phone = self.parent.parent.AppHandle.GetPhoneNumber(NameInQuestion)
         self.TXT_Phone.SetValue(Phone)
         self.TXT_Phone.Enable(False)
@@ -208,7 +208,7 @@ class ConfigPanel(ColoredPanel):
         else:
             self.parent.SetConfigValue('missing.overridephone', '0')
             self.TXT_Phone.Enable(False)
-            NameInQuestion = self.parent.GetConfigValue('missing.missingname')
+            NameInQuestion = self.parent.get_conf_val('missing.missingname')
             Phone = self.parent.parent.AppHandle.GetPhoneNumber(NameInQuestion)
             self.TXT_Phone.SetValue(Phone)
 
@@ -231,8 +231,8 @@ class ConfigPanel(ColoredPanel):
         self.parent.SetConfigValue('email.recipients', AllEmails)
 
     def LoadEmails(self):
-        if not self.parent.GetConfigValue('email.recipients') == None:
-            r = self.parent.GetConfigValue('email.recipients').split(',')
+        if not self.parent.get_conf_val('email.recipients') == None:
+            r = self.parent.get_conf_val('email.recipients').split(',')
             self.EmailList.Clear()
             self.EmailList.InsertItems(r, 0)
 
@@ -262,23 +262,23 @@ class ConfigPanel(ColoredPanel):
                 NameType='Parent')
             for Name in NameList:
                 self.Contact_Dropdown.Append(Name)
-            if self.parent.GetConfigValue('missing.missingname') in NameList:
+            if self.parent.get_conf_val('missing.missingname') in NameList:
                 self.Contact_Dropdown.SetStringSelection(
-                    self.parent.GetConfigValue('missing.missingname'))
+                    self.parent.get_conf_val('missing.missingname'))
                 self.CB_OverridePhone.Enable(True)
-                if self.parent.GetConfigValue('missing.overridephone') == '1':
+                if self.parent.get_conf_val('missing.overridephone') == '1':
                     self.TXT_Phone.Enable(True)
-                    if self.parent.GetConfigValue('missing.missingphone'):
+                    if self.parent.get_conf_val('missing.missingphone'):
                         self.TXT_Phone.SetValue(
-                            self.parent.GetConfigValue('missing.missingphone'))
+                            self.parent.get_conf_val('missing.missingphone'))
                 else:
                     self.TXT_Phone.Enable(False)
                     self.TXT_Phone.SetValue(
                         self.parent.parent.AppHandle.GetPhoneNumber(
-                            self.parent.GetConfigValue('missing.missingname')))
+                            self.parent.get_conf_val('missing.missingname')))
             else:
-                if self.parent.GetConfigValue('missing.missingname'):
-                    OldMissingName = self.parent.GetConfigValue('missing.missingname')
+                if self.parent.get_conf_val('missing.missingname'):
+                    OldMissingName = self.parent.get_conf_val('missing.missingname')
                 self.TXT_Phone.Enable(False)
                 self.CB_OverridePhone.Enable(False)
 

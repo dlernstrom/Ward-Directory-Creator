@@ -31,14 +31,14 @@ class BuildingPanel(ColoredPanel):
 
         #Sacrament Meeting Row
         self.CB_SacramentDisp = wx.CheckBox(self, -1)
-        if int(self.parent.GetConfigValue('block.displaysac')):
+        if int(self.parent.get_conf_val('block.displaysac')):
             self.CB_SacramentDisp.SetValue(True)
         ScheduleGrid.Add(self.CB_SacramentDisp, (1, 0), span=wx.DefaultSpan,
                          flag=wx.ALIGN_CENTER | wx.ALL, border=10)
 
         self.SacText = wx.StaticText(self, -1, "Sacrament Meeting (Start Time)")
         self.SacText.SetFont(self.StandardFont)
-        if int(self.parent.GetConfigValue('block.displaysac')):
+        if int(self.parent.get_conf_val('block.displaysac')):
             self.SacText.Enable(True)
         else:
             self.SacText.Enable(False)
@@ -47,13 +47,13 @@ class BuildingPanel(ColoredPanel):
 
         self.SacTime = wx.lib.masked.TimeCtrl(self, -1, display_seconds=False)
         self.SacTime.SetFont(self.StandardFont)
-        if not self.parent.GetConfigValue('block.sacstart') == None:
-            self.SacTime.SetValue(self.parent.GetConfigValue('block.sacstart'))
+        if not self.parent.get_conf_val('block.sacstart') == None:
+            self.SacTime.SetValue(self.parent.get_conf_val('block.sacstart'))
         h = self.SacTime.GetSize().height
         self.spin1 = wx.SpinButton(self, -1, wx.DefaultPosition, (-1, h),
                                    wx.SP_VERTICAL)
         self.SacTime.BindSpinButton(self.spin1)
-        if int(self.parent.GetConfigValue('block.displaysac')):
+        if int(self.parent.get_conf_val('block.displaysac')):
             self.SacTime.Enable(True)
             self.spin1.Enable(True)
         else:
@@ -68,7 +68,7 @@ class BuildingPanel(ColoredPanel):
 
         # Sunday School Row
         self.CB_SundaySchoolDisp = wx.CheckBox(self, -1)
-        if int(self.parent.GetConfigValue('block.displayss')):
+        if int(self.parent.get_conf_val('block.displayss')):
             self.CB_SundaySchoolDisp.SetValue(True)
         else:
             self.CB_SundaySchoolDisp.SetValue(False)
@@ -78,7 +78,7 @@ class BuildingPanel(ColoredPanel):
 
         self.SSText = wx.StaticText(self, -1, "SundaySchool (Start Time)")
         self.SSText.SetFont(self.StandardFont)
-        if int(self.parent.GetConfigValue('block.displayss')):
+        if int(self.parent.get_conf_val('block.displayss')):
             self.SSText.Enable(True)
         else:
             self.SSText.Enable(False)
@@ -87,13 +87,13 @@ class BuildingPanel(ColoredPanel):
 
         self.SSTime = wx.lib.masked.TimeCtrl(self, -1, display_seconds=False)
         self.SSTime.SetFont(self.StandardFont)
-        if not self.parent.GetConfigValue('block.ssstart') == None:
-            self.SSTime.SetValue(self.parent.GetConfigValue('block.ssstart'))
+        if not self.parent.get_conf_val('block.ssstart') == None:
+            self.SSTime.SetValue(self.parent.get_conf_val('block.ssstart'))
         h = self.SSTime.GetSize().height
         self.spin2 = wx.SpinButton(self, -1, wx.DefaultPosition, (-1, h),
                                    wx.SP_VERTICAL)
         self.SSTime.BindSpinButton(self.spin2)
-        if int(self.parent.GetConfigValue('block.displayss')):
+        if int(self.parent.get_conf_val('block.displayss')):
             self.SSTime.Enable(True)
             self.spin2.Enable(True)
         else:
@@ -108,7 +108,7 @@ class BuildingPanel(ColoredPanel):
 
         # Priesthood/Relief Society Row
         self.CB_PriesthoodDisp = wx.CheckBox(self, -1)
-        if int(self.parent.GetConfigValue('block.display_pr_rs')):
+        if int(self.parent.get_conf_val('block.display_pr_rs')):
             self.CB_PriesthoodDisp.SetValue(True)
         else:
             self.CB_PriesthoodDisp.SetValue(False)
@@ -118,7 +118,7 @@ class BuildingPanel(ColoredPanel):
         title = "Priesthood/Relief Society (Start Time)"
         self.PriesthoodText = wx.StaticText(self, -1, title)
         self.PriesthoodText.SetFont(self.StandardFont)
-        if int(self.parent.GetConfigValue('block.display_pr_rs')):
+        if int(self.parent.get_conf_val('block.display_pr_rs')):
             self.PriesthoodText.Enable(True)
         else:
             self.PriesthoodText.Enable(False)
@@ -128,14 +128,14 @@ class BuildingPanel(ColoredPanel):
         self.PriesthoodTime = wx.lib.masked.TimeCtrl(self, -1,
                                                      display_seconds=False)
         self.PriesthoodTime.SetFont(self.StandardFont)
-        if not self.parent.GetConfigValue('block.pr_rs_start') == None:
+        if not self.parent.get_conf_val('block.pr_rs_start') == None:
             self.PriesthoodTime.SetValue(
-                self.parent.GetConfigValue('block.pr_rs_start'))
+                self.parent.get_conf_val('block.pr_rs_start'))
         h = self.PriesthoodTime.GetSize().height
         self.spin3 = wx.SpinButton(self, -1, wx.DefaultPosition, (-1, h),
                                    wx.SP_VERTICAL)
         self.PriesthoodTime.BindSpinButton(self.spin3)
-        if int(self.parent.GetConfigValue('block.display_pr_rs')):
+        if int(self.parent.get_conf_val('block.display_pr_rs')):
             self.PriesthoodTime.Enable(True)
             self.spin3.Enable(True)
         else:
@@ -163,14 +163,14 @@ class BuildingPanel(ColoredPanel):
 
         self.Addy1 = wx.TextCtrl(self, -1, size=(300, -1))
         self.Addy1.SetFont(self.StandardFont)
-        if not self.parent.GetConfigValue('bldg.addy1') == None:
-            self.Addy1.SetValue(self.parent.GetConfigValue('bldg.addy1'))
+        if not self.parent.get_conf_val('bldg.addy1') == None:
+            self.Addy1.SetValue(self.parent.get_conf_val('bldg.addy1'))
         BuildingBoxSizer.Add(self.Addy1, 0, wx.ALL, 10)
 
         self.Addy2 = wx.TextCtrl(self, -1, size=(300, -1))
         self.Addy2.SetFont(self.StandardFont)
-        if not self.parent.GetConfigValue('bldg.addy2') == None:
-            self.Addy2.SetValue(self.parent.GetConfigValue('bldg.addy2'))
+        if not self.parent.get_conf_val('bldg.addy2') == None:
+            self.Addy2.SetValue(self.parent.get_conf_val('bldg.addy2'))
         BuildingBoxSizer.Add(self.Addy2, 0, wx.ALL, 10)
 
         PhoneStatic = wx.StaticText(self, -1, "Building Phone #")
@@ -179,8 +179,8 @@ class BuildingPanel(ColoredPanel):
 
         self.Phone = wx.TextCtrl(self, -1, size=(200, -1))
         self.Phone.SetFont(self.StandardFont)
-        if not self.parent.GetConfigValue('bldg.phone') == None:
-            self.Phone.SetValue(self.parent.GetConfigValue('bldg.phone'))
+        if not self.parent.get_conf_val('bldg.phone') == None:
+            self.Phone.SetValue(self.parent.get_conf_val('bldg.phone'))
         BuildingBoxSizer.Add(self.Phone, 0, wx.ALL, 10)
 
         #######################################################################
