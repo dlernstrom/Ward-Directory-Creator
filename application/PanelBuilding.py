@@ -2,10 +2,9 @@
 from __future__ import unicode_literals
 
 import wx
-import wx.lib
-import wx.lib.masked
-from ColoredPanel import *
-import  wx.lib.filebrowsebutton as filebrowse
+from wx.lib.masked import EVT_TIMEUPDATE, TimeCtrl
+
+from ColoredPanel import ColoredPanel
 
 
 class BuildingPanel(ColoredPanel):
@@ -21,7 +20,6 @@ class BuildingPanel(ColoredPanel):
         self.ScheduleBoxSizer = ScheduleBoxSizer = wx.StaticBoxSizer(
             ScheduleBox, wx.VERTICAL)
 
-        # I need a flex grid sizer in the ScheduleBoxSizer
         ScheduleGrid = wx.GridBagSizer()
 
         DisplayWord = wx.StaticText(self, -1, "Display")
@@ -29,7 +27,7 @@ class BuildingPanel(ColoredPanel):
         ScheduleGrid.Add(DisplayWord, (0, 0), span=wx.DefaultSpan,
                          flag=wx.ALIGN_CENTER_HORIZONTAL | wx.ALL, border=10)
 
-        #Sacrament Meeting Row
+        # Sacrament Meeting Row
         self.CB_SacramentDisp = wx.CheckBox(self, -1)
         if int(self.parent.get_conf_val('block.displaysac')):
             self.CB_SacramentDisp.SetValue(True)
@@ -45,7 +43,7 @@ class BuildingPanel(ColoredPanel):
         ScheduleGrid.Add(self.SacText, (1, 1), span=wx.DefaultSpan,
                          flag=wx.ALL, border=10)
 
-        self.SacTime = wx.lib.masked.TimeCtrl(self, -1, display_seconds=False)
+        self.SacTime = TimeCtrl(self, -1, display_seconds=False)
         self.SacTime.SetFont(self.StandardFont)
         if not self.parent.get_conf_val('block.sacstart') == None:
             self.SacTime.SetValue(self.parent.get_conf_val('block.sacstart'))
@@ -85,7 +83,7 @@ class BuildingPanel(ColoredPanel):
         ScheduleGrid.Add(self.SSText, (2, 1), span=wx.DefaultSpan, flag=wx.ALL,
                          border=10)
 
-        self.SSTime = wx.lib.masked.TimeCtrl(self, -1, display_seconds=False)
+        self.SSTime = TimeCtrl(self, -1, display_seconds=False)
         self.SSTime.SetFont(self.StandardFont)
         if not self.parent.get_conf_val('block.ssstart') == None:
             self.SSTime.SetValue(self.parent.get_conf_val('block.ssstart'))
@@ -125,8 +123,7 @@ class BuildingPanel(ColoredPanel):
         ScheduleGrid.Add(self.PriesthoodText, (3, 1), span=wx.DefaultSpan,
                          flag=wx.ALL, border=10)
 
-        self.PriesthoodTime = wx.lib.masked.TimeCtrl(self, -1,
-                                                     display_seconds=False)
+        self.PriesthoodTime = TimeCtrl(self, -1, display_seconds=False)
         self.PriesthoodTime.SetFont(self.StandardFont)
         if not self.parent.get_conf_val('block.pr_rs_start') == None:
             self.PriesthoodTime.SetValue(
@@ -150,7 +147,7 @@ class BuildingPanel(ColoredPanel):
 
         ScheduleBoxSizer.Add(ScheduleGrid, 0, wx.ALL | 10)
 
-        ############################################################################
+        #######################################################################
         ## Building Contact Information
         BuildingBox = wx.StaticBox(self, -1, "Building Information")
         BuildingBox.SetFont(self.StandardFont)
@@ -212,12 +209,9 @@ class BuildingPanel(ColoredPanel):
         self.Bind(wx.EVT_CHECKBOX, self.OnSacDisp, self.CB_SacramentDisp)
         self.Bind(wx.EVT_CHECKBOX, self.OnSSDisp, self.CB_SundaySchoolDisp)
         self.Bind(wx.EVT_CHECKBOX, self.OnPrDisp, self.CB_PriesthoodDisp)
-        self.Bind(wx.lib.masked.EVT_TIMEUPDATE, self.OnSacTimeChange,
-                  self.SacTime)
-        self.Bind(wx.lib.masked.EVT_TIMEUPDATE, self.OnSSTimeChange,
-                  self.SSTime)
-        self.Bind(wx.lib.masked.EVT_TIMEUPDATE, self.OnPrTimeChange,
-                  self.PriesthoodTime)
+        self.Bind(EVT_TIMEUPDATE, self.OnSacTimeChange, self.SacTime)
+        self.Bind(EVT_TIMEUPDATE, self.OnSSTimeChange, self.SSTime)
+        self.Bind(EVT_TIMEUPDATE, self.OnPrTimeChange, self.PriesthoodTime)
         self.Bind(wx.EVT_TEXT, self.OnAddy1Changed, self.Addy1)
         self.Bind(wx.EVT_TEXT, self.OnAddy2Changed, self.Addy2)
         self.Bind(wx.EVT_TEXT, self.OnPhoneChanged, self.Phone)

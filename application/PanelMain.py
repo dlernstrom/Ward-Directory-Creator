@@ -4,13 +4,13 @@ from __future__ import unicode_literals
 import wx
 from wx.lib.wordwrap import wordwrap
 
-from ColoredPanel import *
+from ColoredPanel import ColoredPanel
 import __version__
 
 
 class MainPanel(ColoredPanel):
     def __init__(self, parent):
-        ColoredPanel.__init__(self, parent, wx.BLUE)
+        super(MainPanel, self).__init__(parent, wx.BLUE)
 
         #######################################################################
         ## Ward/Branch Configuration Section

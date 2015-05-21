@@ -2,13 +2,14 @@
 from __future__ import unicode_literals
 
 import wx
-from ColoredPanel import *
 from wx.lib.filebrowsebutton import FileBrowseButton, DirBrowseButton
+
+from ColoredPanel import ColoredPanel
 
 
 class ConfigPanel(ColoredPanel):
     def __init__(self, parent):
-        ColoredPanel.__init__(self, parent, None)
+        super(ConfigPanel, self).__init__(parent, None)
         self.parent = parent
 
         #######################################################################

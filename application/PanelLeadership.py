@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import wx
 
-from ColoredPanel import *
+from ColoredPanel import ColoredPanel
 
 
 class LeadershipRow(wx.BoxSizer):

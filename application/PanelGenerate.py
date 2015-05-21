@@ -2,14 +2,14 @@
 from __future__ import unicode_literals
 
 import wx
-import wx.lib
-import wx.lib.dialogs
-from ColoredPanel import *
+from wx.lib.dialogs import ScrolledMessageDialog
+
+from ColoredPanel import ColoredPanel
 
 
 class GeneratePanel(ColoredPanel):
     def __init__(self, parent):
-        ColoredPanel.__init__(self, parent, None)
+        super(GeneratePanel, self).__init__(parent, None)
         self.parent = parent
         self.AppHandle = self.parent.parent.AppHandle
 
@@ -232,17 +232,15 @@ class GeneratePanel(ColoredPanel):
             print "Generating missing report"
             LiveFolder = self.parent.get_conf_val('file.imagesdirectory')
             msg = self.AppHandle.GetReportMsg()
-            dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg,
-                                                       caption="Report",
-                                                       size=(500, 600))
+            dlg = ScrolledMessageDialog(self, msg, caption="Report",
+                                        size=(500, 600))
             dlg.ShowModal()
         if self.parent.get_conf_val('task.missimages') == '1':
             print "Generating missing images report"
             LiveFolder = self.parent.get_conf_val('file.imagesdirectory')
             msg = self.AppHandle.GetImagesReportMsg()
-            dlg = wx.lib.dialogs.ScrolledMessageDialog(self, msg,
-                                                       caption="Report",
-                                                       size=(500, 600))
+            dlg = ScrolledMessageDialog(self, msg, caption="Report",
+                                        size=(500, 600))
             dlg.ShowModal()
 
     def makingActive(self):

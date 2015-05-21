@@ -38,7 +38,7 @@ class Notebook(wx.Notebook):
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGING, self.OnPageChanging)
         self.SetPageSize(self.myMainPanel.GetSize())
 
-    def GetConfigValue(self, DictionaryField):
+    def get_conf_val(self, DictionaryField):
         return self.AppHandle.get_conf_val(DictionaryField)
 
     def SetConfigValue(self, DictionaryField, value):
