@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import csv
+import os
 from decimal import Decimal
 
 
@@ -18,7 +19,8 @@ class Dwelling:
             print self.NextDwellingOverride
             print len(self.NextDwellingOverride)
 
-            self.NextDwellingOverride = (Decimal(self.NextDwellingOverride.split(',')[0].split('(')[1].strip()), Decimal(self.NextDwellingOverride.split(',')[1].split(')')[0].strip()))
+            self.NextDwellingOverride = (Decimal(self.NextDwellingOverride.split(',')[0].split('(')[1].strip()),
+                                         Decimal(self.NextDwellingOverride.split(',')[1].split(')')[0].strip()))
 
     def __repr__(self):
         return '%s\n%s, %s %s' % (self.Street, self.City, self.State, self.Zip)
@@ -30,7 +32,9 @@ class Dwelling:
 
 class Dwellings:
     def __init__(self):
-        self.dwellingsFname = r'C:\Users\dlernstrom\Desktop\DirectoryCherryCreek\Cherry_Creek_Dwellings.csv'
+        self.dwellingsFname = os.path.join('C:\\', 'Users', 'dlernstrom',
+                                           'Desktop', 'DirectoryCherryCreek',
+                                           'Cherry_Creek_Dwellings.csv')
         self.dwellingList = []
         self.read_from_file()
 
