@@ -13,7 +13,7 @@ from Coordinate import Coordinate
 from Pixel import Pixel
 
 
-class Map:
+class Map(object):
     # upperLeftCoordinate and upperRightCoordinate are as though the user was facing North
     def __init__(self, index, upperLeftCoordinate, upperRightCoordinate, size, initialOrientation, finalDirection, myConfig, title, titleCorners):
         self.url = 'http://maps.googleapis.com/maps/api/staticmap'

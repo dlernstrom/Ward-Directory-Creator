@@ -10,9 +10,7 @@ from ColoredPanel import ColoredPanel
 class GeneratePanel(ColoredPanel):
     def __init__(self, parent):
         super(GeneratePanel, self).__init__(parent, None)
-        self.parent = parent
         self.AppHandle = self.parent.parent.AppHandle
-
         ##################################################
         ## Here's the email config box
         EmailBox = wx.StaticBox(self, -1, "Email Configuration")

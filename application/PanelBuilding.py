@@ -10,10 +10,7 @@ from ColoredPanel import ColoredPanel
 class BuildingPanel(ColoredPanel):
     def __init__(self, parent):
         super(BuildingPanel, self).__init__(parent, wx.BLUE)
-
-        self.parent = parent
-
-        ############################################################################
+        #######################################################################
         ## Block Schedule Configuration
         ScheduleBox = wx.StaticBox(self, -1, "Block Schedule")
         ScheduleBox.SetFont(self.StandardFont)

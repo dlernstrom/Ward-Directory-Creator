@@ -5,7 +5,7 @@ import string
 import ConfigParser
 
 
-class Configuration:
+class Configuration(object):
     def __init__(self, filename, defaults):
         self.filename = filename
         self.defaults = defaults

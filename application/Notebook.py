@@ -35,7 +35,6 @@ class Notebook(wx.Notebook):
         self.AddPage(self.myGeneratePanel, self.myGeneratePanel.Title)
 
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
-        self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGING, self.OnPageChanging)
         self.SetPageSize(self.myMainPanel.GetSize())
 
     def get_conf_val(self, DictionaryField):
@@ -52,10 +51,4 @@ class Notebook(wx.Notebook):
         new = event.GetSelection()
         sel = self.GetSelection()
         self.GetPage(new).makingActive()
-        event.Skip()
-
-    def OnPageChanging(self, event):
-        old = event.GetOldSelection()
-        new = event.GetSelection()
-        sel = self.GetSelection()
         event.Skip()

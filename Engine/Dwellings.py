@@ -5,7 +5,7 @@ import os
 from decimal import Decimal
 
 
-class Dwelling:
+class Dwelling(object):
     mapIndex = None
     def __init__(self, dwellingDict):
         keys = dwellingDict.keys()

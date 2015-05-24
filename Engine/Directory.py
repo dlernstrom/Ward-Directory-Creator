@@ -14,7 +14,7 @@ STANDARD_MARGIN = 0.25 * inch
 STANDARD_FRAME_WIDTH = landscape(letter)[0]/2 - 2 * STANDARD_MARGIN
 
 
-class Directory:
+class Directory(object):
     flowableSectionOrder = ['prefix', 'directory', 'pre-map-spacers', 'maps',
                             'mapsLookup', 'post-map-spacers', 'suffix']
     pages = {'prefix': [],

@@ -10,8 +10,6 @@ from ColoredPanel import ColoredPanel
 class ConfigPanel(ColoredPanel):
     def __init__(self, parent):
         super(ConfigPanel, self).__init__(parent, None)
-        self.parent = parent
-
         #######################################################################
         ## File/Folder Configuration
         FolderBox = wx.StaticBox(self, -1, "File/Folder Configuration")

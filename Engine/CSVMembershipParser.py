@@ -8,7 +8,7 @@ class NoPersonError(Exception):
     """ Exception raised when there isn't really a person at this location."""
 
 
-class Phone:
+class Phone(object):
     def __init__(self, phoneCSV):
         phoneStripped = phoneCSV.replace(' ', '').replace('(', '').replace(')', '')\
             .replace('-', '').replace('.', '')

@@ -5,13 +5,12 @@ import wx
 from wx.lib.wordwrap import wordwrap
 
 from ColoredPanel import ColoredPanel
-import __version__
+from __version__ import __version__
 
 
 class MainPanel(ColoredPanel):
     def __init__(self, parent):
         super(MainPanel, self).__init__(parent, wx.BLUE)
-
         #######################################################################
         ## Ward/Branch Configuration Section
         WardBox = wx.StaticBox(self, -1, "Ward/Branch Configuration")
@@ -166,8 +165,8 @@ class MainPanel(ColoredPanel):
     def OnAboutButton(self, evt):
         info = wx.AboutDialogInfo()
         info.Name = "Ward Directory Creator"
-        info.Version = self.parent.AppHandle.GetFullVersion()
-        info.Copyright = "(C) 2007 David Ernstrom"
+        info.Version = __version__
+        info.Copyright = "(C) 2007-2015 David Ernstrom"
         info.Description = wordwrap("The Ward Directory Creator application was "
                                     "designed to simplify the process of creating folded directories for Wards "
                                     "and Branches of the Church of Jesus Christ of Latter Day Saints. This application "

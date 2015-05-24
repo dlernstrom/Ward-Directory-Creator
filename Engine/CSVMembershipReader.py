@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import csv
 
 
-class CSVMembershipReader:
+class CSVMembershipReader(object):
     def __init__(self, filename="Greenfield Ward member directory.csv"):
         self.filename = filename
 

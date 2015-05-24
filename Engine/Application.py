@@ -41,7 +41,7 @@ CONFIG_DEFAULTS = {
 }
 
 
-class Application:
+class Application(object):
     def __init__(self, parent, DEBUG=0):
         self.ConfigHandle = Configuration(CONFIG_FILENAME, CONFIG_DEFAULTS)
         self.ConfigDefaults = CONFIG_DEFAULTS

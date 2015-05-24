@@ -2,9 +2,7 @@
 from __future__ import unicode_literals
 
 
-class Coordinate:
-    latitude = None # 41.93
-    longitude = None # -111.80
+class Coordinate(object):
     def __init__(self, latitude, longitude):
         self.latitude = latitude
         self.longitude = longitude

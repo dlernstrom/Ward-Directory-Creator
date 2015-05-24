@@ -4,11 +4,7 @@ from __future__ import unicode_literals
 from Pixel import Pixel
 
 
-class Calibration:
-    pixel1 = None
-    coord1 = None
-    pixel2 = None
-    coord2 = None
+class Calibration(object):
     def __init__(self, coord1, pixel1, coord2, pixel2):
         self.pixel1 = pixel1
         self.coord1 = coord1

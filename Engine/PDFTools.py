@@ -7,7 +7,7 @@ from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter, landscape
 
 
-class PDFTools:
+class PDFTools(object):
     def __init__(self, DEBUG):
         self.DEBUG = 1
 
