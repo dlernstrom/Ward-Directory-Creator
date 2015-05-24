@@ -7,10 +7,11 @@ import images
 
 
 class ColoredPanel(wx.Window):
-    def __init__(self, parent, color):
+    def __init__(self, parent, app_handle, color):
         super(ColoredPanel, self).__init__(parent, wx.NewId(),
                                            style=wx.SIMPLE_BORDER)
         self.parent = parent
+        self.app_handle = app_handle
 
         # Just for style points, we'll use this as a background image.
         self.bg_bmp = images.getNotebookBKGDBitmap()
@@ -23,3 +24,6 @@ class ColoredPanel(wx.Window):
                                     False, "Georgia")
         self.TextBoxFont = wx.Font(9, wx.DEFAULT, wx.NORMAL, wx.NORMAL,
                                    False, "Georgia")
+
+    def making_active(self):
+        pass

@@ -53,7 +53,7 @@ class Application(object):
     def get_conf_val(self, DictionaryField):
         return self.ConfigHandle.GetValueByKey(DictionaryField)
 
-    def SetConfigValue(self, DictionaryField, value):
+    def set_conf_val(self, DictionaryField, value):
         self.ConfigHandle.SetValueByKey(DictionaryField, value)
         if DictionaryField == 'file.member_csv_location':
             self.GetMembershipList()

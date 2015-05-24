@@ -8,8 +8,8 @@ from ColoredPanel import ColoredPanel
 
 
 class ConfigPanel(ColoredPanel):
-    def __init__(self, parent):
-        super(ConfigPanel, self).__init__(parent, None)
+    def __init__(self, parent, app_handle):
+        super(ConfigPanel, self).__init__(parent, app_handle, None)
         #######################################################################
         ## File/Folder Configuration
         FolderBox = wx.StaticBox(self, -1, "File/Folder Configuration")
@@ -140,75 +140,77 @@ class ConfigPanel(ColoredPanel):
         self.Title = "Configuration"
 
         #Here's the logic to set up the prevalues from config file
-        if self.parent.get_conf_val('file.member_csv_location'):
+        if self.app_handle.get_conf_val('file.member_csv_location'):
             self.memberCsvFile.SetValue(
-                self.parent.get_conf_val('file.member_csv_location'))
-        if self.parent.get_conf_val('file.nonmember_csv_location'):
+                self.app_handle.get_conf_val('file.member_csv_location'))
+        if self.app_handle.get_conf_val('file.nonmember_csv_location'):
             self.nonMemberCsvFile.SetValue(
-                self.parent.get_conf_val('file.nonmember_csv_location'))
-        if self.parent.get_conf_val('file.imagesdirectory'):
+                self.app_handle.get_conf_val('file.nonmember_csv_location'))
+        if self.app_handle.get_conf_val('file.imagesdirectory'):
             self.ImagesDirectory.SetValue(
-                self.parent.get_conf_val('file.imagesdirectory'))
-        if self.parent.get_conf_val('file.pdf_outdirectory'):
+                self.app_handle.get_conf_val('file.imagesdirectory'))
+        if self.app_handle.get_conf_val('file.pdf_outdirectory'):
             self.PDF_Out_Directory.SetValue(
-                self.parent.get_conf_val('file.pdf_outdirectory'))
-        if self.parent.get_conf_val('file.imagearchivedir'):
+                self.app_handle.get_conf_val('file.pdf_outdirectory'))
+        if self.app_handle.get_conf_val('file.imagearchivedir'):
             self.Image_Archive_Directory.SetValue(
-                self.parent.get_conf_val('file.imagearchivedir'))
-        if self.parent.get_conf_val('missing.overridephone') == '1':
+                self.app_handle.get_conf_val('file.imagearchivedir'))
+        if self.app_handle.get_conf_val('missing.overridephone') == '1':
             self.CB_OverridePhone.SetValue(True)
         else:
             self.CB_OverridePhone.SetValue(False)
 
     def new_member_csv_file_callback(self, evt):
-        self.parent.SetConfigValue('file.member_csv_location', evt.GetString())
+        self.app_handle.set_conf_val('file.member_csv_location',
+                                     evt.GetString())
         # This will call an error if the handler
         # is called prior to init being completed
         try:
-            self.makingActive()
+            self.making_active()
         except AttributeError:
             pass
 
     def new_nonmember_csv_file_callback(self, evt):
-        self.parent.SetConfigValue('file.nonmember_csv_location',
-                                   evt.GetString())
+        self.app_handle.set_conf_val('file.nonmember_csv_location',
+                                     evt.GetString())
         # This will call an error if the handler
         # is called prior to init being completed
         try:
-            self.makingActive()
+            self.making_active()
         except AttributeError:
             pass
 
     def NewImagesDirectory(self, evt):
-        self.parent.SetConfigValue('file.imagesdirectory', evt.GetString())
+        self.app_handle.set_conf_val('file.imagesdirectory', evt.GetString())
 
     def NewPDFDirectory(self, evt):
-        self.parent.SetConfigValue('file.pdf_outdirectory', evt.GetString())
+        self.app_handle.set_conf_val('file.pdf_outdirectory',
+                                     evt.GetString())
 
     def NewArchiveDirectory(self, evt):
-        self.parent.SetConfigValue('file.imagearchivedir', evt.GetString())
+        self.app_handle.set_conf_val('file.imagearchivedir', evt.GetString())
 
     def OnSelectMissing(self, evt):
-        self.parent.SetConfigValue('missing.missingname', evt.GetString())
+        self.app_handle.set_conf_val('missing.missingname', evt.GetString())
         self.CB_OverridePhone.SetValue(False)
         self.CB_OverridePhone.Enable(True)
-        NameInQuestion = self.parent.get_conf_val('missing.missingname')
-        Phone = self.parent.parent.AppHandle.GetPhoneNumber(NameInQuestion)
+        NameInQuestion = self.app_handle.get_conf_val('missing.missingname')
+        Phone = self.app_handle.GetPhoneNumber(NameInQuestion)
         self.TXT_Phone.SetValue(Phone)
         self.TXT_Phone.Enable(False)
 
     def OnPhoneText(self, evt):
-        self.parent.SetConfigValue('missing.missingphone', evt.GetString())
+        self.app_handle.set_conf_val('missing.missingphone', evt.GetString())
 
     def OnOverridePhone(self, evt):
         if evt.Checked():
-            self.parent.SetConfigValue('missing.overridephone', '1')
+            self.app_handle.set_conf_val('missing.overridephone', '1')
             self.TXT_Phone.Enable(True)
         else:
-            self.parent.SetConfigValue('missing.overridephone', '0')
+            self.app_handle.set_conf_val('missing.overridephone', '0')
             self.TXT_Phone.Enable(False)
-            NameInQuestion = self.parent.get_conf_val('missing.missingname')
-            Phone = self.parent.parent.AppHandle.GetPhoneNumber(NameInQuestion)
+            NameInQuestion = self.app_handle.get_conf_val('missing.missingname')
+            Phone = self.app_handle.GetPhoneNumber(NameInQuestion)
             self.TXT_Phone.SetValue(Phone)
 
     def OnSelectEmail(self, evt):
@@ -227,11 +229,11 @@ class ConfigPanel(ColoredPanel):
         for email in self.EmailList.GetStrings():
             AllEmails += email + ','
         AllEmails = AllEmails[:-1]
-        self.parent.SetConfigValue('email.recipients', AllEmails)
+        self.app_handle.set_conf_val('email.recipients', AllEmails)
 
     def LoadEmails(self):
-        if not self.parent.get_conf_val('email.recipients') == None:
-            r = self.parent.get_conf_val('email.recipients').split(',')
+        if not self.app_handle.get_conf_val('email.recipients') == None:
+            r = self.app_handle.get_conf_val('email.recipients').split(',')
             self.EmailList.Clear()
             self.EmailList.InsertItems(r, 0)
 
@@ -243,9 +245,9 @@ class ConfigPanel(ColoredPanel):
         self.BTN_RemoveEmail.Enable(False)
         self.SaveEmails()
 
-    def makingActive(self):
+    def making_active(self):
         self.LoadEmails()
-        if self.parent.isValidCSV():
+        if self.app_handle.isValidCSV():
             self.StaticName.Enable(True)
             self.Contact_Dropdown.Enable(True)
             self.StaticPhone.Enable(True)
@@ -257,32 +259,32 @@ class ConfigPanel(ColoredPanel):
 
             # Refresh choices to name list
             self.Contact_Dropdown.Clear()
-            NameList = self.parent.parent.AppHandle.GetNameList(
+            NameList = self.app_handle.GetNameList(
                 NameType='Parent')
             for Name in NameList:
                 self.Contact_Dropdown.Append(Name)
-            if self.parent.get_conf_val('missing.missingname') in NameList:
+            if self.app_handle.get_conf_val('missing.missingname') in NameList:
                 self.Contact_Dropdown.SetStringSelection(
-                    self.parent.get_conf_val('missing.missingname'))
+                    self.app_handle.get_conf_val('missing.missingname'))
                 self.CB_OverridePhone.Enable(True)
-                if self.parent.get_conf_val('missing.overridephone') == '1':
+                if self.app_handle.get_conf_val('missing.overridephone') == '1':
                     self.TXT_Phone.Enable(True)
-                    if self.parent.get_conf_val('missing.missingphone'):
+                    if self.app_handle.get_conf_val('missing.missingphone'):
                         self.TXT_Phone.SetValue(
-                            self.parent.get_conf_val('missing.missingphone'))
+                            self.app_handle.get_conf_val('missing.missingphone'))
                 else:
                     self.TXT_Phone.Enable(False)
                     self.TXT_Phone.SetValue(
-                        self.parent.parent.AppHandle.GetPhoneNumber(
-                            self.parent.get_conf_val('missing.missingname')))
+                        self.app_handle.GetPhoneNumber(
+                            self.app_handle.get_conf_val('missing.missingname')))
             else:
-                if self.parent.get_conf_val('missing.missingname'):
-                    OldMissingName = self.parent.get_conf_val('missing.missingname')
+                if self.app_handle.get_conf_val('missing.missingname'):
+                    OldMissingName = self.app_handle.get_conf_val('missing.missingname')
                 self.TXT_Phone.Enable(False)
                 self.CB_OverridePhone.Enable(False)
 
             # Now let's populate the email addresses
-            EmailAddys = self.parent.parent.AppHandle.GetMemberEmails()
+            EmailAddys = self.app_handle.GetMemberEmails()
             self.Email_Dropdown.Clear()
             for Email in EmailAddys:
                 self.Email_Dropdown.Append(Email)

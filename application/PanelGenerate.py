@@ -8,9 +8,8 @@ from ColoredPanel import ColoredPanel
 
 
 class GeneratePanel(ColoredPanel):
-    def __init__(self, parent):
-        super(GeneratePanel, self).__init__(parent, None)
-        self.AppHandle = self.parent.parent.AppHandle
+    def __init__(self, parent, app_handle):
+        super(GeneratePanel, self).__init__(parent, app_handle, None)
         ##################################################
         ## Here's the email config box
         EmailBox = wx.StaticBox(self, -1, "Email Configuration")
@@ -123,138 +122,138 @@ class GeneratePanel(ColoredPanel):
         border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])
 
         # Here's the logic to set up the prevalues from config file
-        if self.parent.get_conf_val('email.smtp'):
+        if self.app_handle.get_conf_val('email.smtp'):
             self.TXT_SMTPAddy.SetValue(
-                self.parent.get_conf_val('email.smtp'))
-        if self.parent.get_conf_val('email.username'):
+                self.app_handle.get_conf_val('email.smtp'))
+        if self.app_handle.get_conf_val('email.username'):
             self.TXT_User.SetValue(
-                self.parent.get_conf_val('email.username'))
-        if self.parent.get_conf_val('email.pass'):
-            self.TXT_Pass.SetValue(self.parent.get_conf_val('email.pass'))
+                self.app_handle.get_conf_val('email.username'))
+        if self.app_handle.get_conf_val('email.pass'):
+            self.TXT_Pass.SetValue(self.app_handle.get_conf_val('email.pass'))
 
         self.Title = "Generate"
 
     def OnSMTPChanged(self, evt):
-        self.parent.SetConfigValue('email.smtp', evt.GetString())
+        self.app_handle.set_conf_val('email.smtp', evt.GetString())
 
     def OnUserChanged(self, evt):
-        self.parent.SetConfigValue('email.username', evt.GetString())
+        self.app_handle.set_conf_val('email.username', evt.GetString())
 
     def OnPassChanged(self, evt):
-        self.parent.SetConfigValue('email.pass', evt.GetString())
+        self.app_handle.set_conf_val('email.pass', evt.GetString())
 
     def OnCheckMissingReport(self, evt):
         if evt.Checked():
-            self.parent.SetConfigValue('task.missreport', '1')
+            self.app_handle.set_conf_val('task.missreport', '1')
         else:
-            self.parent.SetConfigValue('task.missreport', '0')
+            self.app_handle.set_conf_val('task.missreport', '0')
 
     def OnCheckMissingImages(self, evt):
         if evt.Checked():
-            self.parent.SetConfigValue('task.missimages', '1')
+            self.app_handle.set_conf_val('task.missimages', '1')
         else:
-            self.parent.SetConfigValue('task.missimages', '0')
+            self.app_handle.set_conf_val('task.missimages', '0')
 
     def OnCheckSendEmail(self, evt):
         if evt.Checked():
-            self.parent.SetConfigValue('task.sendemail', '1')
+            self.app_handle.set_conf_val('task.sendemail', '1')
         else:
-            self.parent.SetConfigValue('task.sendemail', '0')
+            self.app_handle.set_conf_val('task.sendemail', '0')
 
     def OnCheckMissingFile(self, evt):
         if evt.Checked():
-            self.parent.SetConfigValue('task.genmissfile', '1')
+            self.app_handle.set_conf_val('task.genmissfile', '1')
         else:
-            self.parent.SetConfigValue('task.genmissfile', '0')
+            self.app_handle.set_conf_val('task.genmissfile', '0')
 
     def OnCheckExtractMoveOuts(self, evt):
         if evt.Checked():
-            self.parent.SetConfigValue('task.extract_moveouts', '1')
+            self.app_handle.set_conf_val('task.extract_moveouts', '1')
         else:
-            self.parent.SetConfigValue('task.extract_moveouts', '0')
+            self.app_handle.set_conf_val('task.extract_moveouts', '0')
 
     def OnCheckGenFull(self, evt):
         if evt.Checked():
-            self.parent.SetConfigValue('task.genfull', '1')
+            self.app_handle.set_conf_val('task.genfull', '1')
         else:
-            self.parent.SetConfigValue('task.genfull', '0')
+            self.app_handle.set_conf_val('task.genfull', '0')
 
     def OnCheckGenBooklet(self, evt):
         if evt.Checked():
-            self.parent.SetConfigValue('task.genbooklet', '1')
+            self.app_handle.set_conf_val('task.genbooklet', '1')
         else:
-            self.parent.SetConfigValue('task.genbooklet', '0')
+            self.app_handle.set_conf_val('task.genbooklet', '0')
 
     def OnCheckGenSing2Doub(self, evt):
         if evt.Checked():
-            self.parent.SetConfigValue('task.gensingle2double', '1')
+            self.app_handle.set_conf_val('task.gensingle2double', '1')
         else:
-            self.parent.SetConfigValue('task.gensingle2double', '0')
+            self.app_handle.set_conf_val('task.gensingle2double', '0')
 
     def OnGoButton(self, evt):
         # Here, I need to check each of the (7) things to do and do them
-        if self.parent.get_conf_val('task.sendemail') == '1':
+        if self.app_handle.get_conf_val('task.sendemail') == '1':
             print "Sending Emails"
-            self.AppHandle.SendEmails()
-        if self.parent.get_conf_val('task.genmissfile') == '1':
+            self.app_handle.SendEmails()
+        if self.app_handle.get_conf_val('task.genmissfile') == '1':
             print "Generating Missing File"
-        if self.parent.get_conf_val('task.extract_moveouts') == '1':
+        if self.app_handle.get_conf_val('task.extract_moveouts') == '1':
             print "Extracting Move-Outs"
-            LiveFolder = self.parent.get_conf_val('file.imagesdirectory')
-            ArchiveFolder = self.parent.get_conf_val('file.imagearchivedir')
-            self.AppHandle.MoveSuperflousImages(LiveFolder, ArchiveFolder)
+            LiveFolder = self.app_handle.get_conf_val('file.imagesdirectory')
+            ArchiveFolder = self.app_handle.get_conf_val('file.imagearchivedir')
+            self.app_handle.MoveSuperflousImages(LiveFolder, ArchiveFolder)
 
         #Generate PDF Stuff Here
         Full = 0
-        if self.parent.get_conf_val('task.genfull') == '1':
+        if self.app_handle.get_conf_val('task.genfull') == '1':
             print "Generating Full PDF"
             Full = 1
 
         Single2Double = 0
-        if self.parent.get_conf_val('task.gensingle2double') == '1':
+        if self.app_handle.get_conf_val('task.gensingle2double') == '1':
             print "Generating Single2Double PDF"
             Single2Double = 1
 
         Booklet = 0
-        if self.parent.get_conf_val('task.genbooklet') == '1':
+        if self.app_handle.get_conf_val('task.genbooklet') == '1':
             print "Generating Booklet PDF"
             Booklet = 1
         if Full or Booklet or Single2Double:
-            OutputFolder = self.parent.get_conf_val('file.pdf_outdirectory')
+            OutputFolder = self.app_handle.get_conf_val('file.pdf_outdirectory')
             DictionaryData = None
-            self.AppHandle.InitiatePDF(OutputFolder, Full, Booklet,
-                                       Single2Double)
+            self.app_handle.InitiatePDF(OutputFolder, Full, Booklet,
+                                        Single2Double)
 
         #Generate Missing Image Report
-        if self.parent.get_conf_val('task.missreport') == '1':
+        if self.app_handle.get_conf_val('task.missreport') == '1':
             print "Generating missing report"
-            LiveFolder = self.parent.get_conf_val('file.imagesdirectory')
-            msg = self.AppHandle.GetReportMsg()
+            LiveFolder = self.app_handle.get_conf_val('file.imagesdirectory')
+            msg = self.app_handle.GetReportMsg()
             dlg = ScrolledMessageDialog(self, msg, caption="Report",
                                         size=(500, 600))
             dlg.ShowModal()
-        if self.parent.get_conf_val('task.missimages') == '1':
+        if self.app_handle.get_conf_val('task.missimages') == '1':
             print "Generating missing images report"
-            LiveFolder = self.parent.get_conf_val('file.imagesdirectory')
-            msg = self.AppHandle.GetImagesReportMsg()
+            LiveFolder = self.app_handle.get_conf_val('file.imagesdirectory')
+            msg = self.app_handle.GetImagesReportMsg()
             dlg = ScrolledMessageDialog(self, msg, caption="Report",
                                         size=(500, 600))
             dlg.ShowModal()
 
-    def makingActive(self):
-        if self.parent.get_conf_val('task.missreport') == '1':
+    def making_active(self):
+        if self.app_handle.get_conf_val('task.missreport') == '1':
             self.CB_MissingReport.SetValue(True)
-        if self.parent.get_conf_val('task.missimages') == '1':
+        if self.app_handle.get_conf_val('task.missimages') == '1':
             self.CB_MissingImages.SetValue(True)
-        if self.parent.get_conf_val('task.sendemail') == '1':
+        if self.app_handle.get_conf_val('task.sendemail') == '1':
             self.CB_SendEmail.SetValue(True)
-        if self.parent.get_conf_val('task.genmissfile') == '1':
+        if self.app_handle.get_conf_val('task.genmissfile') == '1':
             self.CB_MissingFile.SetValue(True)
-        if self.parent.get_conf_val('task.extract_moveouts') == '1':
+        if self.app_handle.get_conf_val('task.extract_moveouts') == '1':
             self.CB_ExtractMoveOuts.SetValue(True)
-        if self.parent.get_conf_val('task.genfull') == '1':
+        if self.app_handle.get_conf_val('task.genfull') == '1':
             self.CB_GenPDF_Full.SetValue(True)
-        if self.parent.get_conf_val('task.genbooklet') == '1':
+        if self.app_handle.get_conf_val('task.genbooklet') == '1':
             self.CB_GenPDF_Booklet.SetValue(True)
-        if self.parent.get_conf_val('task.gensingle2double') == '1':
+        if self.app_handle.get_conf_val('task.gensingle2double') == '1':
             self.CB_GenPDF_Single2Double.SetValue(True)

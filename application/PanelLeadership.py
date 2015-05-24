@@ -11,7 +11,7 @@ class LeadershipRow(wx.BoxSizer):
         super(LeadershipRow, self).__init__(wx.HORIZONTAL)
         self.parent = parent
         self.Description = Description
-        self.ShortDesc=ShortDesc
+        self.ShortDesc = ShortDesc
         self.NameType = NameType
 
         self.DescriptionText = wx.StaticText(parent, -1, Description)
@@ -41,8 +41,8 @@ class LeadershipRow(wx.BoxSizer):
 
 
 class LeadershipPanel(ColoredPanel):
-    def __init__(self, parent):
-        super(LeadershipPanel, self).__init__(parent, None)
+    def __init__(self, parent, app_handle):
+        super(LeadershipPanel, self).__init__(parent, app_handle, None)
         #######################################################################
         ## Leadership Name Configuration
         self.Bishop = LeadershipRow(self, "Bishop",
@@ -124,50 +124,50 @@ class LeadershipPanel(ColoredPanel):
 
     def DropdownChange(self, Row, NewValue):
         #Save the new value
-        self.parent.SetConfigValue(Row.ShortDesc + 'name', NewValue)
+        self.app_handle.set_conf_val(Row.ShortDesc + 'name', NewValue)
         #Uncheck the override box
         Row.CB_Override.SetValue(False)
         #Save the override box status
-        self.parent.SetConfigValue(Row.ShortDesc + 'overph', '0')
+        self.app_handle.set_conf_val(Row.ShortDesc + 'overph', '0')
         #Enable(True) the override box
         Row.CB_Override.Enable(True)
         #Load the phone number from CSV
-        phone = self.parent.parent.AppHandle.GetPhoneNumber(NewValue)
+        phone = self.app_handle.GetPhoneNumber(NewValue)
         Row.TXT_Phone.SetValue(phone)
         #Check the display box
         Row.CB_Disp.SetValue(True)
         #Save the CB_Disp value
-        self.parent.SetConfigValue(Row.ShortDesc + 'disp', '1')
+        self.app_handle.set_conf_val(Row.ShortDesc + 'disp', '1')
         #Enable(True) the display box
         Row.CB_Disp.Enable(True)
 
     def OverrideChange(self, Row, Checked):
         if Checked:
             # save the new value
-            self.parent.SetConfigValue(Row.ShortDesc + 'overph', '1')
+            self.app_handle.set_conf_val(Row.ShortDesc + 'overph', '1')
             # Enable the phone field
             Row.TXT_Phone.Enable(True)
         else:
             # save the new value
-            self.parent.SetConfigValue(Row.ShortDesc + 'overph', '0')
+            self.app_handle.set_conf_val(Row.ShortDesc + 'overph', '0')
             # Disable the phone field
             Row.TXT_Phone.Enable(False)
             # Reset the values for the phone field to CSV like
-            phone = self.parent.parent.AppHandle.GetPhoneNumber(
-                self.parent.get_conf_val(Row.ShortDesc + 'name'))
+            phone = self.app_handle.GetPhoneNumber(
+                self.app_handle.get_conf_val(Row.ShortDesc + 'name'))
             Row.TXT_Phone.SetValue(phone)
 
     def PhoneNumberChange(self, Row, NewNumber):
-        self.parent.SetConfigValue(Row.ShortDesc + 'phone', NewNumber)
+        self.app_handle.set_conf_val(Row.ShortDesc + 'phone', NewNumber)
 
     def DispChange(self, Row, NewStatus):
         if NewStatus:
-            self.parent.SetConfigValue(Row.ShortDesc + 'disp', '1')
+            self.app_handle.set_conf_val(Row.ShortDesc + 'disp', '1')
         else:
-            self.parent.SetConfigValue(Row.ShortDesc + 'disp', '0')
+            self.app_handle.set_conf_val(Row.ShortDesc + 'disp', '0')
 
-    def makingActive(self):
-        if not self.parent.isValidCSV():
+    def making_active(self):
+        if not self.app_handle.isValidCSV():
             self.disable_all()
             return
 
@@ -177,7 +177,7 @@ class LeadershipPanel(ColoredPanel):
             # Setup the dropdown lists
             if not Row.NameType == NameType:
                 NameType = Row.NameType
-                NameList = self.parent.parent.AppHandle.GetNameList(NameType)
+                NameList = self.app_handle.GetNameList(NameType)
             Row.Contact_Dropdown.Clear()
             for Name in NameList:
                 Row.Contact_Dropdown.Append(Name)
@@ -185,33 +185,33 @@ class LeadershipPanel(ColoredPanel):
             Row.DescriptionText.Enable(True)
             Row.Contact_Dropdown.Enable(True)
             # What else can I enable?
-            if self.parent.get_conf_val(Row.ShortDesc + 'name') in NameList:
+            if self.app_handle.get_conf_val(Row.ShortDesc + 'name') in NameList:
                 # The name is in the list, I may as well set the data
                 Row.Contact_Dropdown.SetStringSelection(
-                    self.parent.get_conf_val(Row.ShortDesc + 'name'))
-                if self.parent.get_conf_val(Row.ShortDesc + 'disp') == '1':
+                    self.app_handle.get_conf_val(Row.ShortDesc + 'name'))
+                if self.app_handle.get_conf_val(Row.ShortDesc + 'disp') == '1':
                     Row.CB_Disp.SetValue(True)
                 else:
                     Row.CB_Disp.SetValue(False)
                 Row.CB_Override.Enable(True)
-                if self.parent.get_conf_val(Row.ShortDesc + 'overph') == '1':
+                if self.app_handle.get_conf_val(Row.ShortDesc + 'overph') == '1':
                     Row.CB_Override.SetValue(True)
                     Row.TXT_Phone.Enable(True)
                     Row.TXT_Phone.SetValue(
-                        self.parent.get_conf_val(Row.ShortDesc + 'phone'))
+                        self.app_handle.get_conf_val(Row.ShortDesc + 'phone'))
                 else:
                     Row.CB_Override.SetValue(False)
                     Row.TXT_Phone.Enable(False)
-                    phone = self.parent.parent.AppHandle.GetPhoneNumber(
-                        self.parent.get_conf_val(Row.ShortDesc + 'name'))
+                    phone = self.app_handle.GetPhoneNumber(
+                        self.app_handle.get_conf_val(Row.ShortDesc + 'name'))
                     Row.TXT_Phone.SetValue(phone)
                 Row.CB_Disp.Enable(True)
             else:
-                if self.parent.get_conf_val(Row.ShortDesc + 'name'):
+                if self.app_handle.get_conf_val(Row.ShortDesc + 'name'):
                     # Name not in list
-                    nm = self.parent.get_conf_val(Row.ShortDesc + 'name')
+                    nm = self.app_handle.get_conf_val(Row.ShortDesc + 'name')
                     print nm + " Not in list"
-                    self.parent.SetConfigValue(Row.ShortDesc + 'disp', '0')
+                    self.app_handle.set_conf_val(Row.ShortDesc + 'disp', '0')
                 Row.TXT_Phone.Enable(False)
                 Row.CB_Override.Enable(False)
                 Row.CB_Override.SetValue(False)

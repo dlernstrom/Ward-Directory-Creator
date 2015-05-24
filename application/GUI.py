@@ -4,9 +4,13 @@ import time
 
 import wx
 
-from Notebook import Notebook
-from __version__ import __version__
 from Engine.Application import Application
+from PanelMain import MainPanel
+from PanelConfig import ConfigPanel
+from PanelBuilding import BuildingPanel
+from PanelLeadership import LeadershipPanel
+from PanelGenerate import GeneratePanel
+from __version__ import __version__
 
 DEBUG = 0
 
@@ -18,8 +22,28 @@ class MyFrame(wx.Frame):
             style=wx.MINIMIZE_BOX | wx.MAXIMIZE_BOX | wx.SYSTEM_MENU | \
                   wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
 
-        self.AppHandle = Application(self, DEBUG)
+        self.app_handle = Application(self, DEBUG)
         self.StatusBar = wx.StatusBar(self, -1)
         self.StatusBar.SetStatusText("Version: %s" % __version__)
-        self.myNotebook = Notebook(self, self.AppHandle)
+        self.TextBoxFont = wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False,
+                                   "Georgia")
+        self.SetFont(self.TextBoxFont)
+        self.nb = wx.Notebook(self, -1)
+
+        main = MainPanel(self.nb, self.app_handle)
+        self.nb.AddPage(main, main.Title)
+
+        panels = [BuildingPanel, ConfigPanel, LeadershipPanel,
+                  GeneratePanel]
+        for panel in panels:
+            p = panel(self.nb, self.app_handle)
+            self.nb.AddPage(p, p.Title)
+
+        self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.on_page_changed)
+        self.nb.SetPageSize(main.GetSize())
         self.Fit()
+
+    def on_page_changed(self, event):
+        new = event.GetSelection()
+        self.nb.GetPage(new).making_active()
+        event.Skip()

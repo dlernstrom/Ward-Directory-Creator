@@ -8,8 +8,8 @@ from ColoredPanel import ColoredPanel
 
 
 class BuildingPanel(ColoredPanel):
-    def __init__(self, parent):
-        super(BuildingPanel, self).__init__(parent, wx.BLUE)
+    def __init__(self, parent, app_handle):
+        super(BuildingPanel, self).__init__(parent, app_handle, wx.BLUE)
         #######################################################################
         ## Block Schedule Configuration
         ScheduleBox = wx.StaticBox(self, -1, "Block Schedule")
@@ -26,14 +26,14 @@ class BuildingPanel(ColoredPanel):
 
         # Sacrament Meeting Row
         self.CB_SacramentDisp = wx.CheckBox(self, -1)
-        if int(self.parent.get_conf_val('block.displaysac')):
+        if int(self.app_handle.get_conf_val('block.displaysac')):
             self.CB_SacramentDisp.SetValue(True)
         ScheduleGrid.Add(self.CB_SacramentDisp, (1, 0), span=wx.DefaultSpan,
                          flag=wx.ALIGN_CENTER | wx.ALL, border=10)
 
         self.SacText = wx.StaticText(self, -1, "Sacrament Meeting (Start Time)")
         self.SacText.SetFont(self.StandardFont)
-        if int(self.parent.get_conf_val('block.displaysac')):
+        if int(self.app_handle.get_conf_val('block.displaysac')):
             self.SacText.Enable(True)
         else:
             self.SacText.Enable(False)
@@ -42,13 +42,13 @@ class BuildingPanel(ColoredPanel):
 
         self.SacTime = TimeCtrl(self, -1, display_seconds=False)
         self.SacTime.SetFont(self.StandardFont)
-        if not self.parent.get_conf_val('block.sacstart') == None:
-            self.SacTime.SetValue(self.parent.get_conf_val('block.sacstart'))
+        if not self.app_handle.get_conf_val('block.sacstart') == None:
+            self.SacTime.SetValue(self.app_handle.get_conf_val('block.sacstart'))
         h = self.SacTime.GetSize().height
         self.spin1 = wx.SpinButton(self, -1, wx.DefaultPosition, (-1, h),
                                    wx.SP_VERTICAL)
         self.SacTime.BindSpinButton(self.spin1)
-        if int(self.parent.get_conf_val('block.displaysac')):
+        if int(self.app_handle.get_conf_val('block.displaysac')):
             self.SacTime.Enable(True)
             self.spin1.Enable(True)
         else:
@@ -63,7 +63,7 @@ class BuildingPanel(ColoredPanel):
 
         # Sunday School Row
         self.CB_SundaySchoolDisp = wx.CheckBox(self, -1)
-        if int(self.parent.get_conf_val('block.displayss')):
+        if int(self.app_handle.get_conf_val('block.displayss')):
             self.CB_SundaySchoolDisp.SetValue(True)
         else:
             self.CB_SundaySchoolDisp.SetValue(False)
@@ -73,7 +73,7 @@ class BuildingPanel(ColoredPanel):
 
         self.SSText = wx.StaticText(self, -1, "SundaySchool (Start Time)")
         self.SSText.SetFont(self.StandardFont)
-        if int(self.parent.get_conf_val('block.displayss')):
+        if int(self.app_handle.get_conf_val('block.displayss')):
             self.SSText.Enable(True)
         else:
             self.SSText.Enable(False)
@@ -82,13 +82,13 @@ class BuildingPanel(ColoredPanel):
 
         self.SSTime = TimeCtrl(self, -1, display_seconds=False)
         self.SSTime.SetFont(self.StandardFont)
-        if not self.parent.get_conf_val('block.ssstart') == None:
-            self.SSTime.SetValue(self.parent.get_conf_val('block.ssstart'))
+        if not self.app_handle.get_conf_val('block.ssstart') == None:
+            self.SSTime.SetValue(self.app_handle.get_conf_val('block.ssstart'))
         h = self.SSTime.GetSize().height
         self.spin2 = wx.SpinButton(self, -1, wx.DefaultPosition, (-1, h),
                                    wx.SP_VERTICAL)
         self.SSTime.BindSpinButton(self.spin2)
-        if int(self.parent.get_conf_val('block.displayss')):
+        if int(self.app_handle.get_conf_val('block.displayss')):
             self.SSTime.Enable(True)
             self.spin2.Enable(True)
         else:
@@ -103,7 +103,7 @@ class BuildingPanel(ColoredPanel):
 
         # Priesthood/Relief Society Row
         self.CB_PriesthoodDisp = wx.CheckBox(self, -1)
-        if int(self.parent.get_conf_val('block.display_pr_rs')):
+        if int(self.app_handle.get_conf_val('block.display_pr_rs')):
             self.CB_PriesthoodDisp.SetValue(True)
         else:
             self.CB_PriesthoodDisp.SetValue(False)
@@ -113,7 +113,7 @@ class BuildingPanel(ColoredPanel):
         title = "Priesthood/Relief Society (Start Time)"
         self.PriesthoodText = wx.StaticText(self, -1, title)
         self.PriesthoodText.SetFont(self.StandardFont)
-        if int(self.parent.get_conf_val('block.display_pr_rs')):
+        if int(self.app_handle.get_conf_val('block.display_pr_rs')):
             self.PriesthoodText.Enable(True)
         else:
             self.PriesthoodText.Enable(False)
@@ -122,14 +122,14 @@ class BuildingPanel(ColoredPanel):
 
         self.PriesthoodTime = TimeCtrl(self, -1, display_seconds=False)
         self.PriesthoodTime.SetFont(self.StandardFont)
-        if not self.parent.get_conf_val('block.pr_rs_start') == None:
+        if not self.app_handle.get_conf_val('block.pr_rs_start') == None:
             self.PriesthoodTime.SetValue(
-                self.parent.get_conf_val('block.pr_rs_start'))
+                self.app_handle.get_conf_val('block.pr_rs_start'))
         h = self.PriesthoodTime.GetSize().height
         self.spin3 = wx.SpinButton(self, -1, wx.DefaultPosition, (-1, h),
                                    wx.SP_VERTICAL)
         self.PriesthoodTime.BindSpinButton(self.spin3)
-        if int(self.parent.get_conf_val('block.display_pr_rs')):
+        if int(self.app_handle.get_conf_val('block.display_pr_rs')):
             self.PriesthoodTime.Enable(True)
             self.spin3.Enable(True)
         else:
@@ -157,14 +157,14 @@ class BuildingPanel(ColoredPanel):
 
         self.Addy1 = wx.TextCtrl(self, -1, size=(300, -1))
         self.Addy1.SetFont(self.StandardFont)
-        if not self.parent.get_conf_val('bldg.addy1') == None:
-            self.Addy1.SetValue(self.parent.get_conf_val('bldg.addy1'))
+        if not self.app_handle.get_conf_val('bldg.addy1') == None:
+            self.Addy1.SetValue(self.app_handle.get_conf_val('bldg.addy1'))
         BuildingBoxSizer.Add(self.Addy1, 0, wx.ALL, 10)
 
         self.Addy2 = wx.TextCtrl(self, -1, size=(300, -1))
         self.Addy2.SetFont(self.StandardFont)
-        if not self.parent.get_conf_val('bldg.addy2') == None:
-            self.Addy2.SetValue(self.parent.get_conf_val('bldg.addy2'))
+        if not self.app_handle.get_conf_val('bldg.addy2') == None:
+            self.Addy2.SetValue(self.app_handle.get_conf_val('bldg.addy2'))
         BuildingBoxSizer.Add(self.Addy2, 0, wx.ALL, 10)
 
         PhoneStatic = wx.StaticText(self, -1, "Building Phone #")
@@ -173,8 +173,8 @@ class BuildingPanel(ColoredPanel):
 
         self.Phone = wx.TextCtrl(self, -1, size=(200, -1))
         self.Phone.SetFont(self.StandardFont)
-        if not self.parent.get_conf_val('bldg.phone') == None:
-            self.Phone.SetValue(self.parent.get_conf_val('bldg.phone'))
+        if not self.app_handle.get_conf_val('bldg.phone') == None:
+            self.Phone.SetValue(self.app_handle.get_conf_val('bldg.phone'))
         BuildingBoxSizer.Add(self.Phone, 0, wx.ALL, 10)
 
         #######################################################################
@@ -217,57 +217,54 @@ class BuildingPanel(ColoredPanel):
 
     def OnSacDisp(self, evt):
         if evt.Checked():
-            self.parent.SetConfigValue('block.displaysac', '1')
+            self.app_handle.set_conf_val('block.displaysac', '1')
             self.SacText.Enable(True)
             self.SacTime.Enable(True)
             self.spin1.Enable(True)
         else:
-            self.parent.SetConfigValue('block.displaysac', '0')
+            self.app_handle.set_conf_val('block.displaysac', '0')
             self.SacText.Enable(False)
             self.SacTime.Enable(False)
             self.spin1.Enable(False)
 
     def OnSSDisp(self, evt):
         if evt.Checked():
-            self.parent.SetConfigValue('block.displayss', '1')
+            self.app_handle.set_conf_val('block.displayss', '1')
             self.SSText.Enable(True)
             self.SSTime.Enable(True)
             self.spin2.Enable(True)
         else:
-            self.parent.SetConfigValue('block.displayss', '0')
+            self.app_handle.set_conf_val('block.displayss', '0')
             self.SSText.Enable(False)
             self.SSTime.Enable(False)
             self.spin2.Enable(False)
 
     def OnPrDisp(self, evt):
         if evt.Checked():
-            self.parent.SetConfigValue('block.display_pr_rs', '1')
+            self.app_handle.set_conf_val('block.display_pr_rs', '1')
             self.PriesthoodText.Enable(True)
             self.PriesthoodTime.Enable(True)
             self.spin3.Enable(True)
         else:
-            self.parent.SetConfigValue('block.display_pr_rs', '0')
+            self.app_handle.set_conf_val('block.display_pr_rs', '0')
             self.PriesthoodText.Enable(False)
             self.PriesthoodTime.Enable(False)
             self.spin3.Enable(False)
 
     def OnSacTimeChange(self, evt):
-        self.parent.SetConfigValue('block.sacstart', evt.GetValue())
+        self.app_handle.set_conf_val('block.sacstart', evt.GetValue())
 
     def OnSSTimeChange(self, evt):
-        self.parent.SetConfigValue('block.ssstart', evt.GetValue())
+        self.app_handle.set_conf_val('block.ssstart', evt.GetValue())
 
     def OnPrTimeChange(self, evt):
-        self.parent.SetConfigValue('block.pr_rs_start', evt.GetValue())
+        self.app_handle.set_conf_val('block.pr_rs_start', evt.GetValue())
 
     def OnAddy1Changed(self, evt):
-        self.parent.SetConfigValue('bldg.addy1', evt.GetString())
+        self.app_handle.set_conf_val('bldg.addy1', evt.GetString())
 
     def OnAddy2Changed(self, evt):
-        self.parent.SetConfigValue('bldg.addy2', evt.GetString())
+        self.app_handle.set_conf_val('bldg.addy2', evt.GetString())
 
     def OnPhoneChanged(self, evt):
-        self.parent.SetConfigValue('bldg.phone', evt.GetString())
-
-    def makingActive(self):
-        return
+        self.app_handle.set_conf_val('bldg.phone', evt.GetString())
