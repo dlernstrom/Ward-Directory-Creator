@@ -6,7 +6,8 @@ import os
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.lib.units import inch
-from reportlab.platypus import Preformatted, Frame, Image, Paragraph, Table, TableStyle, Spacer
+from reportlab.platypus import Preformatted, Frame, Image, Paragraph, Table, \
+    TableStyle, Spacer
 from reportlab.platypus.flowables import KeepInFrame
 from reportlab.pdfgen.canvas import Canvas
 
@@ -15,7 +16,7 @@ from TextOnImage import TextOnImage
 from DirectoryPage import DirectoryPage
 
 STANDARD_MARGIN = 0.25 * inch
-HALF_PAGE_WIDTH = landscape(letter)[0]/2
+HALF_PAGE_WIDTH = landscape(letter)[0] / 2
 STANDARD_FRAME_WIDTH = HALF_PAGE_WIDTH - 2 * STANDARD_MARGIN
 STANDARD_FRAME_HEIGHT = landscape(letter)[1] - 2 * STANDARD_MARGIN
 
@@ -41,7 +42,8 @@ def get_listing_pages(configData, membershipList, debug):
             continue
         numberOfHouseholds += 1
         numberOfMembers += len(household.family)
-        familyFlowables.append(tableize_family(configData, ImageDirectory, household, debug))
+        familyFlowables.append(
+            tableize_family(configData, ImageDirectory, household, debug))
         if debug:
             print str(numberOfHouseholds), household.coupleName
             print '------------------------------------------'
@@ -70,7 +72,8 @@ def paginate_listings(configData, familyFlowables, debug):
     for fam in familyFlowables:
         if len(pg.flowables) == 0:
             fm.add(churchFlowable, pdf_TEST)
-            fm.add(Paragraph('Page ' + str(pdf_TEST.getPageNumber() - 1), styles['DaveHeaderLeft']), pdf_TEST)
+            fm.add(Paragraph('Page ' + str(pdf_TEST.getPageNumber() - 1),
+                             styles['DaveHeaderLeft']), pdf_TEST)
             pg.flowables.append('CURRENT_PAGE_NUMBER')
 
         if carryOver:
@@ -85,11 +88,13 @@ def paginate_listings(configData, familyFlowables, debug):
             continue
         carryOver = fam
 
-        content = tmpList + [Spacer(width = STANDARD_FRAME_WIDTH, height = 9 * inch)]
-        pg.flowables.append(KeepInFrame(maxWidth = STANDARD_FRAME_WIDTH,
-                                        maxHeight = STANDARD_FRAME_HEIGHT - FooterRoom - headerRoom,
-                                        content = content,
-                                        mode = 'truncate'))
+        content = tmpList + [Spacer(width=STANDARD_FRAME_WIDTH,
+                                    height=9 * inch)]
+        pg.flowables.append(
+            KeepInFrame(maxWidth=STANDARD_FRAME_WIDTH,
+                        maxHeight=STANDARD_FRAME_HEIGHT - FooterRoom - headerRoom,
+                        content=content,
+                        mode='truncate'))
         pg.flowables.append(churchFlowable)
 
         pages.append(pg)
@@ -105,11 +110,13 @@ def paginate_listings(configData, familyFlowables, debug):
         #pg.flowables.append(carryOver)
 
     if len(tmpList):
-        content = tmpList + [Spacer(width = STANDARD_FRAME_WIDTH, height = 9 * inch)]
-        pg.flowables.append(KeepInFrame(maxWidth = STANDARD_FRAME_WIDTH,
-                                        maxHeight = STANDARD_FRAME_HEIGHT - FooterRoom - headerRoom,
-                                        content = content,
-                                        mode = 'truncate'))
+        content = tmpList + [Spacer(width=STANDARD_FRAME_WIDTH,
+                                    height=9 * inch)]
+        pg.flowables.append(
+            KeepInFrame(maxWidth=STANDARD_FRAME_WIDTH,
+                        maxHeight=STANDARD_FRAME_HEIGHT - FooterRoom - headerRoom,
+                        content=content,
+                        mode='truncate'))
         pg.flowables.append(churchFlowable)
         pages.append(pg)
         pdf_TEST.showPage()
@@ -143,21 +150,21 @@ def tableize_family(configData, ImageDirectory, household, debug):
     picturePath = ImageDirectory + os.sep + expectedName
     if os.path.isfile(picturePath):
         FamilyPicture = Image(picturePath,
-                              width = 1.5 * inch,
-                              height = 1.125 * inch,
-                              kind = 'proportional')
+                              width=1.5 * inch,
+                              height=1.125 * inch,
+                              kind='proportional')
         if debug:
             print picturePath
     else:
         logging.debug(expectedName)
-        FamilyPictureBase = Image('Engine\\Missing.jpg',
-                                  width = 1.5 * inch,
-                                  height = 1.125 * inch,
-                                  kind = 'proportional')
-        MissingImageText = Paragraph(text = get_missing_text(configData), style = styles['TextOnImage'])
-        FamilyPicture = TextOnImage(P = MissingImageText, I = FamilyPictureBase, xpad = 0, ypad = 0.3 * inch, side = 'center') # was at .05 * inch
-        if debug:
-            print 'Missing.jpg'
+        FamilyPictureBase = Image(r'Engine\Missing.jpg',
+                                  width=1.5 * inch,
+                                  height=1.125 * inch,
+                                  kind='proportional')
+        MissingImageText = Paragraph(text=get_missing_text(configData),
+                                     style=styles['TextOnImage'])
+        FamilyPicture = TextOnImage(P=MissingImageText, I=FamilyPictureBase,
+                                    xpad=0, ypad=0.3 * inch, side='center')
 
     #########NOTICE THAT SPAN IS WRITTEN BASS ACKWARDS WITH COL,ROW
     TheTableStyle = TableStyle([('LEFTPADDING', (0,0), (-1,-1), 3),
