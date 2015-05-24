@@ -14,8 +14,7 @@ class BuildingPanel(ColoredPanel):
         ## Block Schedule Configuration
         ScheduleBox = wx.StaticBox(self, -1, "Block Schedule")
         ScheduleBox.SetFont(self.StandardFont)
-        self.ScheduleBoxSizer = ScheduleBoxSizer = wx.StaticBoxSizer(
-            ScheduleBox, wx.VERTICAL)
+        ScheduleBoxSizer = wx.StaticBoxSizer(ScheduleBox, wx.VERTICAL)
 
         ScheduleGrid = wx.GridBagSizer()
 
@@ -31,7 +30,8 @@ class BuildingPanel(ColoredPanel):
         ScheduleGrid.Add(self.CB_SacramentDisp, (1, 0), span=wx.DefaultSpan,
                          flag=wx.ALIGN_CENTER | wx.ALL, border=10)
 
-        self.SacText = wx.StaticText(self, -1, "Sacrament Meeting (Start Time)")
+        self.SacText = wx.StaticText(self, -1,
+                                     "Sacrament Meeting (Start Time)")
         self.SacText.SetFont(self.StandardFont)
         if int(self.app_handle.get_conf_val('block.displaysac')):
             self.SacText.Enable(True)
@@ -43,7 +43,8 @@ class BuildingPanel(ColoredPanel):
         self.SacTime = TimeCtrl(self, -1, display_seconds=False)
         self.SacTime.SetFont(self.StandardFont)
         if not self.app_handle.get_conf_val('block.sacstart') == None:
-            self.SacTime.SetValue(self.app_handle.get_conf_val('block.sacstart'))
+            self.SacTime.SetValue(
+                self.app_handle.get_conf_val('block.sacstart'))
         h = self.SacTime.GetSize().height
         self.spin1 = wx.SpinButton(self, -1, wx.DefaultPosition, (-1, h),
                                    wx.SP_VERTICAL)
