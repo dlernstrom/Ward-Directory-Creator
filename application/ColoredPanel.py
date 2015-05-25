@@ -7,7 +7,7 @@ import images
 
 
 class ColoredPanel(wx.Window):
-    def __init__(self, parent, app_handle, color):
+    def __init__(self, parent, color, app_handle=None):
         super(ColoredPanel, self).__init__(parent, wx.NewId(),
                                            style=wx.SIMPLE_BORDER)
         self.parent = parent

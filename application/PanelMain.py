@@ -10,7 +10,7 @@ from __version__ import __version__
 
 class MainPanel(ColoredPanel):
     def __init__(self, parent, app_handle):
-        super(MainPanel, self).__init__(parent, app_handle, wx.BLUE)
+        super(MainPanel, self).__init__(parent, wx.BLUE, app_handle)
         #######################################################################
         ## Ward/Branch Configuration Section
         WardBox = wx.StaticBox(self, -1, "Ward/Branch Configuration")

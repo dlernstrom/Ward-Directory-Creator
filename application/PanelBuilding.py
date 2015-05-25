@@ -9,7 +9,7 @@ from ColoredPanel import ColoredPanel
 
 class BuildingPanel(ColoredPanel):
     def __init__(self, parent, app_handle):
-        super(BuildingPanel, self).__init__(parent, app_handle, wx.BLUE)
+        super(BuildingPanel, self).__init__(parent, wx.BLUE, app_handle)
         #######################################################################
         ## Block Schedule Configuration
         ScheduleBox = wx.StaticBox(self, -1, "Block Schedule")

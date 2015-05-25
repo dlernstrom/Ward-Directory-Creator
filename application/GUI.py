@@ -9,7 +9,9 @@ from PanelMain import MainPanel
 from PanelConfig import ConfigPanel
 from PanelBuilding import BuildingPanel
 from PanelLeadership import LeadershipPanel
-from PanelGenerate import GeneratePanel
+from GeneratePanel.GenerateControl import GenerateControl
+from GeneratePanel.GenerateInteraction import GenerateInteraction
+from GeneratePanel.GeneratePresentation import GeneratePresentation
 from __version__ import __version__
 
 DEBUG = 0
@@ -33,11 +35,15 @@ class MyFrame(wx.Frame):
         main = MainPanel(self.nb, self.app_handle)
         self.nb.AddPage(main, main.Title)
 
-        panels = [BuildingPanel, ConfigPanel, LeadershipPanel,
-                  GeneratePanel]
+        panels = [BuildingPanel, ConfigPanel, LeadershipPanel]
         for panel in panels:
             p = panel(self.nb, self.app_handle)
             self.nb.AddPage(p, p.Title)
+
+        p = GeneratePresentation(self.nb)
+        i = GenerateInteraction()
+        self.generate_control = GenerateControl(self.app_handle, p, i)
+        self.nb.AddPage(p, "Generate")
 
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.on_page_changed)
         self.nb.SetPageSize(main.GetSize())
@@ -45,5 +51,8 @@ class MyFrame(wx.Frame):
 
     def on_page_changed(self, event):
         new = event.GetSelection()
-        self.nb.GetPage(new).making_active()
+        if isinstance(self.nb.GetPage(new), GeneratePresentation):
+            self.generate_control.making_active()
+        else:
+            self.nb.GetPage(new).making_active()
         event.Skip()

@@ -42,7 +42,7 @@ class LeadershipRow(wx.BoxSizer):
 
 class LeadershipPanel(ColoredPanel):
     def __init__(self, parent, app_handle):
-        super(LeadershipPanel, self).__init__(parent, app_handle, None)
+        super(LeadershipPanel, self).__init__(parent, None, app_handle)
         #######################################################################
         ## Leadership Name Configuration
         self.Bishop = LeadershipRow(self, "Bishop",
