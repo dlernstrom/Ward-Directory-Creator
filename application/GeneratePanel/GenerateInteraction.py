@@ -42,13 +42,13 @@ class GenerateInteraction(object):
         if evt.Checked():
             self.control.set_miss_images('1')
         else:
-            self.control.set_miss_images('1')
+            self.control.set_miss_images('0')
 
     def OnCheckSendEmail(self, evt):
         if evt.Checked():
-            self.app_handle.set_conf_val('task.sendemail', '1')
+            self.control.set_send_email('1')
         else:
-            self.app_handle.set_conf_val('task.sendemail', '0')
+            self.control.set_send_email('0')
 
     def OnCheckMissingFile(self, evt):
         if evt.Checked():
@@ -72,7 +72,7 @@ class GenerateInteraction(object):
         if evt.Checked():
             self.control.set_gen_booklet('1')
         else:
-            self.control.set_gen_booklet('1')
+            self.control.set_gen_booklet('0')
 
     def OnCheckGenSing2Doub(self, evt):
         if evt.Checked():

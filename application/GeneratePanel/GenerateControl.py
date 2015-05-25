@@ -11,30 +11,30 @@ class GenerateControl(object):
     def making_active(self):
         # Here's the logic to set up the prevalues from config file
         if self.app_handle.get_conf_val('email.smtp'):
-            self.presentation.TXT_SMTPAddy.SetValue(
-                self.app_handle.get_conf_val('email.smtp'))
+            self.presentation.smtp_addy = \
+                self.app_handle.get_conf_val('email.smtp')
         if self.app_handle.get_conf_val('email.username'):
-            self.presentation.TXT_User.SetValue(
-                self.app_handle.get_conf_val('email.username'))
+            self.presentation.smtp_user = \
+                self.app_handle.get_conf_val('email.username')
         if self.app_handle.get_conf_val('email.pass'):
-            self.presentation.TXT_Pass.SetValue(
-                self.app_handle.get_conf_val('email.pass'))
+            self.presentation.smtp_pass = \
+                self.app_handle.get_conf_val('email.pass')
         if self.app_handle.get_conf_val('task.missreport') == '1':
-            self.presentation.CB_MissingReport.SetValue(True)
+            self.presentation.gen_missing_rpt = True
         if self.app_handle.get_conf_val('task.missimages') == '1':
-            self.presentation.CB_MissingImages.SetValue(True)
+            self.presentation.gen_missing_img_rpt = True
         if self.app_handle.get_conf_val('task.sendemail') == '1':
-            self.presentation.CB_SendEmail.SetValue(True)
+            self.presentation.send_email = True
         if self.app_handle.get_conf_val('task.genmissfile') == '1':
-            self.presentation.CB_MissingFile.SetValue(True)
+            self.presentation.gen_missing_img_file = True
         if self.app_handle.get_conf_val('task.extract_moveouts') == '1':
-            self.presentation.CB_ExtractMoveOuts.SetValue(True)
+            self.presentation.extract_move_outs = True
         if self.app_handle.get_conf_val('task.genfull') == '1':
-            self.presentation.CB_GenPDF_Full.SetValue(True)
+            self.presentation.gen_pdf_full = True
         if self.app_handle.get_conf_val('task.genbooklet') == '1':
-            self.presentation.CB_GenPDF_Booklet.SetValue(True)
+            self.presentation.gen_pdf_booklet = True
         if self.app_handle.get_conf_val('task.gensingle2double') == '1':
-            self.presentation.CB_GenPDF_Single2Double.SetValue(True)
+            self.presentation.gen_pdf_single2double = True
 
     def set_smtp(self, new_val):
         self.app_handle.set_conf_val('email.smtp', new_val)
@@ -50,6 +50,9 @@ class GenerateControl(object):
 
     def set_miss_images(self, new_val):
         self.app_handle.set_conf_val('task.missimages', new_val)
+
+    def set_send_email(self, new_val):
+        self.app_handle.set_conf_val('task.sendemail', new_val)
 
     def set_gen_miss_file(self, new_val):
         self.app_handle.set_conf_val('task.genmissfile', new_val)
