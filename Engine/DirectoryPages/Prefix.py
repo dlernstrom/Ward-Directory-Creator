@@ -20,111 +20,114 @@ def get_callings_data(configData):
     # Return a list of dictionaries of the positions ordered correctly
     # TODO: This should happen by my parent...
     # I am the customer and should get it how I want it already
-    RoleList = ['bish', 'first', 'second', 'exec', 'clerk', 'fin', 'mem', "NULL",
+    role_lst = ['bish', 'first', 'second', 'exec', 'clerk', 'fin', 'mem', "NULL",
                 'hp', 'eq', 'rs', 'ym', 'yw', 'primary', 'ss', "NULL",
                 'wml', 'act', 'news', 'miss']
-    RoleDict = {'bish' :	'Bishop',
-                'first' :	'1st Counselor',
-                'second' :	'2nd Counselor',
-                'exec' :	'Executive Secretary',
-                'clerk' :	'Ward Clerk',
-                'fin' :		'Financial Clerk',
-                'mem' :		'Membership Clerk',
-                'hp' :		'High Priest Group Leader',
-                'eq' :		'Elders Quorum President',
-                'rs' :		'Relief Society President',
-                'ym' :		"Young Men's President",
-                'yw' :		"Young Women's President",
-                'primary' :	'Primary President',
-                'ss':           'Sunday School President',
-                'wml' :		'Ward Mission Leader',
-                'act' :		'Activities Committee Chair',
-                'news' :	'Ward Newsletter',
-                'dir' :		'Ward Directory',
-                "NULL" :	'',
-                'miss':         'Missionaries'}
-    LeadershipList = []
-    for Role in RoleList:
-        if Role == 'miss':
-            LeadershipList.append({"Role" :		'',
-                                   "Name" :		RoleDict[Role],
-                                   "Phone" :	'(435) 232-7293'})
+    role_dict = {'bish':	'Bishop',
+                 'first':	'1st Counselor',
+                 'second':	'2nd Counselor',
+                 'exec':	'Executive Secretary',
+                 'clerk':	'Ward Clerk',
+                 'fin':		'Financial Clerk',
+                 'mem':		'Membership Clerk',
+                 'hp':		'High Priest Group Leader',
+                 'eq':		'Elders Quorum President',
+                 'rs':		'Relief Society President',
+                 'ym':		"Young Men's President",
+                 'yw':		"Young Women's President",
+                 'primary':	'Primary President',
+                 'ss':		'Sunday School President',
+                 'wml':		'Ward Mission Leader',
+                 'act':		'Activities Committee Chair',
+                 'news':	'Ward Newsletter',
+                 'dir':		'Ward Directory',
+                 "NULL":	'',
+                 'miss':	'Missionaries'}
+    leadership_lst = []
+    for role in role_lst:
+        if role == 'miss':
+            leadership_lst.append({"Role":	'',
+                                   "Name":	role_dict[role],
+                                   "Phone":	'(435) 232-7293'})
         try:
-            if configData['leadership.' + Role + 'disp'] == '1':
-                LeadershipList.append({"Role" :		RoleDict[Role],
-                                       "Name" :		configData['leadership.' + Role + 'name'],
-                                       "Phone" :	configData['leadership.' + Role + 'phone']})
+            if configData['leadership.' + role + 'disp'] == '1':
+                leadership_lst.append({"Role":	role_dict[role],
+                                       "Name":	configData['leadership.' + role + 'name'],
+                                       "Phone":	configData['leadership.' + role + 'phone']})
             else:
-                LeadershipList.append({"Role" :		" ",
-                                       "Name" :		" ",
-                                       "Phone" :	" "})
-                LeadershipList.append({"Role" :		" ",
-                                       "Name" :		" ",
-                                       "Phone" :	" "})
+                leadership_lst.append({"Role":	" ",
+                                       "Name":	" ",
+                                       "Phone":	" "})
+                leadership_lst.append({"Role":	" ",
+                                       "Name":	" ",
+                                       "Phone":	" "})
         except KeyError:
-            LeadershipList.append({"Role" :		" ",
-                                   "Name" :		" ",
-                                   "Phone" :	" "})
-            LeadershipList.append({"Role" :		" ",
-                                   "Name" :		" ",
-                                   "Phone" :	" "})
-    return LeadershipList
+            leadership_lst.append({"Role":	" ",
+                                   "Name":	" ",
+                                   "Phone":	" "})
+            leadership_lst.append({"Role":	" ",
+                                   "Name":	" ",
+                                   "Phone":	" "})
+    return leadership_lst
 
 
 def get_block_data(configData):
-    BlockData = []
-    format = '%I:%M %p'
+    block_data = []
+    block_time_format = '%I:%M %p'
     if configData['block.displaysac']:
-        BlockData.append([time.strptime(configData['block.sacstart'], format),
-                          "Sacrament Meeting"])
+        sac_time = time.strptime(configData['block.sacstart'],
+                                 block_time_format)
+        block_data.append([sac_time, "Sacrament Meeting"])
     if configData['block.displayss']:
-        BlockData.append([time.strptime(configData['block.ssstart'], format),
-                          "Sunday School"])
+        ss_time = time.strptime(configData['block.ssstart'], block_time_format)
+        block_data.append([ss_time, "Sunday School"])
     if configData['block.display_pr_rs']:
-        BlockData.append([time.strptime(configData['block.pr_rs_start'], format),
-                          "Priesthood / Relief Society"])
-    BlockData.sort()
-    for Mtg in BlockData:
-        Mtg[0] = time.strftime(format, Mtg[0])
-        if Mtg[0][0] == '0':
-            Mtg[0] = Mtg[0][1:]
+        pr_rs_time = time.strptime(configData['block.pr_rs_start'],
+                                   block_time_format)
+        block_data.append([pr_rs_time, "Priesthood / Relief Society"])
+    block_data.sort()
+    for mtg in block_data:
+        mtg[0] = time.strftime(block_time_format, mtg[0])
+        if mtg[0][0] == '0':
+            mtg[0] = mtg[0][1:]
 
-    myDisplayBlock = []
-    for Mtg in BlockData:
-        myDisplayBlock.append([[Paragraph(text=Mtg[0], style=styles['PrefixBaseRight'])],
-                               [Paragraph(text=Mtg[1], style=styles['PrefixBaseLeft'])]])
-    return myDisplayBlock
+    pdf_block_data = []
+    for mtg in block_data:
+        pdf_block_data.append(
+            [[Paragraph(text=mtg[0], style=styles['PrefixBaseRight'])],
+             [Paragraph(text=mtg[1], style=styles['PrefixBaseLeft'])]])
+    return pdf_block_data
 
 
-def get_directory_prefix_pages(dictionaryData, debug):
+def get_directory_prefix_pages(dict_data, debug):
     pages = []
     if debug:
         print "Here's the dictionary I received"
-        print dictionaryData
+        print dict_data
     #Page 1 Data
     prefixPage = DirectoryPage()
     prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
                                        height=1.5 * inch))
     prefixPage.flowables.append(
-        Paragraph(text="<b>" + dictionaryData['unit.unitname'] + "</b>",
+        Paragraph(text="<b>" + dict_data['unit.unitname'] + "</b>",
                   style=styles['DocumentTitle']))
     prefixPage.flowables.append(Paragraph(text="Member Directory",
                                           style=styles['Subtitle']))
     prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
                                        height=2.0 * inch))
     prefixPage.flowables.append(
-        Paragraph(text=dictionaryData['unit.stakename'],
+        Paragraph(text=dict_data['unit.stakename'],
                   style=styles['PrefixBase']))
-    if 'bldg.addy1' in dictionaryData.keys():
+    if 'bldg.addy1' in dict_data.keys():
         prefixPage.flowables.append(
-            Paragraph(text=dictionaryData['bldg.addy1'],
+            Paragraph(text=dict_data['bldg.addy1'],
                       style=styles['PrefixBase']))
     else:
         prefixPage.flowables.append(Paragraph(text='',
                                               style=styles['PrefixBase']))
-    if 'bldg.addy2' in dictionaryData.keys():
+    if 'bldg.addy2' in dict_data.keys():
         prefixPage.flowables.append(
-            Paragraph(text=dictionaryData['bldg.addy2'],
+            Paragraph(text=dict_data['bldg.addy2'],
                       style=styles['PrefixBase']))
     else:
         prefixPage.flowables.append(Paragraph(text='',
@@ -147,7 +150,7 @@ def get_directory_prefix_pages(dictionaryData, debug):
         Paragraph(text=sched, style=styles['Subtitle']))
     prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
                                        height=.125 * inch))
-    blockData = get_block_data(dictionaryData)
+    blockData = get_block_data(dict_data)
     TextTable = Table(blockData, [1.5 * inch, 3.0 * inch])
     if debug:
         TextTable.setStyle(
@@ -156,9 +159,9 @@ def get_directory_prefix_pages(dictionaryData, debug):
     prefixPage.flowables.append(TextTable)
     prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
                                        height=.125 * inch))
-    if 'bldg.phone' in dictionaryData.keys():
+    if 'bldg.phone' in dict_data.keys():
         prefixPage.flowables.append(
-            Paragraph(text="Office Phone: " + dictionaryData['bldg.phone'],
+            Paragraph(text="Office Phone: " + dict_data['bldg.phone'],
                       style=styles['PrefixBase']))
     else:
         prefixPage.flowables.append(Paragraph(text='',
@@ -172,7 +175,7 @@ def get_directory_prefix_pages(dictionaryData, debug):
                                        height=.125 * inch))
     data = []
 
-    for Position in get_callings_data(dictionaryData):
+    for Position in get_callings_data(dict_data):
         data.append([[Paragraph(text=Position['Role'],
                                 style=styles['RegTextR'])],
                      [Paragraph(text=Position['Name'],
@@ -191,16 +194,16 @@ def get_directory_prefix_pages(dictionaryData, debug):
                                             maxHeight=5.0 * inch,
                                             content=content,
                                             mode='truncate'))
-    Disclaimer = """This ward directory is to be used only for Church purposes
-                                             and should not be copied without permission of the bishop
-                                             or stake president.
-                                             """
-    prefixPage.flowables.append(Paragraph(text="<b>" + Disclaimer + "</b>",
+    disc = """<b>This ward directory is to be used only for Church purposes
+        and should not be copied without permission of the bishop
+        or stake president.</b>
+        """
+    prefixPage.flowables.append(Paragraph(text=disc,
                                           style=styles['RegText']))
     prefixPage.flowables.append(PageBreak())
     if debug:
-        for aFlowable in prefixPage.flowables:
-            if aFlowable.__class__ is Paragraph or aFlowable.__class__ is Spacer:
-                aFlowable._showBoundary = 1
+        for flow in prefixPage.flowables:
+            if flow.__class__ in [Paragraph, Spacer]:
+                flow._showBoundary = 1
     pages.append(prefixPage)
     return pages

@@ -71,7 +71,7 @@ class Application(object):
         directoryCollection = Directory()
         configData = self.ConfigHandle.GetConfigData()
         directoryCollection.pages['prefix'] = get_directory_prefix_pages(
-            dictionaryData=configData, debug=self.DEBUG)
+            dict_data=configData, debug=self.DEBUG)
         directoryCollection.pages['directory'] = get_listing_pages(
             configData=configData, membershipList=self.MembershipList,
             debug=self.DEBUG)
@@ -82,7 +82,7 @@ class Application(object):
             configData=configData, dwellingsHandle=self.homes,
             membershipList=self.MembershipList, debug=self.DEBUG)
         directoryCollection.pages['suffix'] = get_directory_suffix_pages(
-            dictionaryData=configData, debug=self.DEBUG)
+            dict_data=configData, debug=self.DEBUG)
         return directoryCollection
 
     def InitiatePDF(self, OutputFolder, Full, Booklet, Single2Double):

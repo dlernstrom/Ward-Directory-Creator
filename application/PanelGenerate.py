@@ -10,7 +10,7 @@ from ColoredPanel import ColoredPanel
 class GeneratePanel(ColoredPanel):
     def __init__(self, parent, app_handle):
         super(GeneratePanel, self).__init__(parent, app_handle, None)
-        ##################################################
+        #######################################################################
         ## Here's the email config box
         EmailBox = wx.StaticBox(self, -1, "Email Configuration")
         EmailBox.SetFont(self.StandardFont)
@@ -41,7 +41,7 @@ class GeneratePanel(ColoredPanel):
         self.TXT_Pass.SetFont(self.StandardFont)
         EmailBoxSizer.Add(self.TXT_Pass, 0, wx.TOP | wx.LEFT, 10)
 
-        #################################################
+        #######################################################################
         ## Here's the generate directory box
         StaticBox = wx.StaticBox(self, -1, "Generate Directory")
         StaticBox.SetFont(self.StandardFont)
@@ -90,7 +90,7 @@ class GeneratePanel(ColoredPanel):
         GenerateSizer.Add(self.BTN_Go, 0,
                           wx.TOP | wx.ALIGN_CENTER_HORIZONTAL, 10)
 
-        ##############################################
+        #######################################################################
         ## Here's the outer sizer container stuff
         border_level1_left = wx.BoxSizer(wx.VERTICAL)
         border_level1_left.Add(GenerateSizer, 1, wx.EXPAND | wx.ALL, 25)
@@ -203,7 +203,7 @@ class GeneratePanel(ColoredPanel):
             ArchiveFolder = self.app_handle.get_conf_val('file.imagearchivedir')
             self.app_handle.MoveSuperflousImages(LiveFolder, ArchiveFolder)
 
-        #Generate PDF Stuff Here
+        # Generate PDF Stuff Here
         Full = 0
         if self.app_handle.get_conf_val('task.genfull') == '1':
             print "Generating Full PDF"
@@ -220,7 +220,7 @@ class GeneratePanel(ColoredPanel):
             Booklet = 1
         if Full or Booklet or Single2Double:
             OutputFolder = self.app_handle.get_conf_val('file.pdf_outdirectory')
-            DictionaryData = None
+            dict_data = None
             self.app_handle.InitiatePDF(OutputFolder, Full, Booklet,
                                         Single2Double)
 
