@@ -4,10 +4,14 @@ import time
 
 import wx
 
+from BuildingPanel.BuildingControl import BuildingControl
+from BuildingPanel.BuildingInteraction import BuildingInteraction
+from BuildingPanel.BuildingPresentation import BuildingPresentation
+from ConfigPanel.ConfigControl import ConfigControl
+from ConfigPanel.ConfigInteraction import ConfigInteraction
+from ConfigPanel.ConfigPresentation import ConfigPresentation
 from Engine.Application import Application
 from PanelMain import MainPanel
-from PanelConfig import ConfigPanel
-from PanelBuilding import BuildingPanel
 from PanelLeadership import LeadershipPanel
 from GeneratePanel.GenerateControl import GenerateControl
 from GeneratePanel.GenerateInteraction import GenerateInteraction
@@ -35,8 +39,17 @@ class MyFrame(wx.Frame):
         main = MainPanel(self.nb, self.app_handle)
         self.nb.AddPage(main, main.Title)
 
-        panels = [BuildingPanel, ConfigPanel, LeadershipPanel]
-        for panel in panels:
+        p = BuildingPresentation(self.nb)
+        i = BuildingInteraction()
+        self.building_control = BuildingControl(self.app_handle, p, i)
+        self.nb.AddPage(p, "Building")
+
+        p = ConfigPresentation(self.nb)
+        i = ConfigInteraction()
+        self.config_control = ConfigControl(self.app_handle, p, i)
+        self.nb.AddPage(p, "Configuration")
+
+        for panel in [LeadershipPanel]:
             p = panel(self.nb, self.app_handle)
             self.nb.AddPage(p, p.Title)
 
@@ -51,7 +64,11 @@ class MyFrame(wx.Frame):
 
     def on_page_changed(self, event):
         new = event.GetSelection()
-        if isinstance(self.nb.GetPage(new), GeneratePresentation):
+        if isinstance(self.nb.GetPage(new), BuildingPresentation):
+            self.building_control.making_active()
+        elif isinstance(self.nb.GetPage(new), ConfigPresentation):
+            self.config_control.making_active()
+        elif isinstance(self.nb.GetPage(new), GeneratePresentation):
             self.generate_control.making_active()
         else:
             self.nb.GetPage(new).making_active()

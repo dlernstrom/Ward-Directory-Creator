@@ -78,9 +78,9 @@ class GenerateControl(object):
             print "Generating Missing File"
         if self.app_handle.get_conf_val('task.extract_moveouts') == '1':
             print "Extracting Move-Outs"
-            LiveFolder = self.app_handle.get_conf_val('file.imagesdirectory')
-            ArchiveFolder = self.app_handle.get_conf_val('file.imagearchivedir')
-            self.app_handle.MoveSuperflousImages(LiveFolder, ArchiveFolder)
+            live_fldr = self.app_handle.get_conf_val('file.imagesdirectory')
+            arch_fldr = self.app_handle.get_conf_val('file.imagearchivedir')
+            self.app_handle.MoveSuperflousImages(live_fldr, arch_fldr)
 
         # Generate PDF Stuff Here
         Full = 0
@@ -106,11 +106,9 @@ class GenerateControl(object):
         # Generate Missing Image Report
         if self.app_handle.get_conf_val('task.missreport') == '1':
             print "Generating missing report"
-            LiveFolder = self.app_handle.get_conf_val('file.imagesdirectory')
             msg = self.app_handle.GetReportMsg()
             self.presentation.show_report(msg)
         if self.app_handle.get_conf_val('task.missimages') == '1':
             print "Generating missing images report"
-            LiveFolder = self.app_handle.get_conf_val('file.imagesdirectory')
             msg = self.app_handle.GetImagesReportMsg()
             self.presentation.show_report(msg)
