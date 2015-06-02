@@ -8,111 +8,85 @@ from application.ColoredPanel import ColoredPanel
 
 
 class BuildingControl(ColoredPanel):
-    def __init__(self, app_handle, presentation, interaction):
-        self.app_handle = app_handle
+    def __init__(self, abstraction, presentation, interaction):
+        self.abstraction = abstraction
         self.presentation = presentation
         interaction.install(self, presentation)
 
     def making_active(self):
         # Here's the logic to set up the prevalues from config file
-        if int(self.app_handle.get_conf_val('block.displaysac')):
+        if self.abstraction.displaysac:
             self.presentation.sac_display_checkbox = True
-        if int(self.app_handle.get_conf_val('block.displaysac')):
             self.presentation.SacText.Enable(True)
-        else:
-            self.presentation.SacText.Enable(False)
-        if not self.app_handle.get_conf_val('block.sacstart') == None:
-            self.presentation.SacTime.SetValue(
-                self.app_handle.get_conf_val('block.sacstart'))
-        if int(self.app_handle.get_conf_val('block.displaysac')):
             self.presentation.SacTime.Enable(True)
             self.presentation.spin1.Enable(True)
         else:
+            self.presentation.SacText.Enable(False)
             self.presentation.SacTime.Enable(False)
             self.presentation.spin1.Enable(False)
-        if int(self.app_handle.get_conf_val('block.displayss')):
+        if not self.abstraction.sacstart == None:
+            self.presentation.SacTime.SetValue(self.abstraction.sacstart)
+        if self.abstraction.displayss:
             self.presentation.CB_SundaySchoolDisp.SetValue(True)
-        else:
-            self.presentation.CB_SundaySchoolDisp.SetValue(False)
-        if int(self.app_handle.get_conf_val('block.displayss')):
             self.presentation.SSText.Enable(True)
-        else:
-            self.presentation.SSText.Enable(False)
-        if not self.app_handle.get_conf_val('block.ssstart') == None:
-            self.presentation.SSTime.SetValue(
-                self.app_handle.get_conf_val('block.ssstart'))
-        if int(self.app_handle.get_conf_val('block.displayss')):
             self.presentation.SSTime.Enable(True)
             self.presentation.spin2.Enable(True)
         else:
+            self.presentation.CB_SundaySchoolDisp.SetValue(False)
+            self.presentation.SSText.Enable(False)
             self.presentation.SSTime.Enable(False)
-            self.presentation.SSTime.Enable(False)
-        if int(self.app_handle.get_conf_val('block.display_pr_rs')):
+            self.presentation.spin2.Enable(False)
+        if not self.abstraction.ssstart == None:
+            self.presentation.SSTime.SetValue(self.abstraction.ssstart)
+        if self.abstraction.display_pr_rs:
             self.presentation.CB_PriesthoodDisp.SetValue(True)
-        else:
-            self.presentation.CB_PriesthoodDisp.SetValue(False)
-        if int(self.app_handle.get_conf_val('block.display_pr_rs')):
             self.presentation.PriesthoodText.Enable(True)
-        else:
-            self.presentation.PriesthoodText.Enable(False)
-        if not self.app_handle.get_conf_val('block.pr_rs_start') == None:
-            self.presentation.PriesthoodTime.SetValue(
-                self.app_handle.get_conf_val('block.pr_rs_start'))
-        if int(self.app_handle.get_conf_val('block.display_pr_rs')):
             self.presentation.PriesthoodTime.Enable(True)
             self.presentation.spin3.Enable(True)
         else:
+            self.presentation.CB_PriesthoodDisp.SetValue(False)
+            self.presentation.PriesthoodText.Enable(False)
             self.presentation.PriesthoodTime.Enable(False)
             self.presentation.spin3.Enable(False)
-
-        if not self.app_handle.get_conf_val('bldg.addy1') == None:
-            self.presentation.Addy1.SetValue(
-                self.app_handle.get_conf_val('bldg.addy1'))
-        if not self.app_handle.get_conf_val('bldg.addy2') == None:
-            self.presentation.Addy2.SetValue(
-                self.app_handle.get_conf_val('bldg.addy2'))
-        if not self.app_handle.get_conf_val('bldg.phone') == None:
-            self.presentation.Phone.SetValue(
-                self.app_handle.get_conf_val('bldg.phone'))
+        if not self.abstraction.pr_rs_start == None:
+            self.presentation.PriesthoodTime.SetValue(
+                self.abstraction.pr_rs_start)
+        if not self.abstraction.addy1 == None:
+            self.presentation.Addy1.SetValue(self.abstraction.addy1)
+        if not self.abstraction.addy2 == None:
+            self.presentation.Addy2.SetValue(self.abstraction.addy2)
+        if not self.abstraction.phone == None:
+            self.presentation.Phone.SetValue(self.abstraction.phone)
 
     def show_sac_start_time(self, enable=True):
-        if enable:
-            self.app_handle.set_conf_val('block.displaysac', '1')
-        else:
-            self.app_handle.set_conf_val('block.displaysac', '0')
+        self.abstraction.displaysac = enable
         self.presentation.SacText.Enable(enable)
         self.presentation.SacTime.Enable(enable)
         self.presentation.spin1.Enable(enable)
 
     def show_ss_start_time(self, enable=True):
-        if enable:
-            self.app_handle.set_conf_val('block.displayss', '1')
-        else:
-            self.app_handle.set_conf_val('block.displayss', '0')
+        self.abstraction.displayss = enable
         self.presentation.SSText.Enable(enable)
         self.presentation.SSTime.Enable(enable)
         self.presentation.spin2.Enable(enable)
 
     def show_pr_start_time(self, enable=True):
-        if enable:
-            self.app_handle.set_conf_val('block.display_pr_rs', '1')
-        else:
-            self.app_handle.set_conf_val('block.display_pr_rs', '0')
+        self.abstraction.display_pr_rs = enable
 
     def update_sac_time(self, new_val):
-        self.app_handle.set_conf_val('block.sacstart', new_val)
+        self.abstraction.sacstart = new_val
 
     def update_ss_time(self, new_val):
-        self.app_handle.set_conf_val('block.ssstart', new_val)
+        self.abstraction.ssstart
 
     def update_pr_time(self, new_val):
-        self.app_handle.set_conf_val('block.pr_rs_start', new_val)
+        self.abstraction.pr_rs_start = new_val
 
     def update_building_address_line_1(self, new_val):
-        self.app_handle.set_conf_val('bldg.addy1', new_val)
+        self.abstraction.addy1 = new_val
 
     def update_building_address_line_2(self, new_val):
-        self.app_handle.set_conf_val('bldg.addy2', new_val)
+        self.abstraction.addy2 = new_val
 
     def update_building_phone(self, new_val):
-        self.app_handle.set_conf_val('bldg.phone', new_val)
+        self.abstraction.phone = new_val

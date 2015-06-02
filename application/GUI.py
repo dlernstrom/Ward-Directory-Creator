@@ -4,6 +4,7 @@ import time
 
 import wx
 
+from BuildingPanel.BuildingAbstraction import BuildingAbstraction
 from BuildingPanel.BuildingControl import BuildingControl
 from BuildingPanel.BuildingInteraction import BuildingInteraction
 from BuildingPanel.BuildingPresentation import BuildingPresentation
@@ -43,9 +44,10 @@ class MyFrame(wx.Frame):
         self.main_control = MainControl(self.app_handle, p, i)
         self.nb.AddPage(p, 'Main')
 
+        a = BuildingAbstraction(self.app_handle)
         p = BuildingPresentation(self.nb)
         i = BuildingInteraction()
-        self.building_control = BuildingControl(self.app_handle, p, i)
+        self.building_control = BuildingControl(a, p, i)
         self.nb.AddPage(p, "Building")
 
         p = ConfigPresentation(self.nb)
