@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 import wx
-from wx.lib.masked import EVT_TIMEUPDATE, TimeCtrl
+from wx.lib.masked import TimeCtrl
 
 from application.ColoredPanel import ColoredPanel
 

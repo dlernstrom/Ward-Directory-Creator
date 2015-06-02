@@ -124,3 +124,33 @@ class ConfigPresentation(ColoredPanel):
         border_level0.Add(inside_border_level1, 1, wx.EXPAND | wx.ALL, 25)
         self.SetSizer(border_level0)
         border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])
+
+    def new_member_csv_file_callback(self, evt):
+        self.app_handle.set_conf_val('file.member_csv_location',
+                                     evt.GetString())
+        # This will call an error if the handler
+        # is called prior to init being completed
+        try:
+            self.control.making_active()
+        except AttributeError:
+            pass
+
+    def new_nonmember_csv_file_callback(self, evt):
+        self.app_handle.set_conf_val('file.nonmember_csv_location',
+                                     evt.GetString())
+        # This will call an error if the handler
+        # is called prior to init being completed
+        try:
+            self.control.making_active()
+        except AttributeError:
+            pass
+
+    def NewImagesDirectory(self, evt):
+        self.app_handle.set_conf_val('file.imagesdirectory', evt.GetString())
+
+    def NewPDFDirectory(self, evt):
+        self.app_handle.set_conf_val('file.pdf_outdirectory',
+                                     evt.GetString())
+
+    def NewArchiveDirectory(self, evt):
+        self.app_handle.set_conf_val('file.imagearchivedir', evt.GetString())
