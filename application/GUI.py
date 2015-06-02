@@ -8,6 +8,7 @@ from BuildingPanel.BuildingAbstraction import BuildingAbstraction
 from BuildingPanel.BuildingControl import BuildingControl
 from BuildingPanel.BuildingInteraction import BuildingInteraction
 from BuildingPanel.BuildingPresentation import BuildingPresentation
+from ConfigPanel.ConfigAbstraction import ConfigAbstraction
 from ConfigPanel.ConfigControl import ConfigControl
 from ConfigPanel.ConfigInteraction import ConfigInteraction
 from ConfigPanel.ConfigPresentation import ConfigPresentation
@@ -50,9 +51,10 @@ class MyFrame(wx.Frame):
         self.building_control = BuildingControl(a, p, i)
         self.nb.AddPage(p, "Building")
 
+        a = ConfigAbstraction(self.app_handle)
         p = ConfigPresentation(self.nb)
         i = ConfigInteraction()
-        self.config_control = ConfigControl(self.app_handle, p, i)
+        self.config_control = ConfigControl(a, p, i)
         self.nb.AddPage(p, "Configuration")
 
         p = LeadershipPanel(self.nb, self.app_handle)
