@@ -32,7 +32,7 @@ class BuildingPresentation(ColoredPanel):
                                      "Sacrament Meeting (Start Time)")
         self.SacText.SetFont(self.StandardFont)
         gbs.Add(self.SacText, (1, 1), span=wx.DefaultSpan,
-                         flag=wx.ALL, border=10)
+                flag=wx.ALL, border=10)
 
         self.SacTime = TimeCtrl(self, -1, display_seconds=False)
         self.SacTime.SetFont(self.StandardFont)
@@ -148,3 +148,11 @@ class BuildingPresentation(ColoredPanel):
         border_level0.Add(inside_border_level1, 1, wx.EXPAND | wx.ALL, 25)
         self.SetSizer(border_level0)
         border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])
+
+    @property
+    def sac_display_checkbox(self):
+        return self.CB_SacramentDisp.GetValue()
+
+    @sac_display_checkbox.setter
+    def sac_display_checkbox(self, new_val):
+        self.CB_SacramentDisp.SetValue(new_val)

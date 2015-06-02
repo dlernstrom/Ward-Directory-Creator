@@ -16,7 +16,7 @@ class BuildingControl(ColoredPanel):
     def making_active(self):
         # Here's the logic to set up the prevalues from config file
         if int(self.app_handle.get_conf_val('block.displaysac')):
-            self.presentation.CB_SacramentDisp.SetValue(True)
+            self.presentation.sac_display_checkbox = True
         if int(self.app_handle.get_conf_val('block.displaysac')):
             self.presentation.SacText.Enable(True)
         else:
