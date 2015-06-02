@@ -7,55 +7,60 @@ import wx
 class ConfigInteraction(object):
     def install(self, control, p):
         self.control = control
-        p.Bind(wx.EVT_CHECKBOX, self.OnOverridePhone, p.CB_OverridePhone)
-        p.Bind(wx.EVT_COMBOBOX, self.OnSelectMissing, p.Contact_Dropdown)
-        p.Bind(wx.EVT_TEXT, self.OnPhoneText, p.TXT_Phone)
-        p.Bind(wx.EVT_COMBOBOX, self.OnSelectEmail, p.Email_Dropdown)
-        p.Bind(wx.EVT_BUTTON, self.OnAddEmail, p.BTN_AddEmail)
-        p.Bind(wx.EVT_LISTBOX, self.ListboxClicked, p.EmailList)
-        p.Bind(wx.EVT_LISTBOX_DCLICK, self.OnRemoveEmail, p.EmailList)
-        p.Bind(wx.EVT_BUTTON, self.OnRemoveEmail, p.BTN_RemoveEmail)
 
-    def OnSelectMissing(self, evt):
-        self.app_handle.set_conf_val('missing.missingname', evt.GetString())
-        self.presentation.CB_OverridePhone.SetValue(False)
-        self.presentation.CB_OverridePhone.Enable(True)
-        NameInQuestion = self.app_handle.get_conf_val('missing.missingname')
-        Phone = self.app_handle.GetPhoneNumber(NameInQuestion)
-        self.presentation.TXT_Phone.SetValue(Phone)
-        self.presentation.TXT_Phone.Enable(False)
+        # These particular widgets do not use the standard Bind call because
+        # the widget is an amalgomation of two separate widgets
+        p.memberCsvFile.changeCallback = self.on_member_csv_change
+        p.nonMemberCsvFile.changeCallback = self.on_nonmember_csv_change
+        p.ImagesDirectory.changeCallback = self.on_images_directory_change
+        p.PDF_Out_Directory = self.on_pdf_directory_change
+        p.Image_Archive_Directory = self.on_archive_directory_change
 
-    def OnPhoneText(self, evt):
-        self.app_handle.set_conf_val('missing.missingphone', evt.GetString())
+        p.Bind(wx.EVT_CHECKBOX, self.on_override_phone, p.CB_OverridePhone)
+        p.Bind(wx.EVT_COMBOBOX, self.on_select_missing_picture_contact,
+               p.Contact_Dropdown)
+        p.Bind(wx.EVT_TEXT, self.on_phone_txt_change, p.TXT_Phone)
+        p.Bind(wx.EVT_COMBOBOX, self.on_select_email, p.Email_Dropdown)
+        p.Bind(wx.EVT_BUTTON, self.on_add_email, p.BTN_AddEmail)
+        p.Bind(wx.EVT_LISTBOX, self.on_listbox_clicked, p.EmailList)
+        p.Bind(wx.EVT_LISTBOX_DCLICK, self.on_remove_email, p.EmailList)
+        p.Bind(wx.EVT_BUTTON, self.on_remove_email, p.BTN_RemoveEmail)
 
-    def OnOverridePhone(self, evt):
+    def on_member_csv_change(self, evt):
+        self.control.update_member_csv_file_path(evt.GetString())
+
+    def on_nonmember_csv_change(self, evt):
+        self.control.update_nonmember_csv_file_path(evt.GetString())
+
+    def on_images_directory_change(self, evt):
+        self.control.update_images_directory(evt.GetString())
+
+    def on_pdf_directory_change(self, evt):
+        self.control.update_pdf_directory(evt.GetString())
+
+    def on_archive_directory_change(self, evt):
+        self.control.update_archive_directory(evt.GetString())
+
+    def on_select_missing_picture_contact(self, evt):
+        self.control.update_missing_picture_contact(evt.GetString())
+
+    def on_phone_txt_change(self, evt):
+        self.control.update_missing_picture_contact_phone(evt.GetString())
+
+    def on_override_phone(self, evt):
         if evt.Checked():
-            self.app_handle.set_conf_val('missing.overridephone', '1')
-            self.presentation.TXT_Phone.Enable(True)
+            self.control.override_missing_picture_contact_phone(True)
         else:
-            self.app_handle.set_conf_val('missing.overridephone', '0')
-            self.presentation.TXT_Phone.Enable(False)
-            NameInQuestion = self.app_handle.get_conf_val('missing.missingname')
-            Phone = self.app_handle.GetPhoneNumber(NameInQuestion)
-            self.presentation.TXT_Phone.SetValue(Phone)
+            self.control.override_missing_picture_contact_phone(False)
 
-    def OnSelectEmail(self, evt):
-        self.presentation.BTN_AddEmail.Enable(True)
+    def on_select_email(self, evt):
+        self.control.email_address_selected_for_notifications()
 
-    def OnAddEmail(self, evt):
-        # TODO: Remove the entry from the list of choices...
-        self.presentation.BTN_AddEmail.Enable(False)
-        self.presentation.EmailList.Append(
-            self.presentation.Email_Dropdown.GetStringSelection())
-        # Clear for next usage
-        self.presentation.Email_Dropdown.SetSelection(wx.NOT_FOUND)
-        self.control.SaveEmails()
+    def on_add_email(self, evt):
+        self.control.add_email_for_notifications()
 
-    def ListboxClicked(self, evt):
-        self.presentation.BTN_RemoveEmail.Enable(True)
+    def on_listbox_clicked(self, evt):
+        self.control.email_address_selected_for_notification_removal()
 
-    def OnRemoveEmail(self, evt):
-        self.presentation.EmailList.Delete(
-            self.presentation.EmailList.GetSelection())
-        self.presentation.BTN_RemoveEmail.Enable(False)
-        self.control.SaveEmails()
+    def on_remove_email(self, evt):
+        self.control.remove_notification_email_address()

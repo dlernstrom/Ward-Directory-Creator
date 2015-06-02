@@ -107,3 +107,12 @@ class BuildingControl(ColoredPanel):
 
     def update_pr_time(self, new_val):
         self.app_handle.set_conf_val('block.pr_rs_start', new_val)
+
+    def update_building_address_line_1(self, new_val):
+        self.app_handle.set_conf_val('bldg.addy1', new_val)
+
+    def update_building_address_line_2(self, new_val):
+        self.app_handle.set_conf_val('bldg.addy2', new_val)
+
+    def update_building_phone(self, new_val):
+        self.app_handle.set_conf_val('bldg.phone', new_val)

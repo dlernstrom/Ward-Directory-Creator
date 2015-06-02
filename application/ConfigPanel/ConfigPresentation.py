@@ -18,28 +18,24 @@ class ConfigPresentation(ColoredPanel):
 
         self.memberCsvFile = FileBrowseButton(
             self, -1, size=(700, 30), labelText="Membership File",
-            fileMask="*.csv", changeCallback=self.new_member_csv_file_callback)
+            fileMask="*.csv")
         folder_box_sizer.Add(self.memberCsvFile, 0, wx.TOP | wx.LEFT, 10)
 
         self.nonMemberCsvFile = FileBrowseButton(
             self, -1, size=(700, 30), labelText="Nonmember File",
-            fileMask="*.csv",
-            changeCallback=self.new_nonmember_csv_file_callback)
+            fileMask="*.csv")
         folder_box_sizer.Add(self.nonMemberCsvFile, 0, wx.TOP | wx.LEFT, 10)
 
         self.ImagesDirectory = DirBrowseButton(
-            self, -1, size=(700, 30), labelText="Images Directory",
-            changeCallback=self.NewImagesDirectory)
+            self, -1, size=(700, 30), labelText="Images Directory")
         folder_box_sizer.Add(self.ImagesDirectory, 0, wx.TOP | wx.LEFT, 10)
 
         self.PDF_Out_Directory = DirBrowseButton(
-            self, -1, size=(700, 30), labelText="PDF Output Directory",
-            changeCallback=self.NewPDFDirectory)
+            self, -1, size=(700, 30), labelText="PDF Output Directory")
         folder_box_sizer.Add(self.PDF_Out_Directory, 0, wx.TOP | wx.LEFT, 10)
 
         self.Image_Archive_Directory = DirBrowseButton(
-            self, -1, size=(700, 30), labelText="Image Archive Directory",
-            changeCallback=self.NewArchiveDirectory)
+            self, -1, size=(700, 30), labelText="Image Archive Directory")
         folder_box_sizer.Add(self.Image_Archive_Directory, 0,
                              wx.TOP | wx.LEFT | wx.BOTTOM, 10)
 
@@ -125,32 +121,5 @@ class ConfigPresentation(ColoredPanel):
         self.SetSizer(border_level0)
         border_level0.SetDimension(0, 0, self.GetSize()[0], self.GetSize()[1])
 
-    def new_member_csv_file_callback(self, evt):
-        self.app_handle.set_conf_val('file.member_csv_location',
-                                     evt.GetString())
-        # This will call an error if the handler
-        # is called prior to init being completed
-        try:
-            self.control.making_active()
-        except AttributeError:
-            pass
-
-    def new_nonmember_csv_file_callback(self, evt):
-        self.app_handle.set_conf_val('file.nonmember_csv_location',
-                                     evt.GetString())
-        # This will call an error if the handler
-        # is called prior to init being completed
-        try:
-            self.control.making_active()
-        except AttributeError:
-            pass
-
-    def NewImagesDirectory(self, evt):
-        self.app_handle.set_conf_val('file.imagesdirectory', evt.GetString())
-
-    def NewPDFDirectory(self, evt):
-        self.app_handle.set_conf_val('file.pdf_outdirectory',
-                                     evt.GetString())
-
-    def NewArchiveDirectory(self, evt):
-        self.app_handle.set_conf_val('file.imagearchivedir', evt.GetString())
+    def clear_email_selection(self):
+        self.Email_Dropdown.SetSelection(wx.NOT_FOUND)

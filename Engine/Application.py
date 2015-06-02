@@ -208,7 +208,7 @@ class Application(object):
     def nonmember_list(self):
         if self.get_conf_val('file.nonmember_csv_location') == None or \
                 not self.get_conf_val('file.nonmember_csv_location')[-4:] == '.csv':
-            raise Exception("Not a valid nonmembership list")
+            return []
         a = []
         membershipHandle = CSVMembershipParser(
             self.get_conf_val('file.nonmember_csv_location'))

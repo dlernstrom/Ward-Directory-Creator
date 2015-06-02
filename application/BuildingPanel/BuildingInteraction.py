@@ -46,10 +46,10 @@ class BuildingInteraction(object):
         self.control.update_pr_time(evt.GetValue())
 
     def on_bldg_addy1_changed(self, evt):
-        self.app_handle.set_conf_val('bldg.addy1', evt.GetString())
+        self.control.update_building_address_line_1(evt.GetString())
 
     def on_bldg_addy2_changed(self, evt):
-        self.app_handle.set_conf_val('bldg.addy2', evt.GetString())
+        self.control.update_building_address_line_2(evt.GetString())
 
     def on_bldg_phone_changed(self, evt):
-        self.app_handle.set_conf_val('bldg.phone', evt.GetString())
+        self.control.update_building_phone(evt.GetString())
