@@ -23,7 +23,7 @@ class MainInteraction(object):
         self.control.update_ward_name(evt.GetString())
 
     def OnWardTypeChanged(self, evt):
-        if evt.GetId() == self.RB_Ward.GetId():
+        if evt.GetEventObject().GetLabel() == 'Ward':
             self.control.update_unit_type('Ward')
         else:
             self.control.update_unit_type('Branch')

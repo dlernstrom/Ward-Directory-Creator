@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import wx
+from wx.lib.wordwrap import wordwrap
 
 from application.ColoredPanel import ColoredPanel
 from __version__ import __version__

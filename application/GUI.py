@@ -39,10 +39,10 @@ class MyFrame(wx.Frame):
         self.SetFont(self.TextBoxFont)
         self.nb = wx.Notebook(self, -1)
 
-        p = MainPresentation(self.nb)
+        main_presentation = MainPresentation(self.nb)
         i = MainInteraction()
-        self.main_control = MainControl(self.app_handle, p, i)
-        self.nb.AddPage(p, 'Main')
+        self.main_control = MainControl(self.app_handle, main_presentation, i)
+        self.nb.AddPage(main_presentation, 'Main')
 
         a = BuildingAbstraction(self.app_handle)
         p = BuildingPresentation(self.nb)
@@ -64,8 +64,9 @@ class MyFrame(wx.Frame):
         self.nb.AddPage(p, "Generate")
 
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.on_page_changed)
-        self.nb.SetPageSize(main.GetSize())
+        self.nb.SetPageSize(main_presentation.GetSize())
         self.Fit()
+        self.main_control.making_active()
 
     def on_page_changed(self, event):
         new = event.GetSelection()
