@@ -11,7 +11,9 @@ from ConfigPanel.ConfigControl import ConfigControl
 from ConfigPanel.ConfigInteraction import ConfigInteraction
 from ConfigPanel.ConfigPresentation import ConfigPresentation
 from Engine.Application import Application
-from PanelMain import MainPanel
+from MainPanel.MainControl import MainControl
+from MainPanel.MainInteraction import MainInteraction
+from MainPanel.MainPresentation import MainPresentation
 from PanelLeadership import LeadershipPanel
 from GeneratePanel.GenerateControl import GenerateControl
 from GeneratePanel.GenerateInteraction import GenerateInteraction
@@ -36,8 +38,10 @@ class MyFrame(wx.Frame):
         self.SetFont(self.TextBoxFont)
         self.nb = wx.Notebook(self, -1)
 
-        main = MainPanel(self.nb, self.app_handle)
-        self.nb.AddPage(main, main.Title)
+        p = MainPresentation(self.nb)
+        i = MainInteraction()
+        self.main_control = MainControl(self.app_handle, p, i)
+        self.nb.AddPage(p, 'Main')
 
         p = BuildingPresentation(self.nb)
         i = BuildingInteraction()
@@ -49,9 +53,8 @@ class MyFrame(wx.Frame):
         self.config_control = ConfigControl(self.app_handle, p, i)
         self.nb.AddPage(p, "Configuration")
 
-        for panel in [LeadershipPanel]:
-            p = panel(self.nb, self.app_handle)
-            self.nb.AddPage(p, p.Title)
+        p = LeadershipPanel(self.nb, self.app_handle)
+        self.nb.AddPage(p, p.Title)
 
         p = GeneratePresentation(self.nb)
         i = GenerateInteraction()
@@ -64,12 +67,15 @@ class MyFrame(wx.Frame):
 
     def on_page_changed(self, event):
         new = event.GetSelection()
-        if isinstance(self.nb.GetPage(new), BuildingPresentation):
+        page = self.nb.GetPage(new)
+        if isinstance(page, BuildingPresentation):
             self.building_control.making_active()
-        elif isinstance(self.nb.GetPage(new), ConfigPresentation):
+        elif isinstance(page, ConfigPresentation):
             self.config_control.making_active()
-        elif isinstance(self.nb.GetPage(new), GeneratePresentation):
+        elif isinstance(page, GeneratePresentation):
             self.generate_control.making_active()
+        elif isinstance(page, MainPresentation):
+            self.main_control.making_active()
         else:
-            self.nb.GetPage(new).making_active()
+            page.making_active()
         event.Skip()
