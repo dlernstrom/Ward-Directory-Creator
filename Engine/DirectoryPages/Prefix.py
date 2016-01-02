@@ -9,6 +9,7 @@ from reportlab.lib.units import inch
 from reportlab.platypus import PageBreak, Paragraph, Spacer, Table, TableStyle
 from reportlab.platypus.flowables import KeepInFrame, HRFlowable
 
+from Engine.constants import role_lst, role_dict
 from DirectoryPage import DirectoryPage
 from PDFStyles import styles
 
@@ -16,33 +17,10 @@ STANDARD_MARGIN = 0.25 * inch
 STANDARD_FRAME_WIDTH = landscape(letter)[0]/2 - 2 * STANDARD_MARGIN
 
 
-def get_callings_data(configData):
+def get_callings_data(app_handle):
     # Return a list of dictionaries of the positions ordered correctly
     # TODO: This should happen by my parent...
     # I am the customer and should get it how I want it already
-    role_lst = ['bish', 'first', 'second', 'exec', 'clerk', 'fin', 'mem', "NULL",
-                'hp', 'eq', 'rs', 'ym', 'yw', 'primary', 'ss', "NULL",
-                'wml', 'act', 'news', 'miss']
-    role_dict = {'bish':	'Bishop',
-                 'first':	'1st Counselor',
-                 'second':	'2nd Counselor',
-                 'exec':	'Executive Secretary',
-                 'clerk':	'Ward Clerk',
-                 'fin':		'Financial Clerk',
-                 'mem':		'Membership Clerk',
-                 'hp':		'High Priest Group Leader',
-                 'eq':		'Elders Quorum President',
-                 'rs':		'Relief Society President',
-                 'ym':		"Young Men's President",
-                 'yw':		"Young Women's President",
-                 'primary':	'Primary President',
-                 'ss':		'Sunday School President',
-                 'wml':		'Ward Mission Leader',
-                 'act':		'Activities Committee Chair',
-                 'news':	'Ward Newsletter',
-                 'dir':		'Ward Directory',
-                 "NULL":	'',
-                 'miss':	'Missionaries'}
     leadership_lst = []
     for role in role_lst:
         if role == 'miss':
@@ -50,10 +28,11 @@ def get_callings_data(configData):
                                    "Name":	role_dict[role],
                                    "Phone":	'(435) 232-7293'})
         try:
-            if configData['leadership.' + role + 'disp'] == '1':
-                leadership_lst.append({"Role":	role_dict[role],
-                                       "Name":	configData['leadership.' + role + 'name'],
-                                       "Phone":	configData['leadership.' + role + 'phone']})
+            if getattr(app_handle, 'leadership_' + role + 'disp') == '1':
+                leadership_lst.append(
+                    {"Role": role_dict[role],
+                     "Name": getattr(app_handle, 'leadership_' + role + 'name'),
+                     "Phone": getattr(app_handle, 'leadership_' + role + 'phone')})
             else:
                 leadership_lst.append({"Role":	" ",
                                        "Name":	" ",
@@ -71,18 +50,18 @@ def get_callings_data(configData):
     return leadership_lst
 
 
-def get_block_data(configData):
+def get_block_data(app_handle):
     block_data = []
     block_time_format = '%I:%M %p'
-    if configData['block.displaysac']:
-        sac_time = time.strptime(configData['block.sacstart'],
+    if app_handle.block_displaysac:
+        sac_time = time.strptime(app_handle.block_sacstart,
                                  block_time_format)
         block_data.append([sac_time, "Sacrament Meeting"])
-    if configData['block.displayss']:
-        ss_time = time.strptime(configData['block.ssstart'], block_time_format)
+    if app_handle.block_displayss:
+        ss_time = time.strptime(app_handle.block_ssstart, block_time_format)
         block_data.append([ss_time, "Sunday School"])
-    if configData['block.display_pr_rs']:
-        pr_rs_time = time.strptime(configData['block.pr_rs_start'],
+    if app_handle.block_display_pr_rs:
+        pr_rs_time = time.strptime(app_handle.block_pr_rs_start,
                                    block_time_format)
         block_data.append([pr_rs_time, "Priesthood / Relief Society"])
     block_data.sort()
@@ -99,35 +78,32 @@ def get_block_data(configData):
     return pdf_block_data
 
 
-def get_directory_prefix_pages(dict_data, debug):
+def get_directory_prefix_pages(app_handle, debug):
     pages = []
-    if debug:
-        print "Here's the dictionary I received"
-        print dict_data
     #Page 1 Data
     prefixPage = DirectoryPage()
     prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
                                        height=1.5 * inch))
     prefixPage.flowables.append(
-        Paragraph(text="<b>" + dict_data['unit.unitname'] + "</b>",
+        Paragraph(text="<b>" + app_handle.unit_unitname + "</b>",
                   style=styles['DocumentTitle']))
     prefixPage.flowables.append(Paragraph(text="Member Directory",
                                           style=styles['Subtitle']))
     prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
                                        height=2.0 * inch))
     prefixPage.flowables.append(
-        Paragraph(text=dict_data['unit.stakename'],
+        Paragraph(text=app_handle.unit_stakename,
                   style=styles['PrefixBase']))
-    if 'bldg.addy1' in dict_data.keys():
+    if app_handle.bldg_addy1:
         prefixPage.flowables.append(
-            Paragraph(text=dict_data['bldg.addy1'],
+            Paragraph(text=app_handle.bldg_addy1,
                       style=styles['PrefixBase']))
     else:
         prefixPage.flowables.append(Paragraph(text='',
                                               style=styles['PrefixBase']))
-    if 'bldg.addy2' in dict_data.keys():
+    if app_handle.bldg_addy2:
         prefixPage.flowables.append(
-            Paragraph(text=dict_data['bldg.addy2'],
+            Paragraph(text=app_handle.bldg_addy2,
                       style=styles['PrefixBase']))
     else:
         prefixPage.flowables.append(Paragraph(text='',
@@ -150,7 +126,7 @@ def get_directory_prefix_pages(dict_data, debug):
         Paragraph(text=sched, style=styles['Subtitle']))
     prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
                                        height=.125 * inch))
-    blockData = get_block_data(dict_data)
+    blockData = get_block_data(app_handle)
     TextTable = Table(blockData, [1.5 * inch, 3.0 * inch])
     if debug:
         TextTable.setStyle(
@@ -159,9 +135,9 @@ def get_directory_prefix_pages(dict_data, debug):
     prefixPage.flowables.append(TextTable)
     prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
                                        height=.125 * inch))
-    if 'bldg.phone' in dict_data.keys():
+    if app_handle.bldg_phone:
         prefixPage.flowables.append(
-            Paragraph(text="Office Phone: " + dict_data['bldg.phone'],
+            Paragraph(text="Office Phone: " + app_handle.bldg_phone,
                       style=styles['PrefixBase']))
     else:
         prefixPage.flowables.append(Paragraph(text='',
@@ -175,7 +151,7 @@ def get_directory_prefix_pages(dict_data, debug):
                                        height=.125 * inch))
     data = []
 
-    for Position in get_callings_data(dict_data):
+    for Position in get_callings_data(app_handle):
         data.append([[Paragraph(text=Position['Role'],
                                 style=styles['RegTextR'])],
                      [Paragraph(text=Position['Name'],

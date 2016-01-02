@@ -30,7 +30,7 @@ STANDARD_TABLE_HEIGHT = STANDARD_FRAME_HEIGHT - FooterRoom - headerRoom
 STANDARD_MAP_HEIGHT = STANDARD_FRAME_HEIGHT - headerRoom
 
 
-def get_maps_pages(configData, maps, membershipList, debug):
+def get_maps_pages(app_handle, maps, membershipList, debug):
     pages = []
     MAP_PAGE_WIDTH = HALF_PAGE_WIDTH - STANDARD_MARGIN
     maps.annotate_insets()
@@ -70,8 +70,8 @@ def make_member_dwellings_dict(dwellingsHandle, membershipList):
     return myDict
 
 
-def get_maps_lookup_pages(configData, dwellingsHandle, membershipList, debug):
-    churchFlowable = Paragraph('%s - For Church Use Only' % configData['unit.unitname'], styles['DaveFooter'])
+def get_maps_lookup_pages(app_handle, dwellingsHandle, membershipList, debug):
+    churchFlowable = Paragraph('%s - For Church Use Only' % app_handle.unit_unitname, styles['DaveFooter'])
     pages = []
     memberDwellingsDict = make_member_dwellings_dict(dwellingsHandle, membershipList)
     tableData = [['#', 'Name']]
@@ -81,7 +81,7 @@ def get_maps_lookup_pages(configData, dwellingsHandle, membershipList, debug):
         print "Dwelling: %s %s" % (dwelling.mapIndex, dwelling)
         members = memberDwellingsDict.get(dwellingCounter, [])
         print "Members: %s" % str(members)
-        membersString = '\n'.join(map(lambda x: '%s%s' % ('' if x.isMember else '*',x.coupleName), members))
+        membersString = '\n'.join(map(lambda x: '%s%s' % ('' if x.isMember else '*', x.coupleName), members))
         tableData.append([dwellingCounter + 1, membersString])
         ofstream.write(u'"%s","%s","%s"\n' % (dwellingCounter + 1, dwelling.Street, membersString.replace(u'\n', u'')))
     ofstream.close()

@@ -8,7 +8,7 @@ from email.MIMEText import MIMEText
 
 from rtree import index
 
-from Configuration import Configuration
+from constants import CONFIG_DEFAULTS
 from Coordinate import Coordinate
 from CSVMembershipParser import CSVMembershipParser
 from Directory import Directory
@@ -17,48 +17,19 @@ from DirectoryPages.MapsPages import get_maps_pages, get_maps_lookup_pages
 from DirectoryPages.Prefix import get_directory_prefix_pages
 from DirectoryPages.Suffix import get_directory_suffix_pages
 from Dwellings import Dwellings
+from INI_Configuration import INIMixin
 from Maps import Map, Maps
 from PDFTools import PDFTools
 
 
-CONFIG_FILENAME = "WardDirectoryCreator.cfg"
-CONFIG_DEFAULTS = {
-    "unit.unitname":			"Your Ward Name Here",
-    "unit.unit_type":			"Ward",
-    "unit.stakename":			"Your Stake Name Here",
-    "quote.usequote":			"1",
-    "quote.quotecontent":		"As children of the Lord\nwe should strive every day to rise to a higher level of personal righteousness in all of our actions.",
-    "quote.quoteauthor":		"President James E. Faust",
-    "block.displaysac":			"1",
-    "block.sacstart":			"09:00 AM", # 70 mins
-    "block.displayss":			"1",
-    "block.ssstart":			"10:20 AM", # 40 mins
-    "block.display_pr_rs":		"1",
-    "block.pr_rs_start":		"11:10 AM", # 50 mins
-    "bldg.phone":				"(XXX) XXX-XXXX",
-    "bldg.addy1":				"Address Line 1",
-    "bldg.addy2":				"City, State ZIP CODE"
-}
-
-
-class Application(object):
-    def __init__(self, parent, DEBUG=0):
-        self.ConfigHandle = Configuration(CONFIG_FILENAME, CONFIG_DEFAULTS)
-        self.ConfigDefaults = CONFIG_DEFAULTS
+class Application(INIMixin):
+    def __init__(self, parent, DEBUG=0, *args, **kwargs):
+        kwargs['ini_defaults'] = CONFIG_DEFAULTS
+        super(Application, self).__init__(*args, **kwargs)
 
         self.DEBUG = DEBUG
         self.ValidCSV = False
-        #self.GetMembershipList()
-
-    def get_conf_val(self, DictionaryField):
-        return self.ConfigHandle.GetValueByKey(DictionaryField)
-
-    def set_conf_val(self, DictionaryField, value):
-        self.ConfigHandle.SetValueByKey(DictionaryField, value)
-        if DictionaryField == 'file.member_csv_location':
-            self.GetMembershipList()
-            self.SetLists()
-        if DictionaryField == 'file.nonmember_csv_location':
+        if self.file_member_csv_location:
             self.GetMembershipList()
             self.SetLists()
 
@@ -69,20 +40,19 @@ class Application(object):
             household.set_map_index(
                 self.homes.find_map_index_for_household(household))
         directoryCollection = Directory()
-        configData = self.ConfigHandle.GetConfigData()
         directoryCollection.pages['prefix'] = get_directory_prefix_pages(
-            dict_data=configData, debug=self.DEBUG)
+            self, debug=self.DEBUG)
         directoryCollection.pages['directory'] = get_listing_pages(
-            configData=configData, membershipList=self.MembershipList,
+            self, membershipList=self.MembershipList,
             debug=self.DEBUG)
         directoryCollection.pages['maps'] = get_maps_pages(
-            configData=configData, maps=self.ourMaps,
+            self, maps=self.ourMaps,
             membershipList=self.MembershipList, debug=self.DEBUG)
         directoryCollection.pages['mapsLookup'] = get_maps_lookup_pages(
-            configData=configData, dwellingsHandle=self.homes,
+            self, dwellingsHandle=self.homes,
             membershipList=self.MembershipList, debug=self.DEBUG)
         directoryCollection.pages['suffix'] = get_directory_suffix_pages(
-            dict_data=configData, debug=self.DEBUG)
+            self, debug=self.DEBUG)
         return directoryCollection
 
     def InitiatePDF(self, OutputFolder, Full, Booklet, Single2Double):
@@ -117,7 +87,7 @@ class Application(object):
                 directoryCollection.get_pages_for_binding('booklet'))
 
     def create_sortable_index(self):
-        self.homes = Dwellings()
+        self.homes = Dwellings(self.file_dwellings_csv_location)
         self.idx = index.Index()
         counter = 0
         for entry in self.homes.dwellingList:
@@ -135,8 +105,8 @@ class Application(object):
         # furthest west person is at -111.8081775
         # furthest east person is at -111.7705975
         self.ourMaps = Maps(
-            [Map(1, Coordinate(41.9720, -111.8117775), Coordinate(41.9720, -111.7669975), 'large', 'portrait', 'east', 16, "Cherry Creek Ward", [Coordinate(41.9702841,-111.8060452), Coordinate(41.9523412,-111.8081775)]),
-             Map(2, Coordinate(41.9385, -111.808), Coordinate(41.9385, -111.7963776), 'large', 'portrait', 'east', 17, "Inset 1", [Coordinate(41.9359261,-111.7964), Coordinate(41.934148,-111.79725)]),
+            [Map(self.cache_dir, 1, Coordinate(41.9720, -111.8117775), Coordinate(41.9720, -111.7669975), 'large', 'portrait', 'east', 16, "Cherry Creek Ward", [Coordinate(41.9702841,-111.8060452), Coordinate(41.9523412,-111.8081775)]),
+             Map(self.cache_dir, 2, Coordinate(41.9385, -111.808), Coordinate(41.9385, -111.7963776), 'large', 'portrait', 'east', 17, "Inset 1", [Coordinate(41.9359261,-111.7964), Coordinate(41.934148,-111.79725)]),
              ])
         # must be left, bottom, right, top
         currentPosition = (-112, 45, -112, 45)
@@ -194,30 +164,29 @@ class Application(object):
 
     @property
     def member_list(self):
-        if self.get_conf_val('file.member_csv_location') == None or \
-                not self.get_conf_val('file.member_csv_location')[-4:] == '.csv':
+        if self.file_member_csv_location == '' or not \
+                self.file_member_csv_location[-4:] == '.csv':
             raise Exception("Not a valid membership list")
         a = []
-        membershipHandle = CSVMembershipParser(
-            self.get_conf_val('file.member_csv_location'))
+        membershipHandle = CSVMembershipParser(self.file_member_csv_location)
         for Household in membershipHandle.next():
             a.append(Household)
         return a
 
     @property
     def nonmember_list(self):
-        if self.get_conf_val('file.nonmember_csv_location') == None or \
-                not self.get_conf_val('file.nonmember_csv_location')[-4:] == '.csv':
+        if self.file_nonmember_csv_location == '' or not \
+                self.file_nonmember_csv_location[-4:] == '.csv':
             return []
         a = []
         membershipHandle = CSVMembershipParser(
-            self.get_conf_val('file.nonmember_csv_location'))
+            self.file_nonmember_csv_location)
         for Household in membershipHandle.next():
             a.append(Household)
         return a
 
     def GetNeededImageList(self):
-        return map(lambda Member: Member.expectedPhotoName, self.member_list)
+        return [member.expectedPhotoName for member in self.member_list]
 
     def GetFamilyOfDuplicateAddressList(self):
         AddressesSeen = []
@@ -238,7 +207,7 @@ class Application(object):
         return Report
 
     def GetMissingHouseholds(self):
-        ImagesDirectory = self.get_conf_val('file.imagesdirectory')
+        ImagesDirectory = self.file_images_directory
         MissingImages = []
         for Family in self.member_list:
             if not os.path.exists(os.path.join(ImagesDirectory,
@@ -247,7 +216,7 @@ class Application(object):
         return MissingImages
 
     def GetMissingImages(self):
-        ImagesDirectory = self.get_conf_val('file.imagesdirectory')
+        ImagesDirectory = self.file_images_directory
         MissingImages = []
         for Family in self.member_list:
             if not os.path.exists(os.path.join(ImagesDirectory,
@@ -271,7 +240,7 @@ class Application(object):
         return message
 
     def GetMissingMsgEmails(self):
-        return self.get_conf_val('email.recipients').split(',')
+        return self.email_recipients.split(',')
 
     def GetMemberEmails(self):
         emailList = []
@@ -313,12 +282,12 @@ class Application(object):
                         return household.familyPhone.phoneFormatted
 
     def SendEmails(self):
-        if not self.get_conf_val('email.smtp') == None:
-            SMTP_SERVER = self.get_conf_val('email.smtp')
-            SMTP_User = self.get_conf_val('email.username')
-            SMTP_Pass = self.get_conf_val('email.pass')
+        if not self.email_smtp == '':
+            SMTP_SERVER = self.email_smtp
+            SMTP_User = self.email_username
+            SMTP_Pass = self.email_pass
             session = smtplib.SMTP(SMTP_SERVER)
-            if not SMTP_User == None and not SMTP_Pass == None:
+            if not SMTP_User == '' and not SMTP_Pass == '':
                 session.login(user=SMTP_User, password=SMTP_Pass)
             msg = MIMEMultipart()
             msg['From'] = 'Ward Directory Creator <david@ernstrom.net>'
@@ -346,9 +315,8 @@ class Application(object):
         ExtraImages = []
         for root, dirs, files in os.walk(LiveFolder):
             for fileName in files:
-                if not fileName in IgnoreList and \
-                        not fileName.lower() in map(lambda x: x.lower(),
-                                                    NeededList):
+                if not fileName in IgnoreList and not \
+                        fileName.lower() in [x.lower() for x in NeededList]:
                     ExtraImages.append(fileName)
         return ExtraImages
 

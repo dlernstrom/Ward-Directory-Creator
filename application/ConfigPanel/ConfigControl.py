@@ -35,18 +35,18 @@ class ConfigControl(object):
             NameList = self.abstraction.get_name_list(NameType='Parent')
             for Name in NameList:
                 self.presentation.Contact_Dropdown.Append(Name)
-            if self.abstraction.missingname in NameList:
+            if self.abstraction.missing_missing_name in NameList:
                 self.presentation.Contact_Dropdown.SetStringSelection(
-                    self.abstraction.missingname)
+                    self.abstraction.missing_missing_name)
                 self.presentation.CB_OverridePhone.Enable(True)
                 if self.abstraction.overridephone:
                     self.presentation.TXT_Phone.Enable(True)
-                    if self.abstraction.missingphone:
+                    if self.abstraction.missing_missingphone:
                         self.presentation.TXT_Phone.SetValue(
-                            self.abstraction.missingphone)
+                            self.abstraction.missing_missingphone)
                 else:
                     self.presentation.TXT_Phone.Enable(False)
-                    phone = self.abstraction.get_default_phone_number()
+                    phone = self.abstraction.get_missing_contact_default_phone()
                     self.presentation.TXT_Phone.SetValue(phone)
             else:
                 self.presentation.TXT_Phone.Enable(False)
@@ -76,39 +76,44 @@ class ConfigControl(object):
         if self.abstraction.nonmember_csv_location:
             self.presentation.nonMemberCsvFile.SetValue(
                 self.abstraction.nonmember_csv_location)
-        if self.abstraction.imagesdirectory:
+        if self.abstraction.file_images_directory:
             self.presentation.ImagesDirectory.SetValue(
-                self.abstraction.imagesdirectory)
-        if self.abstraction.pdf_outdirectory:
+                self.abstraction.file_images_directory)
+        if self.abstraction.file_pdf_out_directory:
             self.presentation.PDF_Out_Directory.SetValue(
-                self.abstraction.pdf_outdirectory)
-        if self.abstraction.imagearchivedir:
+                self.abstraction.file_pdf_out_directory)
+        if self.abstraction.file_image_archive_directory:
             self.presentation.Image_Archive_Directory.SetValue(
-                self.abstraction.imagearchivedir)
+                self.abstraction.file_image_archive_directory)
         self.presentation.CB_OverridePhone.SetValue(self.abstraction.overridephone)
 
     def update_member_csv_file_path(self, new_val):
-        self.abstraction.member_csv_location = new_val
-        self.making_active()
+        if not self.abstraction.member_csv_location == new_val:
+            self.abstraction.member_csv_location = new_val
+            self.making_active()
 
     def update_nonmember_csv_file_path(self, new_val):
-        self.abstraction.nonmember_csv_location = new_val
-        self.making_active()
+        if not self.abstraction.nonmember_csv_location == new_val:
+            self.abstraction.nonmember_csv_location = new_val
+            self.making_active()
+
+    def update_dwellings_csv_file_path(self, new_val):
+        self.abstraction.file_dwellings_csv_location = new_val
 
     def update_images_directory(self, new_val):
-        self.abstraction.imagesdirectory = new_val
+        self.abstraction.file_images_directory = new_val
 
     def update_pdf_directory(self, new_val):
-        self.abstraction.pdf_outdirectory = new_val
+        self.abstraction.file_pdf_out_directory = new_val
 
     def update_archive_directory(self, new_val):
-        self.abstraction.imagearchivedir = new_val
+        self.abstraction.file_image_archive_directory = new_val
 
     def update_missing_picture_contact(self, new_val):
-        self.abstraction.missingname = new_val
+        self.abstraction.missing_missing_name = new_val
         self.presentation.CB_OverridePhone.SetValue(False)
         self.presentation.CB_OverridePhone.Enable(True)
-        phone = self.app_handle.GetPhoneNumber(new_val)
+        phone = self.abstraction.get_missing_contact_default_phone()
         self.presentation.TXT_Phone.SetValue(phone)
         self.presentation.TXT_Phone.Enable(False)
 
@@ -119,7 +124,7 @@ class ConfigControl(object):
         self.abstraction.overridephone = override
         self.presentation.TXT_Phone.Enable(override)
         if not override:
-            ph = self.abstraction.get_default_phone_number()
+            ph = self.abstraction.get_missing_contact_default_phone()
             self.presentation.TXT_Phone.SetValue(ph)
 
     def email_address_selected_for_notifications(self):

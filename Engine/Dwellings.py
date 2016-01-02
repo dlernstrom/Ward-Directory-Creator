@@ -31,10 +31,8 @@ class Dwelling(object):
 
 
 class Dwellings:
-    def __init__(self):
-        self.dwellingsFname = os.path.join('C:\\', 'Users', 'dlernstrom',
-                                           'Desktop', 'DirectoryCherryCreek',
-                                           'Cherry_Creek_Dwellings.csv')
+    def __init__(self, dwellings_file_name):
+        self.dwellingsFname = dwellings_file_name
         self.dwellingList = []
         self.read_from_file()
 

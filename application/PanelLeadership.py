@@ -46,48 +46,44 @@ class LeadershipPanel(ColoredPanel):
         #######################################################################
         ## Leadership Name Configuration
         self.Bishop = LeadershipRow(self, "Bishop",
-                                    ShortDesc='leadership.bish')
+                                    ShortDesc='bish')
         self.First = LeadershipRow(self, "1st Counselor",
-                                   ShortDesc='leadership.first')
+                                   ShortDesc='first')
         self.Second = LeadershipRow(self, "2nd Counselor",
-                                    ShortDesc='leadership.second')
+                                    ShortDesc='second')
         self.Exec = LeadershipRow(self, "Executive Secretary",
-                                  ShortDesc='leadership.exec')
+                                  ShortDesc='exec')
         self.WardClerk = LeadershipRow(self, "Ward Clerk",
-                                       ShortDesc='leadership.clerk')
+                                       ShortDesc='clerk')
         self.Financial = LeadershipRow(self, "Financial Clerk",
-                                       ShortDesc='leadership.fin')
+                                       ShortDesc='fin')
         self.Membership = LeadershipRow(self, "Membership Clerk",
-                                        ShortDesc='leadership.mem')
+                                        ShortDesc='mem')
         self.EQ = LeadershipRow(self, "Elders Quorum",
-                                ShortDesc='leadership.eq')
+                                ShortDesc='eq')
         self.HP = LeadershipRow(self, "High Priests",
-                                ShortDesc='leadership.hp')
+                                ShortDesc='hp')
         self.RS = LeadershipRow(self, "Relief Society",
-                                ShortDesc='leadership.rs', NameType='Parent')
+                                ShortDesc='rs', NameType='Parent')
         self.YM = LeadershipRow(self, "Young Mens",
-                                ShortDesc='leadership.ym')
+                                ShortDesc='ym')
         self.YW = LeadershipRow(self, "Young Womens",
-                                ShortDesc='leadership.yw', NameType='Parent')
+                                ShortDesc='yw', NameType='Parent')
         self.Primary = LeadershipRow(self, "Primary",
-                                     ShortDesc='leadership.primary',
+                                     ShortDesc='primary',
                                      NameType='Parent')
         self.WM = LeadershipRow(self, "Ward Mission Leader",
-                                ShortDesc='leadership.wml')
+                                ShortDesc='wml')
         self.SS = LeadershipRow(self, "Sunday School President",
-                                ShortDesc='leadership.ss')
+                                ShortDesc='ss')
         self.Newsletter = LeadershipRow(self, "Ward Newsletter",
-                                        ShortDesc='leadership.news',
+                                        ShortDesc='news',
                                         NameType='Parent')
-        self.Directory = LeadershipRow(self, "Ward Directory",
-                                       ShortDesc='leadership.dir',
-                                       NameType='Parent')
 
         self.PageRows = [self.Bishop, self.First, self.Second, self.Exec,
                          self.WardClerk, self.Financial, self.Membership,
                          self.EQ, self.HP, self.RS, self.YM, self.YW,
-                         self.Primary, self.WM, self.SS, self.Newsletter,
-                         self.Directory]
+                         self.Primary, self.WM, self.SS, self.Newsletter]
 
         #######################################################################
         ## Sizer encapsulation section
@@ -124,11 +120,11 @@ class LeadershipPanel(ColoredPanel):
 
     def DropdownChange(self, Row, NewValue):
         #Save the new value
-        self.app_handle.set_conf_val(Row.ShortDesc + 'name', NewValue)
+        setattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'name', NewValue)
         #Uncheck the override box
         Row.CB_Override.SetValue(False)
         #Save the override box status
-        self.app_handle.set_conf_val(Row.ShortDesc + 'overph', '0')
+        setattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'overph', '0')
         #Enable(True) the override box
         Row.CB_Override.Enable(True)
         #Load the phone number from CSV
@@ -137,34 +133,34 @@ class LeadershipPanel(ColoredPanel):
         #Check the display box
         Row.CB_Disp.SetValue(True)
         #Save the CB_Disp value
-        self.app_handle.set_conf_val(Row.ShortDesc + 'disp', '1')
+        setattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'disp', '1')
         #Enable(True) the display box
         Row.CB_Disp.Enable(True)
 
     def OverrideChange(self, Row, Checked):
         if Checked:
             # save the new value
-            self.app_handle.set_conf_val(Row.ShortDesc + 'overph', '1')
+            setattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'overph', '1')
             # Enable the phone field
             Row.TXT_Phone.Enable(True)
         else:
             # save the new value
-            self.app_handle.set_conf_val(Row.ShortDesc + 'overph', '0')
+            setattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'overph', '0')
             # Disable the phone field
             Row.TXT_Phone.Enable(False)
             # Reset the values for the phone field to CSV like
             phone = self.app_handle.GetPhoneNumber(
-                self.app_handle.get_conf_val(Row.ShortDesc + 'name'))
+                getattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'name'))
             Row.TXT_Phone.SetValue(phone)
 
     def PhoneNumberChange(self, Row, NewNumber):
-        self.app_handle.set_conf_val(Row.ShortDesc + 'phone', NewNumber)
+        setattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'phone', NewNumber)
 
     def DispChange(self, Row, NewStatus):
         if NewStatus:
-            self.app_handle.set_conf_val(Row.ShortDesc + 'disp', '1')
+            setattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'disp', '1')
         else:
-            self.app_handle.set_conf_val(Row.ShortDesc + 'disp', '0')
+            setattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'disp', '0')
 
     def making_active(self):
         if not self.app_handle.isValidCSV():
@@ -185,33 +181,33 @@ class LeadershipPanel(ColoredPanel):
             Row.DescriptionText.Enable(True)
             Row.Contact_Dropdown.Enable(True)
             # What else can I enable?
-            if self.app_handle.get_conf_val(Row.ShortDesc + 'name') in NameList:
+            if getattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'name') in NameList:
                 # The name is in the list, I may as well set the data
                 Row.Contact_Dropdown.SetStringSelection(
-                    self.app_handle.get_conf_val(Row.ShortDesc + 'name'))
-                if self.app_handle.get_conf_val(Row.ShortDesc + 'disp') == '1':
+                    getattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'name'))
+                if getattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'disp') == '1':
                     Row.CB_Disp.SetValue(True)
                 else:
                     Row.CB_Disp.SetValue(False)
                 Row.CB_Override.Enable(True)
-                if self.app_handle.get_conf_val(Row.ShortDesc + 'overph') == '1':
+                if getattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'overph') == '1':
                     Row.CB_Override.SetValue(True)
                     Row.TXT_Phone.Enable(True)
                     Row.TXT_Phone.SetValue(
-                        self.app_handle.get_conf_val(Row.ShortDesc + 'phone'))
+                        getattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'phone'))
                 else:
                     Row.CB_Override.SetValue(False)
                     Row.TXT_Phone.Enable(False)
                     phone = self.app_handle.GetPhoneNumber(
-                        self.app_handle.get_conf_val(Row.ShortDesc + 'name'))
+                        getattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'name'))
                     Row.TXT_Phone.SetValue(phone)
                 Row.CB_Disp.Enable(True)
             else:
-                if self.app_handle.get_conf_val(Row.ShortDesc + 'name'):
+                if getattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'name'):
                     # Name not in list
-                    nm = self.app_handle.get_conf_val(Row.ShortDesc + 'name')
+                    nm = getattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'name')
                     print nm + " Not in list"
-                    self.app_handle.set_conf_val(Row.ShortDesc + 'disp', '0')
+                    setattr(self.app_handle, 'leadership_' + Row.ShortDesc + 'disp', '0')
                 Row.TXT_Phone.Enable(False)
                 Row.CB_Override.Enable(False)
                 Row.CB_Override.SetValue(False)

@@ -15,10 +15,10 @@ from Pixel import Pixel
 
 class Map(object):
     # upperLeftCoordinate and upperRightCoordinate are as though the user was facing North
-    def __init__(self, index, upperLeftCoordinate, upperRightCoordinate, size, initialOrientation, finalDirection, myConfig, title, titleCorners):
+    def __init__(self, path, index, upperLeftCoordinate, upperRightCoordinate, size, initialOrientation, finalDirection, myConfig, title, titleCorners):
         self.url = 'http://maps.googleapis.com/maps/api/staticmap'
-        self.imgPath = 'C:\\Users\\dlernstrom\\Desktop\\DirectoryCherryCreek\\'
-        self.mapName = self.imgPath + 'Map%d_modified.bmp' % index
+        self.imgPath = path
+        self.mapName = os.path.join(self.imgPath, 'Map%d_modified.bmp' % index)
         # coordinates define view area
         self.upperLeftCoordinate = ul = upperLeftCoordinate
         self.upperRightCoordinate = ur = upperRightCoordinate
@@ -60,8 +60,9 @@ class Map(object):
         colsPerfect = abs(ul.longitude - ur.longitude) / config[myConfig]['horizRepeat']
         cols = int(math.ceil(colsPerfect))
         cachedName = 'imageCache_Lat%.7f_Lon%.7f_z%s_r%s_c%s.bmp' % (ul.latitude, ul.longitude, 16, rows, cols)
+        cache_fname = os.path.join(self.imgPath, cachedName)
         unCroppedLR = Coordinate(ul.latitude - rows * config[myConfig]['vertRepeat'], ul.longitude + cols * config[myConfig]['horizRepeat'])
-        if not os.path.isfile(self.imgPath + cachedName):
+        if not os.path.isfile(cache_fname):
             pilImage = Image.new("RGB", (cols * config[myConfig]['horizRepeatPixels'], rows * config[myConfig]['vertRepeatPixels']), "black")
             for row in xrange(rows):
                 for col in xrange(cols):
@@ -76,9 +77,9 @@ class Map(object):
                     qs = '%s?%s' % (self.url, urllib.urlencode(params))
                     img = Image.open(StringIO(urllib.urlopen(qs).read()))
                     pilImage.paste(img, (col * config[myConfig]['horizRepeatPixels'], row * config[myConfig]['vertRepeatPixels']))
-            pilImage.save(self.imgPath + cachedName)
+            pilImage.save(cache_fname)
         else:
-            pilImage = Image.open(self.imgPath + cachedName)
+            pilImage = Image.open(cache_fname)
 
         enh = ImageEnhance.Contrast(pilImage)
         pilImage = enh.enhance(2.5)

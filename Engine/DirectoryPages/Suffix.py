@@ -14,15 +14,14 @@ STANDARD_MARGIN = 0.25 * inch
 STANDARD_FRAME_WIDTH = landscape(letter)[0]/2 - 2 * STANDARD_MARGIN
 
 
-def get_quote_data(config_data):
-    quote_data = ['','']
-    if config_data['quote.usequote'] == '1':
-        quote_data = [config_data['quote.quotecontent'],
-                     config_data['quote.quoteauthor']]
+def get_quote_data(app_handle):
+    quote_data = ['', '']
+    if app_handle.usequote == '1':
+        quote_data = [app_handle.quotecontent, app_handle.quoteauthor]
     return quote_data
 
 
-def get_directory_suffix_pages(dict_data, debug):
+def get_directory_suffix_pages(app_handle, debug):
     pages = []
     ###########################################################################
     ## LAST PAGE DATA
@@ -33,7 +32,7 @@ def get_directory_suffix_pages(dict_data, debug):
 
     # ADD THE QUOTE
     QuoteText_List = []
-    quoteData = get_quote_data(dict_data)
+    quoteData = get_quote_data(app_handle)
     for Line in quoteData[0].split('\n'):
         if not len(QuoteText_List) and len(quoteData[0].split('\n')) > 1:
             QuoteStyle = styles['QuoteTitle']
@@ -54,7 +53,7 @@ def get_directory_suffix_pages(dict_data, debug):
 
     suffix_pg.flowables.append(Paragraph(text="Membership data taken from church records available via the",
                                          style=styles['RegText']))
-    suffix_pg.flowables.append(Paragraph(text=dict_data['unit.unitname'] + " website at www.lds.org/directory.",
+    suffix_pg.flowables.append(Paragraph(text=app_handle.unit_unitname + " website at www.lds.org/directory.",
                                          style=styles['RegText']))
     suffix_pg.flowables.append(Paragraph(text="Prepared using Ward Directory Creator v.%s" % __version__,
                                          style=styles['RegText']))

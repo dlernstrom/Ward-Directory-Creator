@@ -26,16 +26,24 @@ class ConfigPresentation(ColoredPanel):
             fileMask="*.csv")
         folder_box_sizer.Add(self.nonMemberCsvFile, 0, wx.TOP | wx.LEFT, 10)
 
+        self.dwellings_file = FileBrowseButton(
+            self, -1, size=(700, 30), labelText="Dwellings File",
+            fileMask="*.csv")
+        folder_box_sizer.Add(self.dwellings_file, 0, wx.TOP | wx.LEFT, 10)
+
         self.ImagesDirectory = DirBrowseButton(
-            self, -1, size=(700, 30), labelText="Images Directory")
+            self, -1, size=(700, 30), labelText="Images Directory",
+            changeCallback=lambda x:x)
         folder_box_sizer.Add(self.ImagesDirectory, 0, wx.TOP | wx.LEFT, 10)
 
         self.PDF_Out_Directory = DirBrowseButton(
-            self, -1, size=(700, 30), labelText="PDF Output Directory")
+            self, -1, size=(700, 30), labelText="PDF Output Directory",
+            changeCallback=lambda x:x)
         folder_box_sizer.Add(self.PDF_Out_Directory, 0, wx.TOP | wx.LEFT, 10)
 
         self.Image_Archive_Directory = DirBrowseButton(
-            self, -1, size=(700, 30), labelText="Image Archive Directory")
+            self, -1, size=(700, 30), labelText="Image Archive Directory",
+            changeCallback=lambda x:x)
         folder_box_sizer.Add(self.Image_Archive_Directory, 0,
                              wx.TOP | wx.LEFT | wx.BOTTOM, 10)
 

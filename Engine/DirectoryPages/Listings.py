@@ -21,17 +21,17 @@ STANDARD_FRAME_WIDTH = HALF_PAGE_WIDTH - 2 * STANDARD_MARGIN
 STANDARD_FRAME_HEIGHT = landscape(letter)[1] - 2 * STANDARD_MARGIN
 
 
-def get_missing_text(configData):
-    if not 'missing.missingname' in configData.keys():
+def get_missing_text(app_handle):
+    if not app_handle.missing_missing_name:
         return ''
-    ContactName = configData['missing.missingname']
+    ContactName = app_handle.missing_missing_name
     CommaIndex = ContactName.index(',')
     ContactName = ContactName[CommaIndex + 2:] + ' ' + ContactName[:CommaIndex]
     return "Please contact %s to have your photograph added" % ContactName
 
 
-def get_listing_pages(configData, membershipList, debug):
-    ImageDirectory = configData['file.imagesdirectory']
+def get_listing_pages(app_handle, membershipList, debug):
+    ImageDirectory = app_handle.file_images_directory
 
     #Here I start adding family flowables
     familyFlowables = []
@@ -43,7 +43,7 @@ def get_listing_pages(configData, membershipList, debug):
         numberOfHouseholds += 1
         numberOfMembers += len(household.family)
         familyFlowables.append(
-            tableize_family(configData, ImageDirectory, household, debug))
+            tableize_family(app_handle, ImageDirectory, household, debug))
         if debug:
             print str(numberOfHouseholds), household.coupleName
             print '------------------------------------------'
@@ -53,14 +53,18 @@ def get_listing_pages(configData, membershipList, debug):
                            styles['DaveFooter']))
     # end aggregating family flowables
 
-    pages = paginate_listings(configData, familyFlowables, debug)
+    pages = paginate_listings(app_handle, familyFlowables, debug)
     return pages
 
 
-def paginate_listings(configData, familyFlowables, debug):
+def paginate_listings(app_handle, familyFlowables, debug):
     pdf_TEST = Canvas("DIRECTORY_TEST.pdf", pagesize = landscape(letter))
-    churchFlowable = Paragraph('%s - For Church Use Only' % configData['unit.unitname'], styles['DaveFooter'])
-    FooterRoom = churchFlowable.wrap(STANDARD_FRAME_WIDTH, STANDARD_FRAME_HEIGHT)[1] + churchFlowable.getSpaceBefore()
+    churchFlowable = Paragraph(
+        '%s - For Church Use Only' % app_handle.unit_unitname,
+        styles['DaveFooter'])
+    FooterRoom = churchFlowable.wrap(
+        STANDARD_FRAME_WIDTH, STANDARD_FRAME_HEIGHT)[1] + \
+        churchFlowable.getSpaceBefore()
     pageHeaderFlowableForSizing = Paragraph('Page 1', styles['DaveHeaderLeft'])
     headerRoom = pageHeaderFlowableForSizing.wrap(STANDARD_FRAME_WIDTH, STANDARD_FRAME_HEIGHT)[1] + pageHeaderFlowableForSizing.getSpaceBefore()
 
@@ -125,7 +129,7 @@ def paginate_listings(configData, familyFlowables, debug):
     return pages
 
 
-def tableize_family(configData, ImageDirectory, household, debug):
+def tableize_family(app_handle, ImageDirectory, household, debug):
     Family = []
     if debug:
         print '%s Family' % household.surname
@@ -161,7 +165,7 @@ def tableize_family(configData, ImageDirectory, household, debug):
                                   width=1.5 * inch,
                                   height=1.125 * inch,
                                   kind='proportional')
-        MissingImageText = Paragraph(text=get_missing_text(configData),
+        MissingImageText = Paragraph(text=get_missing_text(app_handle),
                                      style=styles['TextOnImage'])
         FamilyPicture = TextOnImage(P=MissingImageText, I=FamilyPictureBase,
                                     xpad=0, ypad=0.3 * inch, side='center')

@@ -12,9 +12,10 @@ class ConfigInteraction(object):
         # the widget is an amalgomation of two separate widgets
         p.memberCsvFile.changeCallback = self.on_member_csv_change
         p.nonMemberCsvFile.changeCallback = self.on_nonmember_csv_change
+        p.dwellings_file.changeCallback = self.on_dwellings_csv_change
         p.ImagesDirectory.changeCallback = self.on_images_directory_change
-        p.PDF_Out_Directory = self.on_pdf_directory_change
-        p.Image_Archive_Directory = self.on_archive_directory_change
+        p.PDF_Out_Directory.changeCallback = self.on_pdf_directory_change
+        p.Image_Archive_Directory.changeCallback = self.on_archive_directory_change
 
         p.Bind(wx.EVT_CHECKBOX, self.on_override_phone, p.CB_OverridePhone)
         p.Bind(wx.EVT_COMBOBOX, self.on_select_missing_picture_contact,
@@ -31,6 +32,9 @@ class ConfigInteraction(object):
 
     def on_nonmember_csv_change(self, evt):
         self.control.update_nonmember_csv_file_path(evt.GetString())
+
+    def on_dwellings_csv_change(self, evt):
+        self.control.update_dwellings_csv_file_path(evt.GetString())
 
     def on_images_directory_change(self, evt):
         self.control.update_images_directory(evt.GetString())

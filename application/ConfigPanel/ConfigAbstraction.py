@@ -8,7 +8,7 @@ class ConfigAbstraction(object):
 
     @property
     def email_recipients(self):
-        email_recipients = self.app_handle.get_conf_val('email.recipients')
+        email_recipients = self.app_handle.email_recipients
         if email_recipients:
             return email_recipients.split(',')
         return []
@@ -16,7 +16,7 @@ class ConfigAbstraction(object):
     @email_recipients.setter
     def email_recipients(self, email_list):
         email_string = ','.join(email_list)
-        self.app_handle.set_conf_val('email.recipients', email_string)
+        self.app_handle.email_recipients = email_string
 
     @property
     def is_valid_csv(self):
@@ -29,75 +29,83 @@ class ConfigAbstraction(object):
         return self.app_handle.GetMemberEmails(*args, **kwargs)
 
     @property
-    def missingname(self):
-        return self.app_handle.get_conf_val('missing.missingname')
-
-    @property
     def overridephone(self):
-        return self.app_handle.get_conf_val('missing.overridephone') == '1'
+        return self.app_handle.missing_overridephone == '1'
 
     @overridephone.setter
     def overridephone(self, new_val):
         if new_val:
-            self.app_handle.set_conf_val('missing.overridephone', '1')
+            self.app_handle.missing_overridephone = '1'
         else:
-            self.app_handle.set_conf_val('missing.overridephone', '0')
+            self.app_handle.missing_overridephone = '0'
 
     @property
-    def missingname(self):
-        return self.app_handle.get_conf_val('missing.missingname')
+    def missing_missing_name(self):
+        return self.app_handle.missing_missing_name
 
-    @missingname.setter
-    def missingname(self, new_val):
-        self.app_handle.set_conf_val('missing.missingname', new_val)
+    @missing_missing_name.setter
+    def missing_missing_name(self, new_val):
+        self.app_handle.missing_missing_name = new_val
 
     @property
-    def missingphone(self):
-        return self.app_handle.get_conf_val('missing.missingphone')
+    def missing_missingphone(self):
+        return self.app_handle.missing_missingphone
 
-    @missingphone.setter
-    def missingphone(self, new_val):
-        self.app_handle.set_conf_val('missing.missingphone', new_val)
+    @missing_missingphone.setter
+    def missing_missingphone(self, new_val):
+        self.app_handle.missing_missingphone = new_val
 
-    def get_default_phone_number(self):
-        return self.app_handle.GetPhoneNumber(self.missingname)
+    def get_missing_contact_default_phone(self):
+        return self.app_handle.GetPhoneNumber(self.missing_missing_name)
 
     @property
     def member_csv_location(self):
-        return self.app_handle.get_conf_val('file.member_csv_location')
+        return self.app_handle.file_member_csv_location
 
     @member_csv_location.setter
     def member_csv_location(self, new_val):
-        self.app_handle.set_conf_val('file.member_csv_location', new_val)
+        self.app_handle.file_member_csv_location = new_val
+        self.app_handle.GetMembershipList()
+        self.app_handle.SetLists()
 
     @property
     def nonmember_csv_location(self):
-        return self.app_handle.get_conf_val('file.nonmember_csv_location')
+        return self.app_handle.file_nonmember_csv_location
 
     @nonmember_csv_location.setter
     def nonmember_csv_location(self, new_val):
-        self.app_handle.set_conf_val('file.nonmember_csv_location', new_val)
+        self.app_handle.file_nonmember_csv_location = new_val
+        self.app_handle.GetMembershipList()
+        self.app_handle.SetLists()
 
     @property
-    def imagesdirectory(self):
-        return self.app_handle.get_conf_val('file.imagesdirectory')
+    def file_dwellings_csv_location(self):
+        return self.app_handle.file_dwellings_csv_location
 
-    @imagesdirectory.setter
-    def imagesdirectory(self, new_val):
-        self.app_handle.set_conf_val('file.imagesdirectory', new_val)
-
-    @property
-    def pdf_outdirectory(self):
-        return self.app_handle.get_conf_val('file.pdf_outdirectory')
-
-    @pdf_outdirectory.setter
-    def pdf_outdirectory(self, new_val):
-        self.app_handle.set_conf_val('file.pdf_outdirectory', new_val)
+    @file_dwellings_csv_location.setter
+    def file_dwellings_csv_location(self, new_val):
+        self.app_handle.file_dwellings_csv_location = new_val
 
     @property
-    def imagearchivedir(self):
-        return self.app_handle.get_conf_val('file.imagearchivedir')
+    def file_images_directory(self):
+        return self.app_handle.file_images_directory
 
-    @imagearchivedir.setter
-    def imagearchivedir(self, new_val):
-        self.app_handle.set_conf_val('file.imagearchivedir', new_val)
+    @file_images_directory.setter
+    def file_images_directory(self, new_val):
+        self.app_handle.file_images_directory = new_val
+
+    @property
+    def file_pdf_out_directory(self):
+        return self.app_handle.file_pdf_out_directory
+
+    @file_pdf_out_directory.setter
+    def file_pdf_out_directory(self, new_val):
+        self.app_handle.file_pdf_out_directory = new_val
+
+    @property
+    def file_image_archive_directory(self):
+        return self.app_handle.file_image_archive_directory
+
+    @file_image_archive_directory.setter
+    def file_image_archive_directory(self, new_val):
+        self.app_handle.file_image_archive_directory = new_val
