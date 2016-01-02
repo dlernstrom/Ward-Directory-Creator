@@ -10,8 +10,8 @@ from reportlab.platypus import PageBreak, Paragraph, Spacer, Table, TableStyle
 from reportlab.platypus.flowables import KeepInFrame, HRFlowable
 
 from Engine.constants import role_lst, role_dict
-from DirectoryPage import DirectoryPage
-from PDFStyles import styles
+from .DirectoryPage import DirectoryPage
+from .PDFStyles import styles
 
 STANDARD_MARGIN = 0.25 * inch
 STANDARD_FRAME_WIDTH = landscape(letter)[0]/2 - 2 * STANDARD_MARGIN
@@ -130,8 +130,8 @@ def get_directory_prefix_pages(app_handle, debug):
     TextTable = Table(blockData, [1.5 * inch, 3.0 * inch])
     if debug:
         TextTable.setStyle(
-            TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-                        ('BOX', (0,0), (-1,-1), .25, colors.black)]))
+            TableStyle([('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                        ('BOX', (0, 0), (-1, -1), .25, colors.black)]))
     prefixPage.flowables.append(TextTable)
     prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
                                        height=.125 * inch))
@@ -161,9 +161,9 @@ def get_directory_prefix_pages(app_handle, debug):
     TextTable = Table(data, [2.0 * inch, 1.8 * inch, 1.2 * inch])
     if debug:
         TextTable.setStyle(
-            TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
-                        ('BOX', (0,0), (-1,-1), .25, colors.black),
-                        ]))
+            TableStyle([('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+                        ('BOX', (0, 0), (-1, -1), .25, colors.black),
+                       ]))
     content = [TextTable,
                Spacer(width=STANDARD_FRAME_WIDTH, height=7.0 * inch)]
     prefixPage.flowables.append(KeepInFrame(maxWidth=STANDARD_FRAME_WIDTH,

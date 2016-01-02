@@ -8,6 +8,20 @@ from application.ColoredPanel import ColoredPanel
 from __version__ import __version__
 
 
+BLOB = """The Ward Directory Creator application was
+    designed to simplify the process of creating folded directories for Wards
+    and Branches of the Church of Jesus Christ of Latter Day Saints. This
+    application is neither created, nor endorsed by the church.\n\n
+    The Ward Directory Creator uses the comma seperated values (csv) file,
+    available on your ward's website, for its membership data. This eliminates
+    the need to maintain two seperate databases of your ward members, providing
+    a more accurate directory listing. For best results, download a new copy of
+    the csv file each time you generate a directory.
+    """
+LICENSE_TEXT = """By using this application, you agree not to reverse engineer,
+modify, pirate, disassemble, or otherwise use the application in ways not
+intended by the author(s)."""
+
 class MainPresentation(ColoredPanel):
     def __init__(self, parent):
         super(MainPresentation, self).__init__(parent, None)
@@ -22,11 +36,11 @@ class MainPresentation(ColoredPanel):
         StaticWardName.SetFont(self.StandardFont)
         WardBoxSizer.Add(StaticWardName, 0, wx.TOP | wx.LEFT, 10)
 
-        self.TXT_WardName = wx.TextCtrl(self, -1, size=(250,25))
+        self.TXT_WardName = wx.TextCtrl(self, -1, size=(250, 25))
         self.TXT_WardName.SetFont(self.TextBoxFont)
         WardBoxSizer.Add(self.TXT_WardName, 0, wx.TOP | wx.LEFT, 10)
 
-        self.RB_Ward = wx.RadioButton(self, -1, "Ward", style = wx.RB_GROUP)
+        self.RB_Ward = wx.RadioButton(self, -1, "Ward", style=wx.RB_GROUP)
         self.RB_Ward.SetFont(self.StandardFont)
         WardBoxSizer.Add(self.RB_Ward, 0, wx.TOP | wx.LEFT, 10)
 
@@ -38,7 +52,7 @@ class MainPresentation(ColoredPanel):
         StaticStakeName.SetFont(self.StandardFont)
         WardBoxSizer.Add(StaticStakeName, 0, wx.TOP | wx.LEFT, 10)
 
-        self.TXT_StakeName = wx.TextCtrl(self, -1, size=(250,25))
+        self.TXT_StakeName = wx.TextCtrl(self, -1, size=(250, 25))
         self.TXT_StakeName.SetFont(self.TextBoxFont)
         WardBoxSizer.Add(self.TXT_StakeName, 0, wx.TOP | wx.LEFT, 10)
 
@@ -120,20 +134,11 @@ class MainPresentation(ColoredPanel):
         info.Name = "Ward Directory Creator"
         info.Version = __version__
         info.Copyright = "(C) 2007-2015 David Ernstrom"
-        info.Description = wordwrap("The Ward Directory Creator application was "
-                                    "designed to simplify the process of creating folded directories for Wards "
-                                    "and Branches of the Church of Jesus Christ of Latter Day Saints. This application "
-                                    "is neither created, nor endorsed by the church.\n\n"
-                                    "The Ward Directory Creator uses the comma seperated values (csv) file, "
-                                    "available on your ward's website, for its membership data. This eliminates the "
-                                    "need to maintain two seperate databases of your ward members, providing a "
-                                    "more accurate directory listing. For best results, download a new copy of the "
-                                    "csv file each time you generate a directory.",
+        info.Description = wordwrap(BLOB,
                                     350, wx.ClientDC(self))
         info.WebSite = ("http://directory.ernstrom.net",
                         "Ward Directory Creator")
         info.Developers = ["David Ernstrom", "Tina Ernstrom"]
-        licenseText = "By using this application, you agree not to reverse engineer, modify, pirate, disassemble, or otherwise use the application in ways not intended by the author(s)."
-        info.License = wordwrap(licenseText, 500, wx.ClientDC(self))
+        info.License = wordwrap(LICENSE_TEXT, 500, wx.ClientDC(self))
         # Then we call wx.AboutBox giving it that info object
         wx.AboutBox(info)

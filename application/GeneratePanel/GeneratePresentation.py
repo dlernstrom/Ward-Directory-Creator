@@ -20,7 +20,7 @@ class GeneratePresentation(ColoredPanel):
         smtp_title.SetFont(self.StandardFont)
         email_box_sizer.Add(smtp_title, 0, wx.TOP | wx.LEFT, 10)
 
-        self.TXT_SMTPAddy = wx.TextCtrl(self, -1, size = (200, -1))
+        self.TXT_SMTPAddy = wx.TextCtrl(self, -1, size=(200, -1))
         self.TXT_SMTPAddy.SetFont(self.StandardFont)
         email_box_sizer.Add(self.TXT_SMTPAddy, 0, wx.TOP | wx.LEFT, 10)
 
@@ -28,7 +28,7 @@ class GeneratePresentation(ColoredPanel):
         username_title.SetFont(self.StandardFont)
         email_box_sizer.Add(username_title, 0, wx.TOP | wx.LEFT, 10)
 
-        self.TXT_User = wx.TextCtrl(self, -1, size = (200, -1))
+        self.TXT_User = wx.TextCtrl(self, -1, size=(200, -1))
         self.TXT_User.SetFont(self.StandardFont)
         email_box_sizer.Add(self.TXT_User, 0, wx.TOP | wx.LEFT, 10)
 
@@ -83,12 +83,12 @@ class GeneratePresentation(ColoredPanel):
             self, -1, "Generate Single2Double PDF")
         self.CB_GenPDF_Single2Double.SetFont(self.StandardFont)
         gen_sizer.Add(self.CB_GenPDF_Single2Double, 0,
-                          wx.TOP | wx.LEFT, 10)
+                      wx.TOP | wx.LEFT, 10)
 
         self.BTN_Go = wx.Button(self, -1, "Go!")
         self.BTN_Go.SetFont(self.StandardFont)
         gen_sizer.Add(self.BTN_Go, 0,
-                          wx.TOP | wx.ALIGN_CENTER_HORIZONTAL, 10)
+                      wx.TOP | wx.ALIGN_CENTER_HORIZONTAL, 10)
 
         #######################################################################
         ## Here's the outer sizer container stuff

@@ -80,7 +80,7 @@ class GenerateControl(object):
             print "Extracting Move-Outs"
             live_fldr = self.app_handle.file_images_directory
             arch_fldr = self.app_handle.file_image_archive_directory
-            self.app_handle.MoveSuperflousImages(live_fldr, arch_fldr)
+            self.app_handle.move_extra_images(live_fldr, arch_fldr)
 
         # Generate PDF Stuff Here
         Full = 0

@@ -16,11 +16,15 @@ class Calibration(object):
         self.pixelYDistance = self.pixel2.y - self.pixel1.y
 
     def translate_world_to_pixel(self, worldCoordinate):
-        targetWestDistance = worldCoordinate.longitude - self.coord1.longitude # from known 1
-        targetNorthDistance = worldCoordinate.latitude - self.coord1.latitude # from known 1
+        # from known 1
+        targetWestDistance = worldCoordinate.longitude - self.coord1.longitude
+        # from known 1
+        targetNorthDistance = worldCoordinate.latitude - self.coord1.latitude
         targetXRatioWorld = targetWestDistance / self.worldWestDistance
         targetYRatioWorld = targetNorthDistance / self.worldNorthDistance
-        pixelCoordinateX = targetXRatioWorld * self.pixelXDistance + self.pixel1.x
-        pixelCoordinateY = targetYRatioWorld * self.pixelYDistance + self.pixel1.y
+        pixelCoordinateX = targetXRatioWorld * self.pixelXDistance + \
+            self.pixel1.x
+        pixelCoordinateY = targetYRatioWorld * self.pixelYDistance + \
+            self.pixel1.y
         pixelCoordinates = Pixel(pixelCoordinateX, pixelCoordinateY)
         return pixelCoordinates
