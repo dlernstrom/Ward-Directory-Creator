@@ -6,8 +6,8 @@ from reportlab.platypus.flowables import ParagraphAndImage
 
 class TextOnImage(ParagraphAndImage):
     '''combine a Paragraph ON an Image'''
-    def wrap(self,availWidth,availHeight):
-        wI, hI = self.I.wrap(availWidth,availHeight)
+    def wrap(self, availWidth, availHeight):
+        wI, hI = self.I.wrap(availWidth, availHeight)
         #print "wrap called: [%s] [%s] [%s] [%s]" % (availWidth, availHeight, wI, hI)
         self.wI = wI
         self.hI = hI
@@ -19,7 +19,6 @@ class TextOnImage(ParagraphAndImage):
         P = self.P
         style = P.style
         xpad = self.xpad
-        ypad = self.ypad
         leading = style.leading
         leftIndent = style.leftIndent
         later_widths = wI - leftIndent - style.rightIndent
@@ -27,10 +26,10 @@ class TextOnImage(ParagraphAndImage):
         P.width = 0
         #print str([first_line_width] + [later_widths])
         P.blPara = P.breakLines([first_line_width] + [later_widths])
-        if self._side=='left':
+        if self._side == 'left':
             self._offsets = [wI+xpad]+[0]
         P.height = len(P.blPara.lines)*leading
-        self.height = max(hI,P.height)
+        self.height = max(hI, P.height)
         #print P.blPara.lines
         #print "wrap returned [%s] [%s]" % (self.width, self.height)
         return (self.width, self.height)
@@ -38,16 +37,16 @@ class TextOnImage(ParagraphAndImage):
     def draw(self):
         #print "Draw Image Called"
         canv = self.canv
-        if self._side=='left':
-            self.I.drawOn(canv,0,self.height-self.hI)
+        if self._side == 'left':
+            self.I.drawOn(canv, 0, self.height-self.hI)
             self.P._offsets = self._offsets
             try:
-                self.P.drawOn(canv,0,0)
+                self.P.drawOn(canv, 0, 0)
             finally:
                 del self.P._offsets
         elif self._side == 'center':
             self.I.drawOn(canv, 0, 0)
             self.P.drawOn(canv, 0, self.ypad)
         else:#image on right
-            self.I.drawOn(canv,self.width-self.wI-self.xpad,self.height-self.hI)
-            self.P.drawOn(canv,0,0)
+            self.I.drawOn(canv, self.width-self.wI-self.xpad, self.height-self.hI)
+            self.P.drawOn(canv, 0, 0)

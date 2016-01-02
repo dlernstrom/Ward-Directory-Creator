@@ -1,25 +1,24 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-import time
 
 import wx
 
-from BuildingPanel.BuildingAbstraction import BuildingAbstraction
-from BuildingPanel.BuildingControl import BuildingControl
-from BuildingPanel.BuildingInteraction import BuildingInteraction
-from BuildingPanel.BuildingPresentation import BuildingPresentation
-from ConfigPanel.ConfigAbstraction import ConfigAbstraction
-from ConfigPanel.ConfigControl import ConfigControl
-from ConfigPanel.ConfigInteraction import ConfigInteraction
-from ConfigPanel.ConfigPresentation import ConfigPresentation
+from .BuildingPanel.BuildingAbstraction import BuildingAbstraction
+from .BuildingPanel.BuildingControl import BuildingControl
+from .BuildingPanel.BuildingInteraction import BuildingInteraction
+from .BuildingPanel.BuildingPresentation import BuildingPresentation
+from .ConfigPanel.ConfigAbstraction import ConfigAbstraction
+from .ConfigPanel.ConfigControl import ConfigControl
+from .ConfigPanel.ConfigInteraction import ConfigInteraction
+from .ConfigPanel.ConfigPresentation import ConfigPresentation
+from .MainPanel.MainControl import MainControl
+from .MainPanel.MainInteraction import MainInteraction
+from .MainPanel.MainPresentation import MainPresentation
+from .PanelLeadership import LeadershipPanel
+from .GeneratePanel.GenerateControl import GenerateControl
+from .GeneratePanel.GenerateInteraction import GenerateInteraction
+from .GeneratePanel.GeneratePresentation import GeneratePresentation
 from Engine.Application import Application
-from MainPanel.MainControl import MainControl
-from MainPanel.MainInteraction import MainInteraction
-from MainPanel.MainPresentation import MainPresentation
-from PanelLeadership import LeadershipPanel
-from GeneratePanel.GenerateControl import GenerateControl
-from GeneratePanel.GenerateInteraction import GenerateInteraction
-from GeneratePanel.GeneratePresentation import GeneratePresentation
 from __version__ import __version__
 
 DEBUG = 0
@@ -33,37 +32,44 @@ class MyFrame(wx.Frame):
                   wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
 
         self.app_handle = Application(self, DEBUG)
-        self.StatusBar = wx.StatusBar(self, -1)
-        self.StatusBar.SetStatusText("Version: %s" % __version__)
+        status_bar = wx.StatusBar(self, -1)
+        status_bar.SetStatusText("Version: %s" % __version__)
         self.TextBoxFont = wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False,
                                    "Georgia")
         self.SetFont(self.TextBoxFont)
         self.nb = wx.Notebook(self, -1)
 
         main_presentation = MainPresentation(self.nb)
-        i = MainInteraction()
-        self.main_control = MainControl(self.app_handle, main_presentation, i)
+        main_interaction = MainInteraction()
+        self.main_control = MainControl(self.app_handle, main_presentation,
+                                        main_interaction)
         self.nb.AddPage(main_presentation, 'Main')
 
-        a = BuildingAbstraction(self.app_handle)
-        p = BuildingPresentation(self.nb)
-        i = BuildingInteraction()
-        self.building_control = BuildingControl(a, p, i)
-        self.nb.AddPage(p, "Building")
+        bldg_abstraction = BuildingAbstraction(self.app_handle)
+        bldg_presentation = BuildingPresentation(self.nb)
+        bldg_interaction = BuildingInteraction()
+        self.building_control = BuildingControl(bldg_abstraction,
+                                                bldg_presentation,
+                                                bldg_interaction)
+        self.nb.AddPage(bldg_presentation, "Building")
 
-        a = ConfigAbstraction(self.app_handle)
-        p = ConfigPresentation(self.nb)
-        i = ConfigInteraction()
-        self.config_control = ConfigControl(a, p, i)
-        self.nb.AddPage(p, "Configuration")
+        config_abstraction = ConfigAbstraction(self.app_handle)
+        config_presentation = ConfigPresentation(self.nb)
+        config_interaction = ConfigInteraction()
+        self.config_control = ConfigControl(config_abstraction,
+                                            config_presentation,
+                                            config_interaction)
+        self.nb.AddPage(config_presentation, "Configuration")
 
-        p = LeadershipPanel(self.nb, self.app_handle)
-        self.nb.AddPage(p, p.Title)
+        leadership_panel = LeadershipPanel(self.nb, self.app_handle)
+        self.nb.AddPage(leadership_panel, leadership_panel.Title)
 
-        p = GeneratePresentation(self.nb)
-        i = GenerateInteraction()
-        self.generate_control = GenerateControl(self.app_handle, p, i)
-        self.nb.AddPage(p, "Generate")
+        generate_panel = GeneratePresentation(self.nb)
+        generate_interaction = GenerateInteraction()
+        self.generate_control = GenerateControl(self.app_handle,
+                                                generate_panel,
+                                                generate_interaction)
+        self.nb.AddPage(generate_panel, "Generate")
 
         self.nb.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.on_page_changed)
         self.nb.SetPageSize(main_presentation.GetSize())

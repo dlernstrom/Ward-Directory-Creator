@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import os
+import site
 import sys
 from pylint import lint as lint_mod
 from subprocess import Popen, PIPE
 
+site.addsitedir(os.getcwd())
 
 def _get_env():
     '''Extracts the environment PYTHONPATH and appends the current sys.path to

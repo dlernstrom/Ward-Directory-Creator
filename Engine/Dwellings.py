@@ -8,6 +8,11 @@ from decimal import Decimal
 class Dwelling(object):
     mapIndex = None
     def __init__(self, dwellingDict):
+        # DwellingDict has the following keys:
+        self.Street = None
+        self.City = None
+        self.State = None
+        self.Zip = None
         keys = dwellingDict.keys()
         for key in keys:
             setattr(self, key, dwellingDict[key])

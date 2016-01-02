@@ -7,8 +7,8 @@ from reportlab.platypus import PageBreak, Paragraph, Spacer
 from reportlab.platypus.flowables import HRFlowable, KeepInFrame
 from reportlab.lib import colors
 
-from DirectoryPages.PDFStyles import styles
-from DirectoryPages.DirectoryPage import DirectoryPage
+from .DirectoryPages.PDFStyles import styles
+from .DirectoryPages.DirectoryPage import DirectoryPage
 
 STANDARD_MARGIN = 0.25 * inch
 STANDARD_FRAME_WIDTH = landscape(letter)[0]/2 - 2 * STANDARD_MARGIN

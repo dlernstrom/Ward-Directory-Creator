@@ -10,38 +10,40 @@ class NoPersonError(Exception):
 
 class Phone(object):
     def __init__(self, phoneCSV):
-        phoneStripped = phoneCSV.replace(' ', '').replace('(', '').replace(')', '')\
+        phone_stripped = phoneCSV.replace(' ', '').replace('(', '') \
+            .replace(')', '') \
             .replace('-', '').replace('.', '')
-        if len(phoneStripped) == 0:
-            self.phoneFormatted = ''
+        if len(phone_stripped) == 0:
+            self.phone_formatted = ''
             return
-        if phoneStripped[0] == '1':
-            phoneStripped = phoneStripped[1:]
-        if len(phoneStripped) == 7:
-            phoneStripped = '435' + phoneStripped
-        self.phoneFormatted = '(%s) %s-%s' % (phoneStripped[:3],
-                                              phoneStripped[3:6],
-                                              phoneStripped[6:])
+        if phone_stripped[0] == '1':
+            phone_stripped = phone_stripped[1:]
+        if len(phone_stripped) == 7:
+            phone_stripped = '435' + phone_stripped
+        self.phone_formatted = '(%s) %s-%s' % (phone_stripped[:3],
+                                               phone_stripped[3:6],
+                                               phone_stripped[6:])
     def __str__(self):
-        return self.phoneFormatted
+        return self.phone_formatted
 
 
-class EmailAddress:
-    def __init__(self, emailAddress, name):
-        emailAddress = emailAddress.split(' ')[0].split(',')[0].split('\r')[0].split('\n')[0]
-        self.emailAddress = emailAddress
-        if not len(emailAddress):
-            self.emailFormatted = ''
+class EmailAddress(object):
+    def __init__(self, email_addy, name):
+        email_addy = email_addy.split(' ')[0].split(',')[0] \
+            .split('\r')[0].split('\n')[0]
+        self.email_addy = email_addy
+        if not len(email_addy):
+            self.email_formatted = ''
         else:
             name = '%s %s' % (name.split(',')[1].strip(),
                               name.split(',')[0].strip().upper())
-            self.emailFormatted = '%s <%s>' % (name, emailAddress)
+            self.email_formatted = '%s <%s>' % (name, email_addy)
 
 
-class FamilyMember:
-    def __init__(self, familyCSV, startEntry, isParent = False):
-        self.isParent = isParent
-        familySurname = familyCSV[0]
+class FamilyMember(object):
+    def __init__(self, familyCSV, startEntry, is_parent=False):
+        self.is_parent = is_parent
+        fam_surname = familyCSV[0]
         try:
             self.nameCSV = familyCSV[startEntry]
         except IndexError:
@@ -50,20 +52,21 @@ class FamilyMember:
         if self.nameCSV == '':
             raise NoPersonError("No person")
         # remove family surname from this member's name
-        self.nameCSV = self.nameCSV.replace(familySurname + ', ', '')
+        self.nameCSV = self.nameCSV.replace(fam_surname + ', ', '')
         # move remaining individual surname to end
         if len(self.nameCSV.split(',')) > 1:
-            self.nameCSV = '%s %s' % (self.nameCSV.split(',')[1].strip(),
-                                      self.nameCSV.split(',')[0].strip().upper())
+            self.nameCSV = '%s %s' % (
+                self.nameCSV.split(',')[1].strip(),
+                self.nameCSV.split(',')[0].strip().upper())
         self.phone = Phone(familyCSV[startEntry + 1])
         self.email = EmailAddress(familyCSV[startEntry + 2], self.fullName)
     def __str__(self):
         return self.nameCSV
 
 
-class Family:
+class Family(object):
+    """a container of one or more family members"""
     mapIndexString = ''
-    """ a container of one or more family members """
     def __init__(self, familyCSV, isMember):
         self.isMember = isMember
         self.surname = familyCSV[0]
@@ -77,20 +80,21 @@ class Family:
             .replace(' RIch', '\nRich')\
             .replace(' Cove', '\nCove').strip()
         self.family = []
-        self.family.append(FamilyMember(familyCSV, 5, isParent = True))
+        self.family.append(FamilyMember(familyCSV, 5, is_parent=True))
         self.head_of_household = self.family[0]
         self.parents = [self.head_of_household]
-        self.expectedPhotoName = self.head_of_household.fullName.replace(',', '').replace(' ', '') + '.jpg'
+        self.expectedPhotoName = self.head_of_household.fullName \
+            .replace(',', '').replace(' ', '') + '.jpg'
         try:
-            self.family.append(FamilyMember(familyCSV, 8, isParent=True))
+            self.family.append(FamilyMember(familyCSV, 8, is_parent=True))
             self.parents.append(self.family[-1])
         except NoPersonError:
             pass
         try:
-            nextValue = 11
+            next_val = 11
             while True:
-                self.family.append(FamilyMember(familyCSV, nextValue))
-                nextValue += 3
+                self.family.append(FamilyMember(familyCSV, next_val))
+                next_val += 3
         except NoPersonError:
             pass
 
@@ -99,34 +103,35 @@ class Family:
 
     def get_emails_as_list(self):
         emails = []
-        if len(self.familyEmail.emailFormatted):
-            emails.append(self.familyEmail.emailFormatted)
+        if len(self.familyEmail.email_formatted):
+            emails.append(self.familyEmail.email_formatted)
         for member in self.family:
-            if len(member.email.emailFormatted):
-                emails.append(member.email.emailFormatted)
+            if len(member.email.email_formatted):
+                emails.append(member.email.email_formatted)
         return emails
 
     def set_map_index(self, index):
-        if not index == None:
+        if index != None:
             self.mapIndexString = 'Map Index: %s' % index
 
     def __repr__(self):
         return self.coupleName
 
 
-class CSVMembershipParser:
+class CSVMembershipParser(object):
     def __init__(self, filename):
         self.filename = filename
-        self.MembershipHandle = CSVMembershipReader.CSVMembershipReader(self.filename)
+        self.MembershipHandle = CSVMembershipReader.CSVMembershipReader(
+            self.filename)
 
     def next(self):
-        isMember = True
+        is_member = True
         if 'non' in self.filename:
-            isMember = False
+            is_member = False
         try:
             for familyData in self.MembershipHandle:
                 if familyData[0] == 'Family Name':
                     continue
-                yield Family(familyData, isMember = isMember)
+                yield Family(familyData, isMember=is_member)
         except IOError:
             return

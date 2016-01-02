@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import wx
-from wx.lib.masked import TimeCtrl
-
 from application.ColoredPanel import ColoredPanel
 
 
@@ -24,7 +21,7 @@ class BuildingControl(ColoredPanel):
             self.presentation.SacText.Enable(False)
             self.presentation.SacTime.Enable(False)
             self.presentation.spin1.Enable(False)
-        if not self.abstraction.sacstart == None:
+        if self.abstraction.sacstart != None:
             self.presentation.SacTime.SetValue(self.abstraction.sacstart)
         if self.abstraction.displayss:
             self.presentation.CB_SundaySchoolDisp.SetValue(True)
@@ -36,7 +33,7 @@ class BuildingControl(ColoredPanel):
             self.presentation.SSText.Enable(False)
             self.presentation.SSTime.Enable(False)
             self.presentation.spin2.Enable(False)
-        if not self.abstraction.ssstart == None:
+        if self.abstraction.ssstart != None:
             self.presentation.SSTime.SetValue(self.abstraction.ssstart)
         if self.abstraction.display_pr_rs:
             self.presentation.CB_PriesthoodDisp.SetValue(True)
@@ -48,14 +45,14 @@ class BuildingControl(ColoredPanel):
             self.presentation.PriesthoodText.Enable(False)
             self.presentation.PriesthoodTime.Enable(False)
             self.presentation.spin3.Enable(False)
-        if not self.abstraction.pr_rs_start == None:
+        if self.abstraction.pr_rs_start != None:
             self.presentation.PriesthoodTime.SetValue(
                 self.abstraction.pr_rs_start)
-        if not self.abstraction.addy1 == None:
+        if self.abstraction.addy1 != None:
             self.presentation.Addy1.SetValue(self.abstraction.addy1)
-        if not self.abstraction.addy2 == None:
+        if self.abstraction.addy2 != None:
             self.presentation.Addy2.SetValue(self.abstraction.addy2)
-        if not self.abstraction.phone == None:
+        if self.abstraction.phone != None:
             self.presentation.Phone.SetValue(self.abstraction.phone)
 
     def show_sac_start_time(self, enable=True):
@@ -77,7 +74,7 @@ class BuildingControl(ColoredPanel):
         self.abstraction.sacstart = new_val
 
     def update_ss_time(self, new_val):
-        self.abstraction.ssstart
+        self.abstraction.ssstart = new_val
 
     def update_pr_time(self, new_val):
         self.abstraction.pr_rs_start = new_val
