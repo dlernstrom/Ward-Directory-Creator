@@ -23,7 +23,7 @@ from .PDFTools import PDFTools
 
 
 class Application(INIMixin):
-    def __init__(self, parent, DEBUG=0, *args, **kwargs):
+    def __init__(self, DEBUG=0, *args, **kwargs):
         kwargs['ini_defaults'] = CONFIG_DEFAULTS
         super(Application, self).__init__(*args, **kwargs)
         self.homes = None
@@ -48,14 +48,12 @@ class Application(INIMixin):
         directory_build.pages['prefix'] = get_directory_prefix_pages(
             self, debug=self.DEBUG)
         directory_build.pages['directory'] = get_listing_pages(
-            self, membershipList=self.MembershipList,
+            self, membership_list=self.MembershipList,
             debug=self.DEBUG)
-        directory_build.pages['maps'] = get_maps_pages(
-            self, maps=self.ourMaps,
-            membershipList=self.MembershipList, debug=self.DEBUG)
+        directory_build.pages['maps'] = get_maps_pages(self.ourMaps)
         directory_build.pages['mapsLookup'] = get_maps_lookup_pages(
             self, dwellingsHandle=self.homes,
-            membershipList=self.MembershipList, debug=self.DEBUG)
+            membership_list=self.MembershipList)
         directory_build.pages['suffix'] = get_directory_suffix_pages(
             self, debug=self.DEBUG)
         return directory_build

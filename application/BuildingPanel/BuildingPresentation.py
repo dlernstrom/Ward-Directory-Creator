@@ -36,9 +36,9 @@ class BuildingPresentation(ColoredPanel):
 
         self.SacTime = TimeCtrl(self, -1, display_seconds=False)
         self.SacTime.SetFont(self.StandardFont)
-        h = self.SacTime.GetSize().height
-        self.spin1 = wx.SpinButton(self, -1, wx.DefaultPosition, (-1, h),
-                                   wx.SP_VERTICAL)
+        self.spin1 = wx.SpinButton(
+            self, -1, wx.DefaultPosition, (-1, self.SacTime.GetSize().height),
+            wx.SP_VERTICAL)
         self.SacTime.BindSpinButton(self.spin1)
         gbs.Add(self.SacTime, (1, 2), span=wx.DefaultSpan,
                 flag=wx.ALIGN_RIGHT | wx.TOP | wx.LEFT | wx.BOTTOM,
@@ -60,9 +60,9 @@ class BuildingPresentation(ColoredPanel):
 
         self.SSTime = TimeCtrl(self, -1, display_seconds=False)
         self.SSTime.SetFont(self.StandardFont)
-        h = self.SSTime.GetSize().height
-        self.spin2 = wx.SpinButton(self, -1, wx.DefaultPosition, (-1, h),
-                                   wx.SP_VERTICAL)
+        self.spin2 = wx.SpinButton(
+            self, -1, wx.DefaultPosition, (-1, self.SSTime.GetSize().height),
+            wx.SP_VERTICAL)
         self.SSTime.BindSpinButton(self.spin2)
         gbs.Add(self.SSTime, (2, 2), span=wx.DefaultSpan,
                 flag=wx.ALIGN_RIGHT | wx.TOP | wx.LEFT | wx.BOTTOM,
@@ -80,13 +80,13 @@ class BuildingPresentation(ColoredPanel):
         self.PriesthoodText = wx.StaticText(self, -1, title)
         self.PriesthoodText.SetFont(self.StandardFont)
         gbs.Add(self.PriesthoodText, (3, 1), span=wx.DefaultSpan,
-                         flag=wx.ALL, border=10)
+                flag=wx.ALL, border=10)
 
         self.PriesthoodTime = TimeCtrl(self, -1, display_seconds=False)
         self.PriesthoodTime.SetFont(self.StandardFont)
-        h = self.PriesthoodTime.GetSize().height
-        self.spin3 = wx.SpinButton(self, -1, wx.DefaultPosition, (-1, h),
-                                   wx.SP_VERTICAL)
+        self.spin3 = wx.SpinButton(
+            self, -1, wx.DefaultPosition,
+            (-1, self.PriesthoodTime.GetSize().height), wx.SP_VERTICAL)
         self.PriesthoodTime.BindSpinButton(self.spin3)
         gbs.Add(self.PriesthoodTime, (3, 2), span=wx.DefaultSpan,
                 flag=wx.ALIGN_RIGHT | wx.TOP | wx.LEFT | wx.BOTTOM,

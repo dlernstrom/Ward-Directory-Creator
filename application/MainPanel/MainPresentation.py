@@ -22,77 +22,76 @@ LICENSE_TEXT = """By using this application, you agree not to reverse engineer,
 modify, pirate, disassemble, or otherwise use the application in ways not
 intended by the author(s)."""
 
+
 class MainPresentation(ColoredPanel):
     def __init__(self, parent):
         super(MainPresentation, self).__init__(parent, None)
         #######################################################################
         ## Ward/Branch Configuration Section
-        WardBox = wx.StaticBox(self, -1, "Ward/Branch Configuration")
-        WardBox.SetFont(self.StandardFont)
-        self.WardBoxSizer = WardBoxSizer = wx.StaticBoxSizer(WardBox,
-                                                             wx.VERTICAL)
+        ward_box = wx.StaticBox(self, -1, "Ward/Branch Configuration")
+        ward_box.SetFont(self.StandardFont)
+        ward_box_sizer = wx.StaticBoxSizer(ward_box, wx.VERTICAL)
 
-        StaticWardName = wx.StaticText(self, -1, "Unit Name:")
-        StaticWardName.SetFont(self.StandardFont)
-        WardBoxSizer.Add(StaticWardName, 0, wx.TOP | wx.LEFT, 10)
+        static_ward_name = wx.StaticText(self, -1, "Unit Name:")
+        static_ward_name.SetFont(self.StandardFont)
+        ward_box_sizer.Add(static_ward_name, 0, wx.TOP | wx.LEFT, 10)
 
         self.TXT_WardName = wx.TextCtrl(self, -1, size=(250, 25))
         self.TXT_WardName.SetFont(self.TextBoxFont)
-        WardBoxSizer.Add(self.TXT_WardName, 0, wx.TOP | wx.LEFT, 10)
+        ward_box_sizer.Add(self.TXT_WardName, 0, wx.TOP | wx.LEFT, 10)
 
         self.RB_Ward = wx.RadioButton(self, -1, "Ward", style=wx.RB_GROUP)
         self.RB_Ward.SetFont(self.StandardFont)
-        WardBoxSizer.Add(self.RB_Ward, 0, wx.TOP | wx.LEFT, 10)
+        ward_box_sizer.Add(self.RB_Ward, 0, wx.TOP | wx.LEFT, 10)
 
         self.RB_Branch = wx.RadioButton(self, -1, "Branch")
         self.RB_Branch.SetFont(self.StandardFont)
-        WardBoxSizer.Add(self.RB_Branch, 0, wx.TOP | wx.LEFT, 10)
+        ward_box_sizer.Add(self.RB_Branch, 0, wx.TOP | wx.LEFT, 10)
 
-        StaticStakeName = wx.StaticText(self, -1, "Stake Name:")
-        StaticStakeName.SetFont(self.StandardFont)
-        WardBoxSizer.Add(StaticStakeName, 0, wx.TOP | wx.LEFT, 10)
+        static_stake_name = wx.StaticText(self, -1, "Stake Name:")
+        static_stake_name.SetFont(self.StandardFont)
+        ward_box_sizer.Add(static_stake_name, 0, wx.TOP | wx.LEFT, 10)
 
         self.TXT_StakeName = wx.TextCtrl(self, -1, size=(250, 25))
         self.TXT_StakeName.SetFont(self.TextBoxFont)
-        WardBoxSizer.Add(self.TXT_StakeName, 0, wx.TOP | wx.LEFT, 10)
+        ward_box_sizer.Add(self.TXT_StakeName, 0, wx.TOP | wx.LEFT, 10)
 
         #######################################################################
         ## Quote Configuration Section
-        QuoteBox = wx.StaticBox(self, -1, "Quote Configuration")
-        QuoteBox.SetFont(self.StandardFont)
-        self.QuoteBoxSizer = QuoteBoxSizer = wx.StaticBoxSizer(QuoteBox,
-                                                               wx.VERTICAL)
+        quote_box = wx.StaticBox(self, -1, "Quote Configuration")
+        quote_box.SetFont(self.StandardFont)
+        quote_box_sizer = wx.StaticBoxSizer(quote_box, wx.VERTICAL)
 
         self.CB_UseQuote = wx.CheckBox(self, -1, "Use Quote")
         self.CB_UseQuote.SetFont(self.StandardFont)
-        QuoteBoxSizer.Add(self.CB_UseQuote, 0, wx.TOP | wx.LEFT, 10)
+        quote_box_sizer.Add(self.CB_UseQuote, 0, wx.TOP | wx.LEFT, 10)
 
         self.StaticInspQuote = wx.StaticText(self, -1, "Inspirational Quote:")
         self.StaticInspQuote.SetFont(self.StandardFont)
-        QuoteBoxSizer.Add(self.StaticInspQuote, 0, wx.TOP | wx.LEFT, 10)
+        quote_box_sizer.Add(self.StaticInspQuote, 0, wx.TOP | wx.LEFT, 10)
 
         self.TXT_Quote = wx.TextCtrl(self, -1, size=(350, 100),
                                      style=wx.PROCESS_ENTER | wx.TE_MULTILINE)
         self.TXT_Quote.SetFont(self.TextBoxFont)
-        QuoteBoxSizer.Add(self.TXT_Quote, 0, wx.TOP | wx.LEFT, 10)
+        quote_box_sizer.Add(self.TXT_Quote, 0, wx.TOP | wx.LEFT, 10)
 
         self.StaticAuthor = wx.StaticText(self, -1, "Author:")
         self.StaticAuthor.SetFont(self.StandardFont)
-        QuoteBoxSizer.Add(self.StaticAuthor, 0, wx.TOP | wx.LEFT, 10)
+        quote_box_sizer.Add(self.StaticAuthor, 0, wx.TOP | wx.LEFT, 10)
 
         self.TXT_Author = wx.TextCtrl(self, -1, size=(250, 25))
         self.TXT_Author.SetFont(self.TextBoxFont)
-        QuoteBoxSizer.Add(self.TXT_Author, 0, wx.TOP | wx.LEFT, 10)
+        quote_box_sizer.Add(self.TXT_Author, 0, wx.TOP | wx.LEFT, 10)
 
         self.BTN_RestoreQuote = wx.Button(self, -1, "Restore Default")
         self.BTN_RestoreQuote.SetFont(self.StandardFont)
-        QuoteBoxSizer.Add(self.BTN_RestoreQuote, 0, wx.TOP | wx.LEFT, 10)
+        quote_box_sizer.Add(self.BTN_RestoreQuote, 0, wx.TOP | wx.LEFT, 10)
 
         #######################################################################
         ## Non wrapped items
-        StaticHeading = wx.StaticText(self, -1, "Ward Directory Creator",
-                                      style=wx.ALIGN_CENTRE)
-        StaticHeading.SetFont(self.TitleFont)
+        static_heading = wx.StaticText(self, -1, "Ward Directory Creator",
+                                       style=wx.ALIGN_CENTRE)
+        static_heading.SetFont(self.TitleFont)
 
         logo = wx.StaticBitmap(self, -1, self.logo_bmp,
                                (self.logo_bmp.GetWidth(),
@@ -104,16 +103,16 @@ class MainPresentation(ColoredPanel):
         #######################################################################
         ## Sizer encapsulation section
         left_level3 = wx.BoxSizer(wx.VERTICAL)
-        left_level3.Add(self.WardBoxSizer, 6,
+        left_level3.Add(ward_box_sizer, 6,
                         wx.EXPAND | wx.TOP | wx.BOTTOM | wx.LEFT, 25)
         left_level3.Add(logo, 0, wx.TOP | wx.BOTTOM | wx.LEFT, 25)
 
         right_level3 = wx.BoxSizer(wx.VERTICAL)
-        right_level3.Add(self.QuoteBoxSizer, 5, wx.EXPAND | wx.ALL, 25)
+        right_level3.Add(quote_box_sizer, 5, wx.EXPAND | wx.ALL, 25)
         right_level3.Add(self.AboutBoxButton, 1, wx.ALL | wx.ALIGN_CENTRE, 25)
 
         top_level2 = wx.BoxSizer(wx.HORIZONTAL)
-        top_level2.Add(StaticHeading, 1,
+        top_level2.Add(static_heading, 1,
                        wx.EXPAND | wx.ALIGN_CENTER_HORIZONTAL)
 
         bottom_level2 = wx.BoxSizer(wx.HORIZONTAL)
@@ -134,8 +133,7 @@ class MainPresentation(ColoredPanel):
         info.Name = "Ward Directory Creator"
         info.Version = __version__
         info.Copyright = "(C) 2007-2015 David Ernstrom"
-        info.Description = wordwrap(BLOB,
-                                    350, wx.ClientDC(self))
+        info.Description = wordwrap(BLOB, 350, wx.ClientDC(self))
         info.WebSite = ("http://directory.ernstrom.net",
                         "Ward Directory Creator")
         info.Developers = ["David Ernstrom", "Tina Ernstrom"]

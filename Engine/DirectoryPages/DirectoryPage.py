@@ -9,7 +9,7 @@ from .PDFStyles import styles
 DEFAULT_PADDING = 0.25 * inch
 
 
-class DirectoryPage:
+class DirectoryPage(object):
     """
                 width                    x2,y2
         +---------------------------------+
@@ -35,37 +35,33 @@ class DirectoryPage:
     # we'll always assume that x1 and y1 are the bottom left of the frame
     # corner
     # width and height will be the full half sheet of paper
-    def __init__(self, pageNumber=0, leftPadding=DEFAULT_PADDING,
-                 bottomPadding=DEFAULT_PADDING, rightPadding=DEFAULT_PADDING,
-                 topPadding=DEFAULT_PADDING):
-        self.leftPadding = leftPadding
-        self.bottomPadding = bottomPadding
-        self.rightPadding = rightPadding
-        self.topPadding = topPadding
+    def __init__(self, left_padding=DEFAULT_PADDING,
+                 right_padding=DEFAULT_PADDING):
+        self.left_padding = left_padding
+        self.right_padding = right_padding
         self.flowables = []
-        self.pageNumber = 0
+        self.page_number = 0
 
     def get_frame(self, debug, side='Left'): # or Right
         x1 = 0
         if side == 'Right':
             x1 = landscape(letter)[0]/2
-        fm = Frame(x1=x1,
-                   y1=0,
-                   width=landscape(letter)[0]/2,
-                   height=landscape(letter)[1],
-                   leftPadding=self.leftPadding,
-                   bottomPadding=self.bottomPadding,
-                   rightPadding=self.rightPadding,
-                   topPadding=self.topPadding,
-                   showBoundary=debug)
-        return fm
+        return Frame(x1=x1,
+                     y1=0,
+                     width=landscape(letter)[0]/2,
+                     height=landscape(letter)[1],
+                     leftPadding=self.left_padding,
+                     bottomPadding=DEFAULT_PADDING,
+                     rightPadding=self.right_padding,
+                     topPadding=DEFAULT_PADDING,
+                     showBoundary=debug)
 
     def make_frame(self, debug, side, pdfHandle):
         fm = self.get_frame(debug, side)
         counter = 0
         for flowable in self.flowables:
             if flowable == 'CURRENT_PAGE_NUMBER':
-                flowable = Paragraph('Page %d' % self.pageNumber,
+                flowable = Paragraph('Page %d' % self.page_number,
                                      styles['DaveHeader%s' % side])
             fm.add(flowable, pdfHandle)
             counter += 1

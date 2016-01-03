@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from Pixel import Pixel
+from .Pixel import Pixel
 
 
 class Calibration(object):

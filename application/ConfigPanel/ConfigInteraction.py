@@ -15,7 +15,8 @@ class ConfigInteraction(object):
         p.dwellings_file.changeCallback = self.on_dwellings_csv_change
         p.ImagesDirectory.changeCallback = self.on_images_directory_change
         p.PDF_Out_Directory.changeCallback = self.on_pdf_directory_change
-        p.Image_Archive_Directory.changeCallback = self.on_archive_directory_change
+        p.Image_Archive_Directory.changeCallback = \
+            self.on_archive_directory_change
 
         p.Bind(wx.EVT_CHECKBOX, self.on_override_phone, p.CB_OverridePhone)
         p.Bind(wx.EVT_COMBOBOX, self.on_select_missing_picture_contact,

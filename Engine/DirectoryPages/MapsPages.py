@@ -4,9 +4,7 @@ from __future__ import unicode_literals
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, landscape
 from reportlab.lib.units import inch
-from reportlab.platypus import Image, PageBreak, \
-    Paragraph, Table, TableStyle, Spacer
-from reportlab.platypus.flowables import HRFlowable, KeepInFrame
+from reportlab.platypus import Image, Paragraph, Table, TableStyle
 
 from .PDFStyles import styles
 from .DirectoryPage import DirectoryPage
@@ -31,7 +29,7 @@ STANDARD_TABLE_HEIGHT = STANDARD_FRAME_HEIGHT - FOOTER_ROOM - HEADER_ROOM
 STANDARD_MAP_HEIGHT = STANDARD_FRAME_HEIGHT - HEADER_ROOM
 
 
-def get_maps_pages(app_handle, maps, membershipList, debug):
+def get_maps_pages(maps):
     pages = []
     maps.annotate_insets()
     for one_map in maps.pages:
@@ -44,14 +42,14 @@ def get_maps_pages(app_handle, maps, membershipList, debug):
                                             kind='proportional'))
             pages.append(dir_page)
         if one_map.size == 'large':
-            dir_page = DirectoryPage(rightPadding=0)
+            dir_page = DirectoryPage(right_padding=0)
             dir_page.flowables.append('CURRENT_PAGE_NUMBER')
             dir_page.flowables.append(Image(one_map.get_map_half('left'),
                                             width=MAP_PAGE_WIDTH,
                                             height=STANDARD_MAP_HEIGHT,
                                             kind='proportional'))
             pages.append(dir_page)
-            dir_page = DirectoryPage(leftPadding=0)
+            dir_page = DirectoryPage(left_padding=0)
             dir_page.flowables.append('CURRENT_PAGE_NUMBER')
             dir_page.flowables.append(Image(one_map.get_map_half('right'),
                                             width=MAP_PAGE_WIDTH,
@@ -71,12 +69,12 @@ def make_member_dwellings_dict(dwellingsHandle, membershipList):
     return dwellings_dict
 
 
-def get_maps_lookup_pages(app_handle, dwellingsHandle, membershipList, debug):
+def get_maps_lookup_pages(app_handle, dwellingsHandle, membership_list):
     church_use_text = '%s - For Church Use Only' % app_handle.unit_unitname
     church_flowable = Paragraph(church_use_text, styles['DaveFooter'])
     pages = []
     mbr_dwellings_dict = make_member_dwellings_dict(dwellingsHandle,
-                                                    membershipList)
+                                                    membership_list)
     table_data = [['#', 'Name']]
     ofstream = open(u'SortedByNumber.csv', u'w')
     # we are confident that this has already been sorted by map index
@@ -104,43 +102,25 @@ def get_maps_lookup_pages(app_handle, dwellingsHandle, membershipList, debug):
                          ]),
         repeatRows=1)
     result = this_tbl.split(STANDARD_TABLE_WIDTH, STANDARD_TABLE_HEIGHT)
-    brokenDownTables = []
+    broken_down_tbls = []
     while len(result) == 2:
-        brokenDownTables.append(result[0])
+        broken_down_tbls.append(result[0])
         result = result[1].split(STANDARD_TABLE_WIDTH, STANDARD_TABLE_HEIGHT)
-    brokenDownTables.append(result[0])
-    while len(brokenDownTables):
-        pg = DirectoryPage()
-        pg.flowables.append('CURRENT_PAGE_NUMBER')
-        table_data = [brokenDownTables[:2]]
+    broken_down_tbls.append(result[0])
+    while len(broken_down_tbls):
+        dir_page = DirectoryPage()
+        dir_page.flowables.append('CURRENT_PAGE_NUMBER')
+        table_data = [broken_down_tbls[:2]]
         if len(table_data[0]) == 1:
             table_data[0].append([])
         table_data[0].insert(1, [])
-        brokenDownTables = brokenDownTables[2:]
+        broken_down_tbls = broken_down_tbls[2:]
         col_widths = [STANDARD_TABLE_WIDTH, STANDARD_MARGIN,
                       STANDARD_TABLE_WIDTH]
-        pg.flowables.append(
+        dir_page.flowables.append(
             Table(data=table_data,
                   colWidths=col_widths,
                   style=TableStyle([('VALIGN', (0, 0), (-1, -1), 'TOP'),])))
-        pg.flowables.append(church_flowable)
-        pages.append(pg)
+        dir_page.flowables.append(church_flowable)
+        pages.append(dir_page)
     return pages
-
-
-def PrepareFiller(title, pageCounter):
-    line_space_list = []
-    for counter in xrange(30):
-        line_space_list.append(Spacer(width=STANDARD_FRAME_WIDTH,
-                                      height=.25 * inch))
-        line_space_list.append(HRFlowable(width="90%", thickness=1,
-                                          lineCap='square',
-                                          color=colors.black))
-    return_list = [Paragraph(text="%s Page %d" % (title, pageCounter),
-                             style=styles['Subtitle']),
-                   KeepInFrame(maxWidth=STANDARD_FRAME_WIDTH,
-                               maxHeight=7.5 * inch,
-                               content=line_space_list,
-                               mode='truncate'),
-                   PageBreak()]
-    return return_list

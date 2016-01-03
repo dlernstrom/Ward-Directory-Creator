@@ -31,7 +31,7 @@ class MyFrame(wx.Frame):
             style=wx.MINIMIZE_BOX | wx.MAXIMIZE_BOX | wx.SYSTEM_MENU | \
                   wx.CAPTION | wx.CLOSE_BOX | wx.CLIP_CHILDREN)
 
-        self.app_handle = Application(self, DEBUG)
+        self.app_handle = Application(DEBUG)
         status_bar = wx.StatusBar(self, -1)
         status_bar.SetStatusText("Version: %s" % __version__)
         self.TextBoxFont = wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.NORMAL, False,

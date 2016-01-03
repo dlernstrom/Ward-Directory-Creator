@@ -33,10 +33,10 @@ class Directory(object):
         result.extend(self.pages['mapsLookup'])
         result.extend(self.get_post_map_spacers(bindingType))
         result.extend(self.pages['suffix'])
-        pageNumber = 1
+        page_number = 1
         for page in result:
-            page.pageNumber = pageNumber
-            pageNumber += 1
+            page.page_number = page_number
+            page_number += 1
         return result
 
     def get_pre_map_spacers(self, bindingType): # full or booklet
@@ -85,17 +85,17 @@ class Directory(object):
         return pages
 
     def PrepareFiller(self):
-        LineSpace_List = []
+        line_space_list = []
         for counter in xrange(30):
-            LineSpace_List.append(Spacer(width=STANDARD_FRAME_WIDTH,
-                                         height=.25 * inch))
-            LineSpace_List.append(
+            line_space_list.append(Spacer(width=STANDARD_FRAME_WIDTH,
+                                          height=.25 * inch))
+            line_space_list.append(
                 HRFlowable(width="90%", thickness=1, lineCap='square',
                            color=colors.black))
-        ReturnList = [Paragraph(text="NOTES", style=styles['Subtitle']),
-                      KeepInFrame(maxWidth=STANDARD_FRAME_WIDTH,
-                                  maxHeight=7.5 * inch,
-                                  content=LineSpace_List,
-                                  mode='truncate'),
-                      PageBreak()]
-        return ReturnList
+        return_list = [Paragraph(text="NOTES", style=styles['Subtitle']),
+                       KeepInFrame(maxWidth=STANDARD_FRAME_WIDTH,
+                                   maxHeight=7.5 * inch,
+                                   content=line_space_list,
+                                   mode='truncate'),
+                       PageBreak()]
+        return return_list

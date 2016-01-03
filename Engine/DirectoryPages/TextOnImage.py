@@ -5,23 +5,22 @@ from reportlab.platypus.flowables import ParagraphAndImage
 
 
 class TextOnImage(ParagraphAndImage):
-    '''combine a Paragraph ON an Image'''
+    """combine a Paragraph ON an Image"""
     def wrap(self, availWidth, availHeight):
         wI, hI = self.I.wrap(availWidth, availHeight)
-        #print "wrap called: [%s] [%s] [%s] [%s]" % (availWidth, availHeight, wI, hI)
         self.wI = wI
         self.hI = hI
         # work out widths array for breaking
         ####################################
-        ## I made the change so that the image width is the maximum width of the
-        ## flowable... the text needs to show up on the image
+        ## I made the change so that the image width is the maximum width of
+        ## the flowable... the text needs to show up on the image
         self.width = self.wI
         P = self.P
         style = P.style
         xpad = self.xpad
         leading = style.leading
-        leftIndent = style.leftIndent
-        later_widths = wI - leftIndent - style.rightIndent
+        left_indent = style.leftIndent
+        later_widths = wI - left_indent - style.rightIndent
         first_line_width = later_widths - style.firstLineIndent
         P.width = 0
         #print str([first_line_width] + [later_widths])
@@ -47,6 +46,6 @@ class TextOnImage(ParagraphAndImage):
         elif self._side == 'center':
             self.I.drawOn(canv, 0, 0)
             self.P.drawOn(canv, 0, self.ypad)
-        else:#image on right
+        else: #image on right
             self.I.drawOn(canv, self.width-self.wI-self.xpad, self.height-self.hI)
             self.P.drawOn(canv, 0, 0)

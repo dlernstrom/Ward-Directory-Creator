@@ -33,17 +33,17 @@ class ConfigPresentation(ColoredPanel):
 
         self.ImagesDirectory = DirBrowseButton(
             self, -1, size=(700, 30), labelText="Images Directory",
-            changeCallback=lambda x:x)
+            changeCallback=lambda x: x)
         folder_box_sizer.Add(self.ImagesDirectory, 0, wx.TOP | wx.LEFT, 10)
 
         self.PDF_Out_Directory = DirBrowseButton(
             self, -1, size=(700, 30), labelText="PDF Output Directory",
-            changeCallback=lambda x:x)
+            changeCallback=lambda x: x)
         folder_box_sizer.Add(self.PDF_Out_Directory, 0, wx.TOP | wx.LEFT, 10)
 
         self.Image_Archive_Directory = DirBrowseButton(
             self, -1, size=(700, 30), labelText="Image Archive Directory",
-            changeCallback=lambda x:x)
+            changeCallback=lambda x: x)
         folder_box_sizer.Add(self.Image_Archive_Directory, 0,
                              wx.TOP | wx.LEFT | wx.BOTTOM, 10)
 
@@ -58,7 +58,7 @@ class ConfigPresentation(ColoredPanel):
         missing_box_sizer.Add(self.StaticName, 0, wx.TOP | wx.LEFT, 10)
 
         self.Contact_Dropdown = wx.ComboBox(self, -1, size=(250, -1),
-                                            style=wx.CB_READONLY )
+                                            style=wx.CB_READONLY)
         self.Contact_Dropdown.SetFont(self.TextBoxFont)
         missing_box_sizer.Add(self.Contact_Dropdown, 0, wx.TOP | wx.LEFT, 10)
 
@@ -66,7 +66,7 @@ class ConfigPresentation(ColoredPanel):
         self.StaticPhone.SetFont(self.StandardFont)
         missing_box_sizer.Add(self.StaticPhone, 0, wx.TOP | wx.LEFT, 10)
 
-        self.TXT_Phone = wx.TextCtrl(self, -1, size=(250,-1))
+        self.TXT_Phone = wx.TextCtrl(self, -1, size=(250, -1))
         self.TXT_Phone.SetFont(self.TextBoxFont)
         missing_box_sizer.Add(self.TXT_Phone, 0, wx.TOP | wx.LEFT, 10)
 
@@ -121,7 +121,8 @@ class ConfigPresentation(ColoredPanel):
         bottom_level2.Add(bottom_right_level3, 3, wx.EXPAND | wx.LEFT, 25)
 
         inside_border_level1 = wx.BoxSizer(wx.VERTICAL)
-        inside_border_level1.Add(folder_box_sizer, 0, wx.EXPAND | wx.BOTTOM, 25)
+        inside_border_level1.Add(folder_box_sizer, 0, wx.EXPAND | wx.BOTTOM,
+                                 25)
         inside_border_level1.Add(bottom_level2, 1, wx.EXPAND)
 
         border_level0 = wx.BoxSizer()

@@ -18,15 +18,15 @@ STANDARD_FRAME_WIDTH = landscape(letter)[0]/2 - 2 * STANDARD_MARGIN
 
 
 def get_callings_data(app_handle):
-    # Return a list of dictionaries of the positions ordered correctly
+    """Return a list of dictionaries of the positions ordered correctly"""
     # TODO: This should happen by my parent...
     # I am the customer and should get it how I want it already
     leadership_lst = []
     for role in role_lst:
         if role == 'miss':
-            leadership_lst.append({"Role":	'',
-                                   "Name":	role_dict[role],
-                                   "Phone":	'(435) 232-7293'})
+            leadership_lst.append({"Role": '',
+                                   "Name": role_dict[role],
+                                   "Phone": '(435) 232-7293'})
         try:
             if getattr(app_handle, 'leadership_' + role + 'disp') == '1':
                 leadership_lst.append(
@@ -34,19 +34,19 @@ def get_callings_data(app_handle):
                      "Name": getattr(app_handle, 'leadership_' + role + 'name'),
                      "Phone": getattr(app_handle, 'leadership_' + role + 'phone')})
             else:
-                leadership_lst.append({"Role":	" ",
-                                       "Name":	" ",
-                                       "Phone":	" "})
-                leadership_lst.append({"Role":	" ",
-                                       "Name":	" ",
-                                       "Phone":	" "})
+                leadership_lst.append({"Role": " ",
+                                       "Name": " ",
+                                       "Phone": " "})
+                leadership_lst.append({"Role": " ",
+                                       "Name": " ",
+                                       "Phone": " "})
         except KeyError:
-            leadership_lst.append({"Role":	" ",
-                                   "Name":	" ",
-                                   "Phone":	" "})
-            leadership_lst.append({"Role":	" ",
-                                   "Name":	" ",
-                                   "Phone":	" "})
+            leadership_lst.append({"Role": " ",
+                                   "Name": " ",
+                                   "Phone": " "})
+            leadership_lst.append({"Role": " ",
+                                   "Name": " ",
+                                   "Phone": " "})
     return leadership_lst
 
 
@@ -80,106 +80,109 @@ def get_block_data(app_handle):
 
 def get_directory_prefix_pages(app_handle, debug):
     pages = []
-    #Page 1 Data
-    prefixPage = DirectoryPage()
-    prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
-                                       height=1.5 * inch))
-    prefixPage.flowables.append(
-        Paragraph(text="<b>" + app_handle.unit_unitname + "</b>",
-                  style=styles['DocumentTitle']))
-    prefixPage.flowables.append(Paragraph(text="Member Directory",
-                                          style=styles['Subtitle']))
-    prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
-                                       height=2.0 * inch))
-    prefixPage.flowables.append(
-        Paragraph(text=app_handle.unit_stakename,
-                  style=styles['PrefixBase']))
-    if app_handle.bldg_addy1:
-        prefixPage.flowables.append(
-            Paragraph(text=app_handle.bldg_addy1,
-                      style=styles['PrefixBase']))
-    else:
-        prefixPage.flowables.append(Paragraph(text='',
-                                              style=styles['PrefixBase']))
-    if app_handle.bldg_addy2:
-        prefixPage.flowables.append(
-            Paragraph(text=app_handle.bldg_addy2,
-                      style=styles['PrefixBase']))
-    else:
-        prefixPage.flowables.append(Paragraph(text='',
-                                              style=styles['PrefixBase']))
-    prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
-                                       height=2.0 * inch))
-    CurrentDateString = datetime.date.today().strftime("%d %B %Y")
-    prefixPage.flowables.append(
-        Paragraph(text="Published: " + CurrentDateString,
-                  style=styles['PrefixBase']))
-    prefixPage.flowables.append(PageBreak())
-    pages.append(prefixPage)
+    pages.append(make_title_page(app_handle))
 
     #Page 2 Data
-    prefixPage = DirectoryPage()
-    prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
-                                       height=.125 * inch))
+    prefix_page = DirectoryPage()
+    prefix_page.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
+                                        height=.125 * inch))
     sched = "<u>%s Meeting Schedule</u>" % datetime.date.today().strftime("%Y")
-    prefixPage.flowables.append(
+    prefix_page.flowables.append(
         Paragraph(text=sched, style=styles['Subtitle']))
-    prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
-                                       height=.125 * inch))
-    blockData = get_block_data(app_handle)
-    TextTable = Table(blockData, [1.5 * inch, 3.0 * inch])
+    prefix_page.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
+                                        height=.125 * inch))
+    text_tbl = Table(get_block_data(app_handle), [1.5 * inch, 3.0 * inch])
     if debug:
-        TextTable.setStyle(
+        text_tbl.setStyle(
             TableStyle([('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                         ('BOX', (0, 0), (-1, -1), .25, colors.black)]))
-    prefixPage.flowables.append(TextTable)
-    prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
-                                       height=.125 * inch))
+    prefix_page.flowables.append(text_tbl)
+    prefix_page.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
+                                        height=.125 * inch))
     if app_handle.bldg_phone:
-        prefixPage.flowables.append(
+        prefix_page.flowables.append(
             Paragraph(text="Office Phone: " + app_handle.bldg_phone,
                       style=styles['PrefixBase']))
     else:
-        prefixPage.flowables.append(Paragraph(text='',
-                                              style=styles['PrefixBase']))
-    prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
-                                       height=.125 * inch))
-    prefixPage.flowables.append(
+        prefix_page.flowables.append(Paragraph(text='',
+                                               style=styles['PrefixBase']))
+    prefix_page.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
+                                        height=.125 * inch))
+    prefix_page.flowables.append(
         HRFlowable(width="90%", thickness=1, lineCap='square',
                    color=colors.black))
-    prefixPage.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
-                                       height=.125 * inch))
+    prefix_page.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
+                                        height=.125 * inch))
     data = []
 
-    for Position in get_callings_data(app_handle):
-        data.append([[Paragraph(text=Position['Role'],
+    for position in get_callings_data(app_handle):
+        data.append([[Paragraph(text=position['Role'],
                                 style=styles['RegTextR'])],
-                     [Paragraph(text=Position['Name'],
+                     [Paragraph(text=position['Name'],
                                 style=styles['RegTextL'])],
-                     [Paragraph(text=Position['Phone'],
+                     [Paragraph(text=position['Phone'],
                                 style=styles['RegTextL'])]])
-    TextTable = Table(data, [2.0 * inch, 1.8 * inch, 1.2 * inch])
+    text_tbl = Table(data, [2.0 * inch, 1.8 * inch, 1.2 * inch])
     if debug:
-        TextTable.setStyle(
+        text_tbl.setStyle(
             TableStyle([('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
                         ('BOX', (0, 0), (-1, -1), .25, colors.black),
                        ]))
-    content = [TextTable,
+    content = [text_tbl,
                Spacer(width=STANDARD_FRAME_WIDTH, height=7.0 * inch)]
-    prefixPage.flowables.append(KeepInFrame(maxWidth=STANDARD_FRAME_WIDTH,
-                                            maxHeight=5.0 * inch,
-                                            content=content,
-                                            mode='truncate'))
+    prefix_page.flowables.append(KeepInFrame(maxWidth=STANDARD_FRAME_WIDTH,
+                                             maxHeight=5.0 * inch,
+                                             content=content,
+                                             mode='truncate'))
     disc = """<b>This ward directory is to be used only for Church purposes
         and should not be copied without permission of the bishop
         or stake president.</b>
         """
-    prefixPage.flowables.append(Paragraph(text=disc,
-                                          style=styles['RegText']))
-    prefixPage.flowables.append(PageBreak())
+    prefix_page.flowables.append(Paragraph(text=disc,
+                                           style=styles['RegText']))
+    prefix_page.flowables.append(PageBreak())
     if debug:
-        for flow in prefixPage.flowables:
+        for flow in prefix_page.flowables:
             if flow.__class__ in [Paragraph, Spacer]:
                 flow._showBoundary = 1
-    pages.append(prefixPage)
+    pages.append(prefix_page)
     return pages
+
+
+def make_title_page(app_handle):
+    # Page 1 Data
+    prefix_page = DirectoryPage()
+    prefix_page.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
+                                        height=1.5 * inch))
+    prefix_page.flowables.append(
+        Paragraph(text="<b>" + app_handle.unit_unitname + "</b>",
+                  style=styles['DocumentTitle']))
+    prefix_page.flowables.append(Paragraph(text="Member Directory",
+                                           style=styles['Subtitle']))
+    prefix_page.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
+                                        height=2.0 * inch))
+    prefix_page.flowables.append(
+        Paragraph(text=app_handle.unit_stakename,
+                  style=styles['PrefixBase']))
+    if app_handle.bldg_addy1:
+        prefix_page.flowables.append(
+            Paragraph(text=app_handle.bldg_addy1,
+                      style=styles['PrefixBase']))
+    else:
+        prefix_page.flowables.append(
+            Paragraph(text='', style=styles['PrefixBase']))
+    if app_handle.bldg_addy2:
+        prefix_page.flowables.append(
+            Paragraph(text=app_handle.bldg_addy2,
+                      style=styles['PrefixBase']))
+    else:
+        prefix_page.flowables.append(Paragraph(text='',
+                                               style=styles['PrefixBase']))
+    prefix_page.flowables.append(Spacer(width=STANDARD_FRAME_WIDTH,
+                                        height=2.0 * inch))
+    prefix_page.flowables.append(
+        Paragraph(
+            text="Published: " + datetime.date.today().strftime("%d %B %Y"),
+            style=styles['PrefixBase']))
+    prefix_page.flowables.append(PageBreak())
+    return prefix_page

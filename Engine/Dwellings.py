@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import csv
-import os
 from decimal import Decimal
 
 
@@ -19,13 +18,16 @@ class Dwelling(object):
         self.Longitude = float(self.Longitude)
         self.Latitude = float(self.Latitude)
         self.dwellingDict = dwellingDict
-        self.addressForCompare = '%s\n%s, %s %s' % (self.Street.replace(',', ''), self.City, self.State, self.Zip)
+        params = (self.Street.replace(',', ''), self.City, self.State,
+                  self.Zip)
+        self.addressForCompare = '%s\n%s, %s %s' % params
         if not self.NextDwellingOverride == '':
             print self.NextDwellingOverride
             print len(self.NextDwellingOverride)
 
-            self.NextDwellingOverride = (Decimal(self.NextDwellingOverride.split(',')[0].split('(')[1].strip()),
-                                         Decimal(self.NextDwellingOverride.split(',')[1].split(')')[0].strip()))
+            self.NextDwellingOverride = (
+                Decimal(self.NextDwellingOverride.split(',')[0].split('(')[1].strip()),
+                Decimal(self.NextDwellingOverride.split(',')[1].split(')')[0].strip()))
 
     def __repr__(self):
         return '%s\n%s, %s %s' % (self.Street, self.City, self.State, self.Zip)
@@ -35,7 +37,7 @@ class Dwelling(object):
         self.dwellingDict['MapIndex'] = mapIndex
 
 
-class Dwellings:
+class Dwellings(object):
     def __init__(self, dwellings_file_name):
         self.dwellingsFname = dwellings_file_name
         self.dwellingList = []

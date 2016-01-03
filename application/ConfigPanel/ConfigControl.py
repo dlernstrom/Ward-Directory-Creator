@@ -32,10 +32,10 @@ class ConfigControl(object):
 
             # Refresh choices to name list
             self.presentation.Contact_Dropdown.Clear()
-            NameList = self.abstraction.get_name_list(NameType='Parent')
-            for Name in NameList:
-                self.presentation.Contact_Dropdown.Append(Name)
-            if self.abstraction.missing_missing_name in NameList:
+            name_list = self.abstraction.get_name_list(NameType='Parent')
+            for name in name_list:
+                self.presentation.Contact_Dropdown.Append(name)
+            if self.abstraction.missing_missing_name in name_list:
                 self.presentation.Contact_Dropdown.SetStringSelection(
                     self.abstraction.missing_missing_name)
                 self.presentation.CB_OverridePhone.Enable(True)
@@ -53,10 +53,9 @@ class ConfigControl(object):
                 self.presentation.CB_OverridePhone.Enable(False)
 
             # Now let's populate the email addresses
-            EmailAddys = self.abstraction.get_member_emails()
             self.presentation.Email_Dropdown.Clear()
-            for Email in EmailAddys:
-                self.presentation.Email_Dropdown.Append(Email)
+            for email_addy in self.abstraction.get_member_emails():
+                self.presentation.Email_Dropdown.Append(email_addy)
         else:
             self.presentation.StaticName.Enable(False)
             self.presentation.Contact_Dropdown.Enable(False)
