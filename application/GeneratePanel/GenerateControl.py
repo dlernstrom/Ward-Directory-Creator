@@ -83,24 +83,14 @@ class GenerateControl(object):
             self.app_handle.move_extra_images(live_fldr, arch_fldr)
 
         # Generate PDF Stuff Here
-        Full = 0
-        if self.app_handle.task_genfull == '1':
-            print "Generating Full PDF"
-            Full = 1
+        gen_full = self.app_handle.task_genfull == '1'
+        gen_sing_2_doub = self.app_handle.task_gensingle2double == '1'
+        gen_booklet = self.app_handle.task_genbooklet == '1'
 
-        Single2Double = 0
-        if self.app_handle.task_gensingle2double == '1':
-            print "Generating Single2Double PDF"
-            Single2Double = 1
-
-        Booklet = 0
-        if self.app_handle.task_genbooklet == '1':
-            print "Generating Booklet PDF"
-            Booklet = 1
-        if Full or Booklet or Single2Double:
+        if gen_full or gen_booklet or gen_sing_2_doub:
             OutputFolder = self.app_handle.file_pdf_out_directory
-            self.app_handle.InitiatePDF(OutputFolder, Full, Booklet,
-                                        Single2Double)
+            self.app_handle.InitiatePDF(OutputFolder, gen_full, gen_booklet,
+                                        gen_sing_2_doub)
 
         # Generate Missing Image Report
         if self.app_handle.task_missreport == '1':
