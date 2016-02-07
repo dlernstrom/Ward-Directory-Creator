@@ -75,6 +75,9 @@ class ConfigControl(object):
         if self.abstraction.nonmember_csv_location:
             self.presentation.nonMemberCsvFile.SetValue(
                 self.abstraction.nonmember_csv_location)
+        if self.abstraction.file_dwellings_csv_location:
+            self.presentation.dwellings_file.SetValue(
+                self.abstraction.file_dwellings_csv_location)
         if self.abstraction.file_images_directory:
             self.presentation.ImagesDirectory.SetValue(
                 self.abstraction.file_images_directory)
