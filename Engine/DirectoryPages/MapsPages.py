@@ -76,7 +76,6 @@ def get_maps_lookup_pages(app_handle, dwellingsHandle, membership_list):
     mbr_dwellings_dict = make_member_dwellings_dict(dwellingsHandle,
                                                     membership_list)
     table_data = [['#', 'Name']]
-    ofstream = open(u'SortedByNumber.csv', u'w')
     # we are confident that this has already been sorted by map index
     for dwell_counter in xrange(len(dwellingsHandle.dwellingList)):
         dwelling = dwellingsHandle.dwellingList[dwell_counter]
@@ -86,10 +85,6 @@ def get_maps_lookup_pages(app_handle, dwellingsHandle, membership_list):
         mbr_str = '\n'.join(
             ['%s%s' % ('' if x.isMember else '*', x.coupleName) for x in mbrs])
         table_data.append([dwell_counter + 1, mbr_str])
-        ofstream.write(
-            '"%s","%s","%s"\n' % (dwell_counter + 1, dwelling.Street,
-                                  mbr_str.replace(u'\n', u'')))
-    ofstream.close()
     map_idx_width = 0.3 * inch
     name_width = STANDARD_TABLE_WIDTH - map_idx_width
     this_tbl = Table(
