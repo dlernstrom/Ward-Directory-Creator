@@ -8,10 +8,14 @@ class Dwelling(object):
     mapIndex = None
     def __init__(self, dwellingDict):
         # DwellingDict has the following keys:
+        # ["MapIndex", "Longitude", "Latitude", "Street",
+        #                         "City", "State", "Zip",
+        #                         'NextDwellingOverride']
         self.Street = None
         self.City = None
         self.State = None
         self.Zip = None
+        self.NextDwellingOverride = ''
         keys = dwellingDict.keys()
         for key in keys:
             setattr(self, key, dwellingDict[key])
@@ -21,13 +25,15 @@ class Dwelling(object):
         params = (self.Street.replace(',', ''), self.City, self.State,
                   self.Zip)
         self.addressForCompare = '%s\n%s, %s %s' % params
-        if not self.NextDwellingOverride == '':
+        if self.NextDwellingOverride != '':
             print self.NextDwellingOverride
             print len(self.NextDwellingOverride)
 
             self.NextDwellingOverride = (
-                Decimal(self.NextDwellingOverride.split(',')[0].split('(')[1].strip()),
-                Decimal(self.NextDwellingOverride.split(',')[1].split(')')[0].strip()))
+                Decimal(self.NextDwellingOverride \
+                        .split(',')[0].split('(')[1].strip()),
+                Decimal(self.NextDwellingOverride \
+                        .split(',')[1].split(')')[0].strip()))
 
     def __repr__(self):
         return '%s\n%s, %s %s' % (self.Street, self.City, self.State, self.Zip)
@@ -58,10 +64,10 @@ class Dwellings(object):
             pass
 
     def add_dwelling_if_unique(self, d):
-        for currDwelling in self.dwellingList:
-            if str(currDwelling) == str(d):
+        for curr_dwelling in self.dwellingList:
+            if str(curr_dwelling) == str(d):
                 print "Dwelling already exists!"
-                print currDwelling
+                print curr_dwelling
                 return
         self.dwellingList.append(d)
 

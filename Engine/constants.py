@@ -23,7 +23,7 @@ role_dict = {'bish':	'Bishop',
              'wml':		'Ward Mission Leader',
              'news':	'Ward Newsletter',
              "NULL":	'',
-             'miss':	'Missionaries'}
+             'miss':	''}
 
 
 CONFIG_DEFAULTS = {

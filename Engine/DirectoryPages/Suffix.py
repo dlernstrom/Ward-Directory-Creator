@@ -52,13 +52,19 @@ def get_directory_suffix_pages(app_handle, debug):
     # END WITH QUOTE
 
     suffix_pg.flowables.append(
-        Paragraph(text="Membership data taken from church records available via the",
-                  style=styles['RegText']))
+        Paragraph(
+            text="Membership data taken from church records available via the",
+            style=styles['RegText']))
     suffix_pg.flowables.append(
-        Paragraph(text=app_handle.unit_unitname + " website at www.lds.org/directory.",
-                  style=styles['RegText']))
+        Paragraph(
+            text="%s website at www.lds.org/directory." % app_handle.unit_unitname,
+            style=styles['RegText']))
     suffix_pg.flowables.append(
-        Paragraph(text="Prepared using Ward Directory Creator v.%s" % __version__,
+        Paragraph(
+            text="Prepared using Ward Directory Creator v.%s" % __version__,
+            style=styles['RegText']))
+    suffix_pg.flowables.append(
+        Paragraph(text="https://github.com/dlernstrom/Ward-Directory-Creator",
                   style=styles['RegText']))
     suffix_pg.flowables.append(
         Paragraph(text="All information for Church use only.",

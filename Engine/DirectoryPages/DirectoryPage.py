@@ -57,11 +57,11 @@ class DirectoryPage(object):
                      showBoundary=debug)
 
     def make_frame(self, debug, side, pdfHandle):
-        fm = self.get_frame(debug, side)
+        frame = self.get_frame(debug, side)
         counter = 0
         for flowable in self.flowables:
             if flowable == 'CURRENT_PAGE_NUMBER':
                 flowable = Paragraph('Page %d' % self.page_number,
                                      styles['DaveHeader%s' % side])
-            fm.add(flowable, pdfHandle)
+            frame.add(flowable, pdfHandle)
             counter += 1

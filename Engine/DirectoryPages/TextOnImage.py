@@ -47,5 +47,6 @@ class TextOnImage(ParagraphAndImage):
             self.I.drawOn(canv, 0, 0)
             self.P.drawOn(canv, 0, self.ypad)
         else: #image on right
-            self.I.drawOn(canv, self.width-self.wI-self.xpad, self.height-self.hI)
+            self.I.drawOn(canv, self.width-self.wI-self.xpad,
+                          self.height-self.hI)
             self.P.drawOn(canv, 0, 0)

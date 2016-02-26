@@ -23,16 +23,13 @@ def get_callings_data(app_handle):
     # I am the customer and should get it how I want it already
     leadership_lst = []
     for role in role_lst:
-        if role == 'miss':
-            leadership_lst.append({"Role": '',
-                                   "Name": role_dict[role],
-                                   "Phone": '(435) 232-7293'})
         try:
-            if getattr(app_handle, 'leadership_' + role + 'disp') == '1':
+            if getattr(app_handle, 'leadership_%sdisp' % role) == '1':
                 leadership_lst.append(
                     {"Role": role_dict[role],
-                     "Name": getattr(app_handle, 'leadership_' + role + 'name'),
-                     "Phone": getattr(app_handle, 'leadership_' + role + 'phone')})
+                     "Name": getattr(app_handle, 'leadership_%sname' % role),
+                     "Phone": getattr(app_handle,
+                                      'leadership_%sphone' % role)})
             else:
                 leadership_lst.append({"Role": " ",
                                        "Name": " ",
